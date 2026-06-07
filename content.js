@@ -69,7 +69,7 @@ window.RESUME = {
       avatar: '',
       gender: 'male',
       workExperience: [
-        { period: '2024年7月 — 2026年8月', position: '博士后研究员，数智融合研究中心研究主任', organization: '浙江大学滨江研究院', location: '杭州，中国' },
+        { period: '2024年7月 — 至今', position: '博士后研究员，数智融合研究中心研究主任', organization: '浙江大学滨江研究院', location: '杭州，中国' },
         { period: '2017年7月 — 2019年8月', position: '驻地工程师', organization: '中国建筑总公司', location: '木尔坦，巴基斯坦', description: '一带一路基础设施建设项目' }
       ],
       education: [
@@ -187,7 +187,7 @@ window.RESUME = {
       avatar: '',
       gender: 'male',
       workExperience: [
-        { period: '2024年7月 — 2026年8月', position: '博士後研究員，數智融合研究中心研究主任', organization: '浙江大學濱江研究院', location: '杭州，中國' },
+        { period: '2024年7月 — 至今', position: '博士後研究員，數智融合研究中心研究主任', organization: '浙江大學濱江研究院', location: '杭州，中國' },
         { period: '2017年7月 — 2019年8月', position: '駐地工程師', organization: '中國建築工程總公司', location: '木爾坦，巴基斯坦', description: '一帶一路基礎設施建設項目' }
       ],
       education: [
@@ -264,7 +264,7 @@ window.RESUME = {
       avatar: '',
       gender: 'male',
       workExperience: [
-        { period: 'July 2024 — Aug 2026', position: 'Postdoctoral researcher, Research Head of Intelligence Fusion Research Center', organization: 'Binjiang Institute of Zhejiang University', location: 'Hangzhou, China' },
+        { period: 'July 2024 — Present', position: 'Postdoctoral researcher, Research Head of Intelligence Fusion Research Center', organization: 'Binjiang Institute of Zhejiang University', location: 'Hangzhou, China' },
         { period: 'July 2017 — Aug 2019', position: 'Resident engineer', organization: 'China State Construction Engineering Corporation', location: 'Multan, Pakistan', description: 'Belt and Road infrastructure project' }
       ],
       education: [
@@ -369,7 +369,7 @@ window.RESUME = {
       avatar: '',
       gender: 'male',
       workExperience: [
-        { period: '2024年7月 — 2026年8月', position: 'ポストドクター研究員、数智融合研究中心研究主任', organization: '浙江大学濱江研究院', location: '杭州、中国' },
+        { period: '2024年7月 — 現在', position: 'ポストドクター研究員、数智融合研究中心研究主任', organization: '浙江大学濱江研究院', location: '杭州、中国' },
         { period: '2017年7月 — 2019年8月', position: '常駐エンジニア', organization: '中国建築工程総公司', location: 'ムルタン、パキスタン', description: '一帯一路インフラプロジェクト' }
       ],
       education: [
@@ -474,7 +474,7 @@ window.RESUME = {
       avatar: '',
       gender: 'male',
       workExperience: [
-        { period: '2024년 7월 — 2026년 8월', position: '박사후연구원, 수지융합연구센터 연구 책임', organization: '저장대학 빈장연구원', location: '항저우, 중국' },
+        { period: '2024년 7월 — 현재', position: '박사후연구원, 수지융합연구센터 연구 책임', organization: '저장대학 빈장연구원', location: '항저우, 중국' },
         { period: '2017년 7월 — 2019년 8월', position: '주재 엔지니어', organization: '중국건축공정총공사', location: '물탄, 파키스탄', description: '일대일로 인프라 프로젝트' }
       ],
       education: [
@@ -579,7 +579,7 @@ window.RESUME = {
       avatar: '',
       gender: 'male',
       workExperience: [
-        { period: 'ก.ค. 2024 — ส.ค. 2026', position: 'นักวิจัยหลังปริญญาเอก หัวหน้าการวิจัย IFRC', organization: 'Binjiang Institute of Zhejiang University', location: 'หางโจว จีน' },
+        { period: 'ก.ค. 2024 — ปัจจุบัน', position: 'นักวิจัยหลังปริญญาเอก หัวหน้าการวิจัย IFRC', organization: 'Binjiang Institute of Zhejiang University', location: 'หางโจว จีน' },
         { period: 'ก.ค. 2017 — ส.ค. 2019', position: 'วิศวกรประจำสถานที่', organization: 'China State Construction Engineering Corporation', location: 'มุลตาน ปากีสถาน', description: 'โครงการโครงสร้างพื้นฐาน Belt and Road' }
       ],
       education: [
