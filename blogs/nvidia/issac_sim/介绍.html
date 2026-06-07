@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>技术介绍 · NVIDIA 具身平台调研</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <div class="site-topbar-nav">
+      <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+      <span class="site-topbar-sep" aria-hidden="true">·</span>
+      <a class="site-back" id="site-back-home" href="../../../">← 返回主页</a>
+    </div>
+    <span class="site-topbar-label">Blog · 技术调研</span>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>NVIDIA 具身平台调研</h1>
+        <p>Isaac Sim · Isaac Lab · Cosmos</p>
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">总体</div>
+<a class="nav-link" href="../总体介绍.html"><span class="nav-link-title">总体介绍</span><span class="nav-link-desc">三者定位、协作关系与许可说明（Sim 5.1 · Lab 2.3.2）</span></a>
+</div>
+<div class="nav-section"><div class="nav-section-title">Isaac Sim</div>
+<a class="nav-link active" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">架构、传感器、域随机化、ROS 2</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">安装、启动与常用操作</span></a>
+<a class="nav-link" href="不同格式3d文件的介绍.html"><span class="nav-link-title">3D 资产格式</span><span class="nav-link-desc">URDF、MJCF、CAD、OBJ/FBX/STL</span></a>
+</div>
+<div class="nav-section"><div class="nav-section-title">Isaac Lab</div>
+<a class="nav-link" href="../issac_lab/介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">包结构、Manager-Based / Direct</span></a>
+<a class="nav-link" href="../issac_lab/基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">环境、训练、Mimic 数据管线</span></a>
+<a class="nav-link" href="../issac_lab/训练流程.html"><span class="nav-link-title">训练流程</span><span class="nav-link-desc">RSL-RL 训练与 checkpoint</span></a>
+<a class="nav-link" href="../issac_lab/任务基本介绍.html"><span class="nav-link-title">任务基本介绍</span><span class="nav-link-desc">14 个任务与奖励配置索引</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>NVIDIA 具身平台调研</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><a href="../总体介绍.html">NVIDIA 具身平台调研</a> <span> / </span> <span>Isaac Sim</span> <span> / </span> <span>技术介绍</span></div>
+          <article class="article"><h1 id="isaac-sim-">Isaac Sim 技术介绍</h1>
+<blockquote>
+<p>官方仓库：<a href="https://github.com/isaac-sim/IsaacSim/blob/main">IsaacSim</a>(<a href="https://github.com/isaac-sim/IsaacSim/blob/main/">https://github.com/isaac-sim/IsaacSim/blob/main/</a>) · 版本见 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/VERSION">VERSION</a><br />
+资产与格式说明见 <a href="不同格式3d文件的介绍.html">不同格式3d文件的介绍.md</a>；训练框架见 <a href="../issac_lab/介绍.html">../issac_lab/介绍.md</a>。</p>
+</blockquote>
+<h2 id="1.-">1. 概述</h2>
+<p>NVIDIA Isaac Sim 是基于 <strong>NVIDIA Omniverse</strong> 与 <strong>OpenUSD</strong> 的机器人仿真平台，用于在虚拟环境中开发、测试和部署 AI 驱动的机器人系统（见 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/README.md">README.md</a>）。</p>
+<ul>
+<li><strong>高保真物理</strong>：GPU 加速 PhysX 仿真</li>
+<li><strong>多传感器</strong>：RTX 相机、RTX LiDAR、物理传感器等</li>
+<li><strong>数据与随机化</strong>：Replicator 合成数据、域随机化</li>
+<li><strong>生态集成</strong>：ROS 2 桥接、Isaac Lab 强化/模仿学习</li>
+</ul>
+<p>Isaac Sim 提供<strong>仿真后端</strong>（场景、物理、渲染、传感器），<strong>不</strong>内置 RL/IL 训练循环；策略训练通常由上层 <strong><a href="https://github.com/isaac-sim/IsaacLab">Isaac Lab</a></strong> 完成。</p>
+<p><strong>资源</strong></p>
+<ul>
+<li>在线文档：<a href="https://docs.isaacsim.omniverse.nvidia.com/latest/index.html">https://docs.isaacsim.omniverse.nvidia.com/latest/index.html</a></li>
+<li>产品页：<a href="https://developer.nvidia.com/isaac-sim">https://developer.nvidia.com/isaac-sim</a></li>
+</ul>
+<hr />
+<h2 id="2.-">2. 核心架构</h2>
+<table>
+<thead>
+<tr class="header">
+<th>层级</th>
+<th>作用</th>
+<th>官方依据</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Omniverse Kit</strong></td>
+<td>应用框架、扩展系统、UI</td>
+<td>构建见 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/README.md">README Quick Start</a></td>
+</tr>
+<tr class="even">
+<td><strong>OpenUSD</strong></td>
+<td>场景描述、组合、变体</td>
+<td><a href="https://github.com/isaac-sim/IsaacSim/blob/main/docs/overview/experimental.rst">docs/overview/experimental.rst</a></td>
+</tr>
+<tr class="odd">
+<td><strong>PhysX</strong></td>
+<td>刚体、关节、接触、可变形体等</td>
+<td><code>UsdPhysics</code> / <code>PhysxSchema</code> 见各 standalone 示例</td>
+</tr>
+<tr class="even">
+<td><strong>Isaac Sim 扩展</strong></td>
+<td>机器人导入、传感器、Replicator、ROS 2 等</td>
+<td><a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/">source/extensions/</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3.-">3. 主要功能</h2>
+<h3 id="3.1-">3.1 机器人建模与导入</h3>
+<p>README 明确支持的非 USD 导入类型：<strong>URDF、MJCF、CAD</strong>（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/README.md#L11">README.md L11</a>）。</p>
+<table>
+<thead>
+<tr class="header">
+<th>格式</th>
+<th>扩展 / 示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>URDF</strong></td>
+<td><a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.asset.importer.urdf/">isaacsim.asset.importer.urdf</a> · <a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/standalone_examples/api/isaacsim.asset.importer.urdf/urdf_import.py">urdf_import.py</a></td>
+<td>解析关节树，网格经 converter 进 USD</td>
+</tr>
+<tr class="even">
+<td><strong>MJCF</strong></td>
+<td><a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.asset.importer.mjcf/">isaacsim.asset.importer.mjcf</a> · <a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/standalone_examples/api/isaacsim.asset.importer.mjcf/mjcf_import.py">mjcf_import.py</a></td>
+<td>MuJoCo 模型 → USD</td>
+</tr>
+<tr class="odd">
+<td><strong>CAD</strong></td>
+<td><code>omni.kit.converter.*</code></td>
+<td>见 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/apps/isaacsim.exp.extscache.kit#L353-L361">isaacsim.exp.extscache.kit L353–361</a></td>
+</tr>
+<tr class="even">
+<td><strong>OBJ / FBX / STL</strong></td>
+<td><code>omni.kit.asset_converter</code></td>
+<td>见 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/standalone_examples/api/omni.kit.asset_converter/asset_usd_converter.py">asset_usd_converter.py</a></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>注意</strong>：<strong>Gazebo SDF</strong> 机器人描述格式<strong>不在</strong>上述 README 与 importer 列表中。OpenUSD 依赖项中的 <code>sdf</code>（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/repo.toml#L287-L291">repo.toml L287–291</a>）指 <strong>pxr.Sdf</strong> 库，与 Gazebo 格式无关。</p>
+</blockquote>
+<p><strong>内置机器人快捷菜单</strong>（Create → Robots，完整资产见 Asset Browser）：</p>
+<ul>
+<li>Ant、Boston Dynamics Spot、Franka Panda、Humanoid、Nova Carter、Quadcopter</li>
+<li>源码：<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.gui.menu/isaacsim/gui/menu/create_menu.py#L182-L216">create_menu.py L182–216</a></li>
+</ul>
+<p>另有 UR10 等示例（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.asset.importer.urdf/python/impl/samples/import_ur10.py">import_ur10.py</a>、<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.examples.interactive/isaacsim/examples/interactive/ur_follow_target/">ur_follow_target</a>），通过 URDF 或 <code>/Isaac/Robots/</code> 资产加载。</p>
+<p>导入时通过 <code>import_config</code> 设置惯性等属性，碰撞等由 importer 写入 USD；导入后可在 Stage 上配置关节驱动等 PhysX 属性（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/standalone_examples/api/isaacsim.asset.importer.urdf/urdf_import.py#L25-L31">urdf_import.py L25–31、L66–81</a>；选项见 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.asset.importer.urdf/docs/api.rst">api.rst</a>）。</p>
+<h3 id="3.2-">3.2 传感器模拟</h3>
+<p>Kit 基础应用加载的传感器扩展（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/apps/isaacsim.exp.base.kit#L40-L43">isaacsim.exp.base.kit L40–43</a>）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>类型</th>
+<th>扩展</th>
+<th>能力摘要</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>相机（RGB / 深度等）</strong></td>
+<td><code>isaacsim.sensors.camera</code></td>
+<td>RGB、深度等图像输出；示例 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/standalone_examples/api/isaacsim.sensors.camera/camera.py">camera.py</a>（渲染经 Omniverse RTX 管线，见 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/README.md">README Key Features</a>）</td>
+</tr>
+<tr class="even">
+<td><strong>LiDAR / Radar</strong></td>
+<td><code>isaacsim.sensors.rtx</code></td>
+<td>RTX 激光雷达配置 · <a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.sensors.rtx/config/extension.toml">extension.toml</a></td>
+</tr>
+<tr class="odd">
+<td><strong>IMU / 接触 / 力矩</strong></td>
+<td><code>isaacsim.sensors.physics</code></td>
+<td>IMU：<strong>线加速度、角速度、姿态</strong>（无磁力计）· <a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.sensors.physics/nodes/OgnIsaacReadIMU.ogn">OgnIsaacReadIMU.ogn</a>；Contact / Effort · <a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.sensors.physics/config/extension.toml#L5">extension.toml L5</a></td>
+</tr>
+<tr class="even">
+<td><strong>PhysX 射线等</strong></td>
+<td><code>isaacsim.sensors.physx</code></td>
+<td>物理射线类传感器</td>
+</tr>
+</tbody>
+</table>
+<p>语义分割、边界框等感知标注通常通过 <strong>Replicator / SDG</strong> 管线输出（见 §3.5）。</p>
+<h3 id="3.3-">3.3 域随机化</h3>
+<ul>
+<li>扩展：<code>isaacsim.replicator.domain_randomization</code>（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/apps/isaacsim.exp.base.kit#L31">isaacsim.exp.base.kit L31</a>）</li>
+<li>可对光照、材质、物理参数、布局等做随机化，供 sim-to-real 与 SDG 使用。</li>
+</ul>
+<h3 id="3.4-">3.4 遥操作与模仿学习数据</h3>
+<ul>
+<li><strong>Isaac Sim</strong> 提供仿真与 OpenXR 手部追踪等输入能力（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/apps/isaacsim.exp.base.xr.openxr.kit">isaacsim.xr.openxr</a>）。</li>
+<li><strong>HDF5 演示录制、Robomimic、Isaac Lab Mimic</strong> 属于 <strong>Isaac Lab</strong> 工具链，不在 IsaacSim-main 核心仓库中实现。</li>
+</ul>
+<h3 id="3.5-sdg">3.5 合成数据生成（SDG）</h3>
+<ul>
+<li>README 列为 Key Application：<a href="https://github.com/isaac-sim/IsaacSim/blob/main/README.md">Synthetic Data Generation</a></li>
+<li>基于 <strong>Omniverse Replicator</strong>（<code>isaacsim.replicator.*</code>），可批量输出 RGB、深度、分割、法线等模态及元数据。</li>
+</ul>
+<h3 id="3.6-gpu-">3.6 GPU 加速与并行</h3>
+<ul>
+<li>物理与 RTX 渲染可在 GPU 上运行（README Key Features）。</li>
+<li>Isaac Sim 提供 <strong>GridCloner</strong> 等克隆 API（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/standalone_examples/benchmarks/benchmark_core_world.py">benchmark_core_world.py</a>）。</li>
+<li><strong>大规模并行 RL</strong>（如数千 <code>num_envs</code>、PyTorch 张量接口）由 <strong>Isaac Lab</strong> 在 Isaac Sim 之上封装。</li>
+</ul>
+<h3 id="3.7-">3.7 可变形体</h3>
+<ul>
+<li>支持 deformable / 软体相关 API 与测试（如 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.core.api/python/tests/test_deformable_prim_view.py">test_deformable_prim_view.py</a>）。</li>
+</ul>
+<hr />
+<h2 id="4.-">4. 使用方式与接口</h2>
+<h3 id="4.1-">4.1 图形界面</h3>
+<p>基于 Omniverse Kit：拖拽 USD 资产、调节仿真、使用 Replicator / 域随机化工具、Asset Browser 浏览 <code>/Isaac/Robots/</code> 等 Nucleus 资产。</p>
+<h3 id="4.2-python-api">4.2 Python API（当前推荐写法）</h3>
+<p>Standalone 示例统一使用 <code>isaacsim</code> 包（<strong>非</strong>已弃用的 <code>omni.isaac.kit</code> / <code>omni.isaac.core</code>）：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="im">from</span> isaacsim <span class="im">import</span> SimulationApp</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">simulation_app <span class="op">=</span> SimulationApp({<span class="st">&quot;headless&quot;</span>: <span class="va">False</span>})</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="im">from</span> isaacsim.core.api <span class="im">import</span> World</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="im">from</span> isaacsim.core.api.objects <span class="im">import</span> DynamicCuboid</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">world <span class="op">=</span> World()</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co"># ... 加载资产、步进仿真 ...</span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">simulation_app.close()</a></code></pre></div>
+<p>完整入门：<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/standalone_examples/tutorials/getting_started.py">standalone_examples/tutorials/getting_started.py</a></p>
+<h3 id="4.3-ros-2-">4.3 ROS 2 桥接</h3>
+<ul>
+<li>扩展：<strong><code>isaacsim.ros2.bridge</code></strong>（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.app.selector/isaacsim/app/selector/settings.py">app selector 配置</a>）</li>
+<li>示例：<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/standalone_examples/api/isaacsim.ros2.bridge/">standalone_examples/api/isaacsim.ros2.bridge/</a></li>
+<li>支持 Humble / Jazzy 等；<strong>ROS 1 桥接已标记 deprecated</strong>（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/isaacsim.app.selector/docs/CHANGELOG.md">selector CHANGELOG</a>）。</li>
+</ul>
+<hr />
+<h2 id="5.--isaac-lab-">5. 与 Isaac Lab 的分工</h2>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Isaac Sim</th>
+<th>Isaac Lab</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>职责</strong></td>
+<td>物理、渲染、传感器、USD 场景</td>
+<td>RL / IL 训练、任务库、并行 env、策略评估</td>
+</tr>
+<tr class="even">
+<td><strong>调研文档</strong></td>
+<td>本文</td>
+<td><a href="../issac_lab/介绍.html">../issac_lab/介绍.md</a></td>
+</tr>
+</tbody>
+</table>
+<p>典型链路：在 Isaac Sim 中准备 USD 场景与机器人 → Isaac Lab 加载为并行环境 → 定义 MDP / 奖励并训练 → 回到 Isaac Sim 或真机验证。</p>
+<hr />
+<h2 id="6.-">6. 应用场景</h2>
+<p>README 与扩展覆盖：机械臂操作、移动机器人（Spot、Nova Carter）、四足/人形、合成感知数据、ROS 2 集成、数字孪生等（<a href="https://github.com/isaac-sim/IsaacSim/blob/main/README.md">README Key Applications</a>）。</p>
+<hr />
+<h2 id="7.-">7. 许可与构建</h2>
+<table>
+<thead>
+<tr class="header">
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>本仓库软件</td>
+<td><strong>Apache 2.0</strong> · <a href="https://github.com/isaac-sim/IsaacSim/blob/main/LICENSE">LICENSE</a></td>
+</tr>
+<tr class="even">
+<td>附加组件</td>
+<td>构建/运行依赖 Omniverse Kit SDK、资产等，见 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/LICENSE#L3-L10">LICENSE L3–10</a> 附加许可链接</td>
+</tr>
+<tr class="odd">
+<td>从源码构建</td>
+<td><a href="https://github.com/isaac-sim/IsaacSim/blob/main/README.md">README Quick Start</a>（<code>repo.sh</code> / <code>build.sh</code>）</td>
+</tr>
+<tr class="even">
+<td>预编译包</td>
+<td>亦可通过 <a href="https://developer.nvidia.com/isaac-sim">developer.nvidia.com/isaac-sim</a> 获取</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8.-">8. 官方仓库索引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>用途</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>项目说明</td>
+<td><a href="https://github.com/isaac-sim/IsaacSim/blob/main/README.md">README.md</a></td>
+</tr>
+<tr class="even">
+<td>入门脚本</td>
+<td><a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/standalone_examples/tutorials/getting_started.py">standalone_examples/tutorials/getting_started.py</a></td>
+</tr>
+<tr class="odd">
+<td>扩展目录</td>
+<td><a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/extensions/">source/extensions/</a></td>
+</tr>
+<tr class="even">
+<td>Kit 应用配置</td>
+<td><a href="https://github.com/isaac-sim/IsaacSim/blob/main/source/apps/isaacsim.exp.base.kit">source/apps/isaacsim.exp.base.kit</a></td>
+</tr>
+<tr class="odd">
+<td>资产格式说明</td>
+<td><a href="不同格式3d文件的介绍.html">不同格式3d文件的介绍.md</a></td>
+</tr>
+<tr class="even">
+<td>Isaac Lab</td>
+<td><a href="https://github.com/isaac-sim/IsaacLab">https://github.com/isaac-sim/IsaacLab</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>基于 Isaac Sim 官方仓库编写。</em></p></article>
+          <p class="footer-note">
+            源码链接指向
+            <a href="https://github.com/isaac-sim/IsaacSim" target="_blank" rel="noopener">Isaac Sim</a>
+            与
+            <a href="https://github.com/isaac-sim/IsaacLab" target="_blank" rel="noopener">Isaac Lab</a>
+            官方 GitHub 仓库。
+          </p>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 概述</a></li><li><a class="" href="#2.-">2. 核心架构</a></li><li><a class="" href="#3.-">3. 主要功能</a></li><li><a class="level-3" href="#3.1-">3.1 机器人建模与导入</a></li><li><a class="level-3" href="#3.2-">3.2 传感器模拟</a></li><li><a class="level-3" href="#3.3-">3.3 域随机化</a></li><li><a class="level-3" href="#3.4-">3.4 遥操作与模仿学习数据</a></li><li><a class="level-3" href="#3.5-sdg">3.5 合成数据生成（SDG）</a></li><li><a class="level-3" href="#3.6-gpu-">3.6 GPU 加速与并行</a></li><li><a class="level-3" href="#3.7-">3.7 可变形体</a></li><li><a class="" href="#4.-">4. 使用方式与接口</a></li><li><a class="level-3" href="#4.1-">4.1 图形界面</a></li><li><a class="level-3" href="#4.2-python-api">4.2 Python API（当前推荐写法）</a></li><li><a class="level-3" href="#4.3-ros-2-">4.3 ROS 2 桥接</a></li><li><a class="" href="#5.--isaac-lab-">5. 与 Isaac Lab 的分工</a></li><li><a class="" href="#6.-">6. 应用场景</a></li><li><a class="" href="#7.-">7. 许可与构建</a></li><li><a class="" href="#8.-">8. 官方仓库索引</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+</body>
+</html>

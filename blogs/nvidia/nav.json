@@ -1,0 +1,64 @@
+{
+  "title": "NVIDIA 具身平台调研",
+  "subtitle": "Isaac Sim · Isaac Lab · Cosmos",
+  "sections": [
+    {
+      "id": "overview",
+      "title": "总体",
+      "docs": [
+        {
+          "path": "总体介绍.md",
+          "title": "总体介绍",
+          "description": "三者定位、协作关系与许可说明（Sim 5.1 · Lab 2.3.2）"
+        }
+      ]
+    },
+    {
+      "id": "isaac-sim",
+      "title": "Isaac Sim",
+      "docs": [
+        {
+          "path": "issac_sim/介绍.md",
+          "title": "技术介绍",
+          "description": "架构、传感器、域随机化、ROS 2"
+        },
+        {
+          "path": "issac_sim/基本使用流程.md",
+          "title": "基本使用流程",
+          "description": "安装、启动与常用操作"
+        },
+        {
+          "path": "issac_sim/不同格式3d文件的介绍.md",
+          "title": "3D 资产格式",
+          "description": "URDF、MJCF、CAD、OBJ/FBX/STL"
+        }
+      ]
+    },
+    {
+      "id": "isaac-lab",
+      "title": "Isaac Lab",
+      "docs": [
+        {
+          "path": "issac_lab/介绍.md",
+          "title": "技术介绍",
+          "description": "包结构、Manager-Based / Direct"
+        },
+        {
+          "path": "issac_lab/基本使用流程.md",
+          "title": "基本使用流程",
+          "description": "环境、训练、Mimic 数据管线"
+        },
+        {
+          "path": "issac_lab/训练流程.md",
+          "title": "训练流程",
+          "description": "RSL-RL 训练与 checkpoint"
+        },
+        {
+          "path": "issac_lab/任务基本介绍.md",
+          "title": "任务基本介绍",
+          "description": "14 个任务与奖励配置索引"
+        }
+      ]
+    }
+  ]
+}

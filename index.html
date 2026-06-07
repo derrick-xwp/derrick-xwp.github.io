@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Xing's Group</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <a href="#content" class="skip-link lang-zh">跳至主内容</a>
+  <a href="#content" class="skip-link lang-zhtw" hidden>跳至主內容</a>
+  <a href="#content" class="skip-link lang-en" hidden>Skip to content</a>
+  <a href="#content" class="skip-link lang-ja" hidden>メインへ</a>
+  <a href="#content" class="skip-link lang-ko" hidden>본문으로</a>
+  <a href="#content" class="skip-link lang-th" hidden>ไปเนื้อหา</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="https://www.zju.edu.cn" target="_blank" rel="noopener" class="header-zju-logo" title="Zhejiang University"><img src="zju-logo.png" alt="Zhejiang University"></a>
+        <a href="./" class="nav-center-name" id="nav-center-name">Xing's Group</a>
+      </div>
+      <div class="header-right">
+        <nav class="main-nav" aria-label="Main navigation" id="main-nav"></nav>
+        <div class="lang-switcher" role="group" aria-label="Language">
+          <select id="lang-select" class="lang-select" aria-label="Language">
+            <option value="zh">中文</option>
+            <option value="zhtw">繁體</option>
+            <option value="en">EN</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+            <option value="th">ไทย</option>
+          </select>
+        </div>
+      </div>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <!-- 手机端：快速进入下一栏目的可点击按钮 -->
+  <nav class="quick-nav" id="quick-nav" aria-label="Quick jump to section"></nav>
+
+  <main id="content">
+    <section class="hero" aria-label="Home">
+      <div class="hero-bg" role="img" aria-label="Background image"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-inner">
+        <h1 id="hero-title">Xing's Group</h1>
+        <p class="hero-subtitle" id="hero-subtitle"></p>
+        <p class="hero-desc" id="hero-desc"></p>
+        <p class="hero-pi" id="hero-pi"></p>
+        <a href="#news" class="btn btn-primary" id="hero-cta"></a>
+      </div>
+    </section>
+
+    <section id="news" class="section">
+      <div class="container">
+        <h2 id="news-title"></h2>
+        <div class="news-list" id="news-list"></div>
+      </div>
+    </section>
+
+    <section id="about" class="section section-about-rich">
+      <div class="container">
+        <h2 id="about-title"></h2>
+        <div class="about-content" id="about-content"></div>
+      </div>
+    </section>
+
+    <section id="pi-info" class="section section-pi-profile">
+      <div class="container">
+        <div class="highlights-content" id="pi-detail-content"></div>
+      </div>
+    </section>
+
+    <section id="research" class="section section-research-topology">
+      <div class="container">
+        <h2 id="research-title"></h2>
+        <p class="research-topology-intro" id="research-topology-intro"></p>
+      </div>
+      <div class="research-topology-frame-outer">
+        <iframe id="research-topology-iframe" class="research-topology-iframe" src="agent-trust-governance.html?embed=1&lang=zh" title="" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </section>
+
+    <section id="people" class="section">
+      <div class="container">
+        <h2 id="people-title"></h2>
+        <h3 class="subsec" id="leaders-title"></h3>
+        <div class="people-grid" id="leaders-list"></div>
+        <h3 class="subsec" id="postdocs-title"></h3>
+        <div class="people-grid people-subgrid" id="postdocs-list"></div>
+        <h3 class="subsec" id="scholars-title"></h3>
+        <div class="people-grid people-subgrid" id="scholars-list"></div>
+        <h3 class="subsec" id="alumni-title"></h3>
+        <div class="people-grid people-subgrid" id="alumni-list"></div>
+        <h3 class="subsec" id="collaborators-title"></h3>
+        <div class="people-grid people-subgrid" id="collaborators-list"></div>
+      </div>
+    </section>
+
+    <section id="publications" class="section">
+      <div class="container">
+        <h2 id="pub-title"></h2>
+        <h3 class="subsec" id="pub-journal-label"></h3>
+        <ol class="papers-list" id="papers-journal"></ol>
+        <h3 class="subsec" id="pub-conf-label"></h3>
+        <ol class="papers-list" id="papers-conf"></ol>
+        <h3 class="subsec" id="pub-preprint-label"></h3>
+        <ol class="papers-list" id="papers-preprints"></ol>
+      </div>
+    </section>
+
+    <section id="patents" class="section">
+      <div class="container">
+        <h2 id="patents-title"></h2>
+        <div id="patents-content"></div>
+      </div>
+    </section>
+
+    <section id="gallery" class="section">
+      <div class="container">
+        <h2 id="gallery-title"></h2>
+        <div class="gallery-grid" id="gallery-content"></div>
+      </div>
+    </section>
+
+    <!-- Lightbox for image viewing -->
+    <div class="lightbox" id="lightbox">
+      <span class="lightbox-close" id="lightbox-close">&times;</span>
+      <img id="lightbox-img" src="" alt="Gallery image">
+    </div>
+  </main>
+
+  <footer id="contact" class="site-footer">
+    <div class="container">
+      <div class="footer-info">
+        <p><strong id="footer-center-name">Xing's Group</strong></p>
+        <p id="footer-affiliation"></p>
+        <p id="footer-location">Hangzhou · China</p>
+        <p id="footer-contact-label"></p>
+      </div>
+      <p class="copyright">© 2025 <span id="copyright-center-name">Xing's Group</span></p>
+    </div>
+  </footer>
+
+  <script src="site-paths.js"></script>
+  <script src="content.js"></script>
+  <script src="papers.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

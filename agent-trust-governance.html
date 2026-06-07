@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>智能体跨层风险传播与三层可信治理体系 | 浙江大学滨江研究院数智融合研究中心</title>
+  <script src="topology-i18n.js"></script>
+  <style>
+    :root {
+      --bg-deep: #050814;
+      --cy: #00e5ff;
+      --pu: #bf00ff;
+      --gn: #00ffa3;
+      --rd: #ff3366;
+      --amb: #7ecbff;
+      --text: #e8f4ff;
+      --text-dim: #8ba3c4;
+      --panel: rgba(6, 14, 32, 0.92);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100%;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 17px;
+      color: var(--text);
+      background: radial-gradient(ellipse 100% 70% at 50% 0%, #0c1a3d 0%, var(--bg-deep) 50%, #020308 100%);
+      overflow-x: auto;
+    }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.65;
+      background-image:
+        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.35) 50%, transparent 51%),
+        radial-gradient(1px 1px at 78% 42%, rgba(0,229,255,0.35) 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 44% 76%, rgba(191,0,255,0.3) 50%, transparent 51%);
+      animation: twinkle 10s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      to { opacity: 1; filter: brightness(1.12); }
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1720px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+    header h1 {
+      font-size: clamp(1.35rem, 3.2vw, 2.15rem);
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      background: linear-gradient(92deg, var(--cy), var(--pu), var(--gn));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    header .sub {
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--text-dim);
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.25rem 2rem;
+      margin: 1rem 0 1.25rem;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+    .legend i {
+      width: 22px;
+      height: 3px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .legend .l-risk { background: linear-gradient(90deg, transparent, var(--rd)); box-shadow: 0 0 8px var(--rd); }
+    .legend .l-gov { background: linear-gradient(90deg, transparent, var(--cy)); box-shadow: 0 0 6px var(--cy); }
+    .legend .l-data { width: 10px; height: 10px; border-radius: 50%; background: var(--gn); box-shadow: 0 0 8px var(--gn); }
+    .legend .l-future {
+      width: 22px;
+      height: 3px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #ffc857, #ff9f1c);
+      box-shadow: 0 0 10px rgba(255, 200, 87, 0.55);
+    }
+
+    .mega-wrap {
+      position: relative;
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(0,229,255,0.22);
+      box-shadow:
+        0 0 40px rgba(0,229,255,0.08),
+        inset 0 0 80px rgba(191,0,255,0.04);
+      background: rgba(4, 10, 24, 0.55);
+      overflow: visible;
+    }
+
+    .mega-wrap svg.graph-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      vertical-align: top;
+    }
+
+    /* 论文徽章 */
+    .paper-badge-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      z-index: 1;
+    }
+    /* 悬停时抬升整枚胶囊；脚本会将 foreignObject 移到图层末尾以越过其它 SVG 兄弟 */
+    .paper-badge-wrap:hover { z-index: 2147483647; }
+
+    .axis-paper-block {
+      box-sizing: border-box;
+      flex: 1 1 auto;
+      width: 100%;
+      height: 100%;
+      padding: 8px 10px;
+      font-size: 12px;
+      line-height: 1.38;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #c8f0ff;
+      background: rgba(4, 14, 32, 0.94);
+      border: 1px solid rgba(0, 229, 255, 0.42);
+      border-radius: 10px;
+      cursor: default;
+      overflow: visible;
+      word-break: break-word;
+      hyphens: auto;
+      box-shadow: 0 0 8px rgba(0, 229, 255, 0.12);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .axis-paper-block:hover {
+      border-color: rgba(191, 0, 255, 0.75);
+      box-shadow: 0 0 14px rgba(191, 0, 255, 0.22);
+      transform: translateY(-0.5px);
+    }
+    .axis-paper-block .pv {
+      color: #5dffcb;
+      font-weight: 700;
+      font-size: 10px;
+      display: block;
+      margin-bottom: 2px;
+      letter-spacing: 0.02em;
+    }
+    .axis-paper-block .paper-short {
+      font-weight: 600;
+      display: block;
+    }
+
+    .paper-tooltip {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: calc(100% + 6px);
+      z-index: 2147483647;
+      min-width: min(360px, 72vw);
+      max-width: min(400px, 86vw);
+      padding: 10px 14px;
+      font-size: 12px;
+      line-height: 1.65;
+      font-weight: 500;
+      color: #eaf6ff;
+      background: rgba(8, 18, 42, 0.97);
+      border: 1px solid rgba(0, 229, 255, 0.45);
+      border-radius: 12px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(191, 0, 255, 0.15);
+      white-space: pre-wrap;
+      pointer-events: none;
+    }
+    .paper-badge-wrap:hover .paper-tooltip {
+      display: block;
+    }
+    .axis-paper-block.layer2 { border-color: rgba(191, 0, 255, 0.42); color: #f0e6ff; }
+    .axis-paper-block.layer2 .pv { color: #e9b8ff; }
+    .axis-paper-block.layer3 { border-color: rgba(0, 255, 163, 0.42); color: #e4fff4; }
+    .axis-paper-block.layer3 .pv { color: #7dffc8; }
+    .axis-paper-block.layer-l4 { border-color: rgba(255, 170, 90, 0.48); color: #fff4e8; background: rgba(28, 18, 8, 0.94); box-shadow: 0 0 10px rgba(255, 140, 60, 0.12); }
+    .axis-paper-block.layer-l4 .pv { color: #ffc266; }
+
+    /* 嵌入主页 iframe：与主页 body 同款多层渐变，视觉一体；禁止滚动条 */
+    html.topology-embed {
+      overflow: hidden;
+      max-width: 100%;
+      background-color: #050814;
+      background-image:
+        radial-gradient(ellipse 100% 70% at 50% 0%, #0c1a3d 0%, transparent 58%),
+        radial-gradient(ellipse 90% 50% at 92% 22%, rgba(191, 0, 255, 0.055), transparent 52%),
+        radial-gradient(ellipse 85% 48% at 8% 32%, rgba(0, 229, 255, 0.045), transparent 50%),
+        linear-gradient(180deg, #050814 0%, #020308 100%);
+    }
+
+    body.topology-embed {
+      min-height: 0;
+      overflow: hidden;
+      background-color: transparent;
+      background-image: none;
+    }
+    body.topology-embed .stars { display: none; }
+    body.topology-embed header,
+    body.topology-embed .legend { display: none; }
+    body.topology-embed .page {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+    body.topology-embed .mega-wrap {
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      background: transparent;
+    }
+    body.topology-embed .axis-paper-block {
+      font-size: 13px;
+      line-height: 1.4;
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+    body.topology-embed .axis-paper-block .pv {
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+    body.topology-embed .paper-tooltip {
+      font-size: 13px;
+      line-height: 1.72;
+      padding: 12px 16px;
+      max-width: min(420px, 90vw);
+    }
+  </style>
+</head>
+<body>
+  <script>
+    (function () {
+      if (/[?&]embed=1(?:&|$)/.test(location.search)) {
+        document.documentElement.classList.add('topology-embed');
+        document.body.classList.add('topology-embed');
+      }
+    })();
+  </script>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="page">
+    <header>
+      <h1 data-i18n="hdrTitle">智能体跨层风险传播与三层可信治理体系（技术路线图谱）</h1>
+      <p class="sub" data-i18n="hdrSub">浙江大学滨江研究院 · 数智融合研究中心（IFRC）— 宽轴带内嵌论文标题与风险阶段同一传导泳道</p>
+    </header>
+
+    <div class="legend" aria-hidden="true">
+      <span><i class="l-risk"></i> <span data-i18n="legRisk">多轴线风险前向（每层并行传导）</span></span>
+      <span><i class="l-gov"></i> <span data-i18n="legGov">治理反馈 / 证据上行</span></span>
+      <span><i class="l-data"></i> <span data-i18n="legData">论文标题嵌入轴线泳道（悬停看全文）</span></span>
+      <span><i class="l-future"></i> <span data-i18n="legFuture">金色描边与 ★2026–2030：标示规划侧重（L1/L2 右上，L3 底部居中；悬停可看概要）</span></span>
+      <span><i class="l-data" style="box-shadow: 0 0 10px rgba(255,160,80,0.55); background: linear-gradient(135deg, rgba(255,180,100,0.85), rgba(0,180,200,0.45));"></i> <span data-i18n="legL4">L4 具身环境层：三维重建 / 神经渲染三轴谱系（与 L3 连线）</span></span>
+    </div>
+
+    <div class="mega-wrap" id="mega">
+      <svg class="graph-svg" viewBox="0 0 1680 2980" xmlns="http://www.w3.org/2000/svg" aria-label="跨层技术路线图">
+        <defs>
+          <linearGradient id="gFutureStroke" x1="0%" y1="0%" x2="100%" y2="50%">
+            <stop offset="0%" stop-color="#ffc857"/>
+            <stop offset="45%" stop-color="#ff9f1c"/>
+            <stop offset="100%" stop-color="#ffd175"/>
+          </linearGradient>
+          <linearGradient id="gRisk" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ff3366" stop-opacity="0"/>
+            <stop offset="15%" stop-color="#ff3366" stop-opacity="0.85"/>
+            <stop offset="85%" stop-color="#ff3366" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#ff3366" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="gBeam" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#ffffff" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+          <filter id="glowCyan" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <marker id="arrRisk" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#ff3366"/>
+          </marker>
+          <marker id="arrGov" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L7,3.5 L0,7 Z" fill="#00e5ff"/>
+          </marker>
+        </defs>
+
+        <g opacity="0.08" stroke="#00e5ff" stroke-width="0.5">
+          <path d="M0,140 H1680 M0,560 H1680 M0,1020 H1680 M0,1480 H1680 M0,1920 H1680 M0,2280 H1680 M0,2580 H1680 M0,2880 H1680 M0,2980 H1680"/>
+          <path d="M840,0 V2350"/>
+        </g>
+
+        <!-- 顶层行业应用 -->
+        <g transform="translate(240, -6)">
+          <rect x="60" y="24" width="240" height="82" rx="14" fill="rgba(8,22,48,0.85)" stroke="#00e5ff" stroke-width="1.2" filter="url(#glowCyan)"/>
+          <text x="180" y="56" text-anchor="middle" fill="#cff8ff" font-size="17" font-weight="800" data-i18n="indPowT">电力基础设施</text>
+          <text x="180" y="84" text-anchor="middle" fill="#8ba3c4" font-size="13" data-i18n="indPowS">调度 · 工控语义 · 高可信推理</text>
+
+          <rect x="340" y="24" width="240" height="82" rx="14" fill="rgba(8,22,48,0.85)" stroke="#bf00ff" stroke-width="1.2"/>
+          <text x="460" y="56" text-anchor="middle" fill="#f0e0ff" font-size="17" font-weight="800" data-i18n="indFinT">金融决策交易</text>
+          <text x="460" y="84" text-anchor="middle" fill="#8ba3c4" font-size="13" data-i18n="indFinS">合规条款 · 实时决策 · 证据链</text>
+
+          <rect x="620" y="24" width="240" height="82" rx="14" fill="rgba(8,22,48,0.85)" stroke="#00ffa3" stroke-width="1.2"/>
+          <text x="740" y="56" text-anchor="middle" fill="#d4ffe8" font-size="17" font-weight="800" data-i18n="indEmbT">具身智能机器人</text>
+          <text x="740" y="84" text-anchor="middle" fill="#8ba3c4" font-size="13" data-i18n="indEmbS">感知–规划–执行闭环</text>
+
+          <rect x="900" y="24" width="240" height="82" rx="14" fill="rgba(8,22,48,0.85)" stroke="#00e5ff" stroke-width="1.2"/>
+          <text x="1020" y="56" text-anchor="middle" fill="#cff8ff" font-size="17" font-weight="800" data-i18n="indPubT">泛政务服务</text>
+          <text x="1020" y="84" text-anchor="middle" fill="#8ba3c4" font-size="13" data-i18n="indPubS">多智能体协同 · 民众交互</text>
+
+          <path d="M180,94 Q180,114 205,132 L360,158" fill="none" stroke="#7ecbff" stroke-width="1.2" stroke-dasharray="4 5" opacity="0.7"/>
+          <path d="M460,94 Q460,116 425,138 L425,158" fill="none" stroke="#7ecbff" stroke-width="1.2" stroke-dasharray="4 5" opacity="0.7"/>
+          <path d="M740,94 Q740,116 605,146 L605,158" fill="none" stroke="#7ecbff" stroke-width="1.2" stroke-dasharray="4 5" opacity="0.7"/>
+          <path d="M1020,94 Q1020,114 885,142 L885,158" fill="none" stroke="#7ecbff" stroke-width="1.2" stroke-dasharray="4 5" opacity="0.7"/>
+        </g>
+
+        <!-- 外部扰动源 -->
+        <g transform="translate(332, 104)">
+          <rect x="0" y="38" width="248" height="44" rx="8" fill="rgba(28,32,48,0.92)" stroke="#64748b"/>
+          <text x="124" y="64" text-anchor="middle" fill="#e2e8f0" font-size="10.5" data-i18n="thr1">身份凭据伪造与跨域信任注入</text>
+          <rect x="256" y="38" width="248" height="44" rx="8" fill="rgba(28,32,48,0.92)" stroke="#64748b"/>
+          <text x="380" y="64" text-anchor="middle" fill="#e2e8f0" font-size="11" data-i18n="thr2">投毒 MCP 工具</text>
+          <rect x="512" y="38" width="248" height="44" rx="8" fill="rgba(28,32,48,0.92)" stroke="#64748b"/>
+          <text x="636" y="64" text-anchor="middle" fill="#e2e8f0" font-size="11" data-i18n="thr3">对抗性语言输入</text>
+          <rect x="768" y="38" width="248" height="44" rx="8" fill="rgba(28,32,48,0.92)" stroke="#64748b"/>
+          <text x="892" y="64" text-anchor="middle" fill="#e2e8f0" font-size="11" data-i18n="thr4">模糊高危指令</text>
+        </g>
+
+        <path d="M456,186 L456,342" fill="none" stroke="#ff665c" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.85"/>
+        <path d="M712,186 L712,342" fill="none" stroke="#ff665c" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.85"/>
+        <path d="M968,186 L968,342" fill="none" stroke="#ff665c" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.85"/>
+        <path d="M1224,186 L1224,342" fill="none" stroke="#ff665c" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.85"/>
+
+        <g transform="translate(0, 124)">
+        <!-- ========== Layer 1 band ========== -->
+        <rect x="36" y="178" width="1608" height="588" rx="16" fill="rgba(6,16,38,0.5)" stroke="rgba(0,229,255,0.28)"/>
+        <rect x="36" y="178" width="1608" height="588" rx="16" fill="none" stroke="url(#gFutureStroke)" stroke-width="2" opacity="0.92">
+          <animate attributeName="opacity" values="0.72;1;0.72" dur="4.5s" repeatCount="indefinite"/>
+        </rect>
+        <text x="840" y="202" text-anchor="middle" fill="#00e5ff" font-size="21" font-weight="900" data-i18n="l1Tit">L1 认知决策层</text>
+        <text x="840" y="238" text-anchor="middle" fill="#a9c4e0" font-size="15.5" data-i18n="l1Sub">语义空间诱导防御与意图对齐约束 · 潜空间事实偏离抑制 · 内生表征与安全对齐</text>
+        <g pointer-events="all">
+          <title data-i18n="l1Tip">2026–2030 规划侧重（认知可信）：推理与测试时 RL 安全（TTRL）、RAG 白盒忠实度与记忆治理、机械可解释性（SAE）、机器遗忘、长期记忆投毒与世界模型表征风险（方向 21.1）等。</title>
+          <text x="1628" y="196" text-anchor="end" fill="#ffc857" font-size="15" font-weight="900">★ 2026–2030</text>
+          <text x="1628" y="224" text-anchor="end" fill="#d4b87a" font-size="13.5" font-weight="600" data-i18n="l1P2">认知可信 · SafeTTRL / RAG·记忆 / SAE · 21.1</text>
+        </g>
+
+        <!-- L1 中央 -->
+        <g id="l1-risk-axes">
+          <rect x="52" y="256" width="1576" height="484" rx="12" fill="rgba(45,0,25,0.18)" stroke="rgba(255,51,102,0.35)"/>
+          <text x="840" y="278" text-anchor="middle" fill="#ff8899" font-size="16" font-weight="900" data-i18n="l1Hub">L1 · 三轴线风险传导</text>
+          <!-- 轴 α -->
+          <g>
+            <rect x="52" y="282" width="525" height="444" rx="8" fill="rgba(80,0,40,0.12)" stroke="rgba(255,51,102,0.2)"/>
+            <text x="314.5" y="302" text-anchor="middle" fill="#ff6b8a" font-size="15" font-weight="800" data-i18n="l1aT">轴α 指令解析与意图对齐空间</text>
+            <rect x="66" y="316" width="10" height="254" rx="3" fill="url(#gRisk)" opacity="0.75"/>
+            <rect x="62" y="326" width="18" height="34" fill="url(#gBeam)" opacity="0.28"><animate attributeName="y" values="326;522;326" dur="2.8s" repeatCount="indefinite"/></rect>
+            <circle cx="71" cy="356" r="5" fill="#ff3366"/><text x="88" y="360" fill="#ffd0dc" font-size="13" data-i18n="l1a1">对抗提示</text>
+            <circle cx="71" cy="426" r="5" fill="#ff3366"/><text x="88" y="430" fill="#ffd0dc" font-size="13" data-i18n="l1a2">潜意图失真</text>
+            <circle cx="71" cy="496" r="5" fill="#ff3366"/><text x="88" y="500" fill="#ffd0dc" font-size="13" data-i18n="l1a3">解码偏好偏移</text>
+            <circle cx="71" cy="566" r="5" fill="#ff3366"/><text x="88" y="570" fill="#ffb8c8" font-size="13" font-weight="800" data-i18n="l1a4">↓ 工具触发偏见</text>
+          </g>
+          <!-- 轴 β -->
+          <g>
+            <rect x="577" y="282" width="525" height="444" rx="8" fill="rgba(80,30,0,0.1)" stroke="rgba(255,85,80,0.22)"/>
+            <text x="839.5" y="302" text-anchor="middle" fill="#ff8c6b" font-size="14.5" font-weight="800" data-i18n="l1bT">轴β 知识增强中的事实性偏差传播</text>
+            <rect x="591" y="316" width="10" height="254" rx="3" fill="url(#gRisk)" opacity="0.65"/>
+            <rect x="587" y="350" width="18" height="32" fill="url(#gBeam)" opacity="0.26"><animate attributeName="y" values="350;540;350" dur="3.1s" repeatCount="indefinite"/></rect>
+            <circle cx="596" cy="356" r="5" fill="#ff5544"/><text x="613" y="360" fill="#ffd0dc" font-size="13" data-i18n="l1b1">检索噪声</text>
+            <circle cx="596" cy="426" r="5" fill="#ff5544"/><text x="613" y="430" fill="#ffd0dc" font-size="13" data-i18n="l1b2">双路径分歧</text>
+            <circle cx="596" cy="496" r="5" fill="#ff5544"/><text x="613" y="500" fill="#ffd0dc" font-size="13" data-i18n="l1b3">证据断裂</text>
+            <circle cx="596" cy="566" r="5" fill="#ff5544"/><text x="613" y="570" fill="#ffb8c8" font-size="13" font-weight="800" data-i18n="l1b4">↓ 幻觉下行</text>
+          </g>
+          <!-- 轴 γ -->
+          <g>
+            <rect x="1102" y="282" width="526" height="444" rx="8" fill="rgba(80,0,55,0.12)" stroke="rgba(255,51,136,0.22)"/>
+            <text x="1365" y="302" text-anchor="middle" fill="#ff66aa" font-size="15" font-weight="800" data-i18n="l1cT">轴γ 潜空间对抗表征偏移</text>
+            <rect x="1116" y="316" width="10" height="254" rx="3" fill="url(#gRisk)" opacity="0.7"/>
+            <rect x="1112" y="338" width="18" height="36" fill="url(#gBeam)" opacity="0.3"><animate attributeName="y" values="338;532;338" dur="2.5s" repeatCount="indefinite"/></rect>
+            <circle cx="1121" cy="356" r="5" fill="#ff3388"/><text x="1138" y="360" fill="#ffd0dc" font-size="13" data-i18n="l1c1">表征混合</text>
+            <circle cx="1121" cy="426" r="5" fill="#ff3388"/><text x="1138" y="430" fill="#ffd0dc" font-size="13" data-i18n="l1c2">对齐塌陷</text>
+            <circle cx="1121" cy="496" r="5" fill="#ff3388"/><text x="1138" y="500" fill="#ffd0dc" font-size="13" data-i18n="l1c3">token 逸出</text>
+            <circle cx="1121" cy="566" r="5" fill="#ff3388"/><text x="1138" y="570" fill="#ffb8c8" font-size="13" font-weight="800" data-i18n="l1c4">↓ 护栏静默</text>
+          </g>
+        </g>
+
+        <!-- L1→L2 标注（画布居中，收窄宽度） -->
+        <g transform="translate(480, 736)">
+          <rect x="0" y="0" width="720" height="78" rx="10" fill="rgba(50,0,20,0.94)" stroke="#ff3366" stroke-width="1.5"/>
+          <text x="14" y="26" fill="#ffd0dc" font-size="13" font-weight="900" data-i18n="e1a">⚠ 跨层风险演化 #1（多轴汇合 · Cross-layer Risk Evolution）</text>
+          <text x="14" y="46" fill="#ffb8c8" font-size="13" font-weight="600" data-i18n="e1b">轴α/γ：潜空间污染 → MCP 工具抉择失真 · 轴β：错误证据沿上下文注入协议负载</text>
+          <text x="14" y="66" fill="#ff9eb5" font-size="12" data-i18n="e1c">对齐 Gentel：br_intent 下行 → ac_api 之前的语义意图向执行原语的映射阻抗破裂风险</text>
+        </g>
+
+        <!-- L1→L2 弧线 -->
+        <path d="M71,612 C71,652 68,722 68,868" fill="none" stroke="#ff3366" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrRisk)" opacity="0.88"/>
+        <path d="M596,612 C593,652 462,682 462,868" fill="none" stroke="#ff5544" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrRisk)" opacity="0.85"/>
+        <path d="M1121,612 C1118,642 856,682 856,868" fill="none" stroke="#ff3388" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrRisk)" opacity="0.85"/>
+        <path d="M596,612 C600,700 750,750 856,920" fill="none" stroke="#ff5544" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#arrRisk)" opacity="0.7"/>
+        <path d="M52,780 C106,720 158,640 604,575" fill="none" stroke="#00e5ff" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#arrGov)" opacity="0.45"/>
+
+        <!-- ========== Layer 2 band ========== -->
+        <rect x="36" y="840" width="1608" height="538" rx="16" fill="rgba(12,8,40,0.45)" stroke="rgba(191,0,255,0.28)"/>
+        <rect x="36" y="840" width="1608" height="538" rx="16" fill="none" stroke="url(#gFutureStroke)" stroke-width="2" opacity="0.92">
+          <animate attributeName="opacity" values="0.72;1;0.72" dur="4.5s" repeatCount="indefinite" begin="0.6s"/>
+        </rect>
+        <text x="840" y="864" text-anchor="middle" fill="#e8c4ff" font-size="21" font-weight="900" data-i18n="l2Tit">L2 代理集成层</text>
+        <text x="840" y="892" text-anchor="middle" fill="#a9c4e0" font-size="15.5" data-i18n="l2Sub">Model Context Protocol（MCP）· 代理执行原语的安全映射与协议边界加固</text>
+        <g pointer-events="all">
+          <title data-i18n="l2Tip">2026–2030 规划侧重（执行可信）：多模态与跨模态安全、具身语义—物理执行鸿沟、OS 级智能体沙箱与工具最小权限、工具收据与可验证执行、可控世界模型闭环评估与安全预演（方向 21.3）等。</title>
+          <text x="1628" y="858" text-anchor="end" fill="#ffc857" font-size="15" font-weight="900">★ 2026–2030</text>
+          <text x="1628" y="886" text-anchor="end" fill="#d4b87a" font-size="13.5" font-weight="600" data-i18n="l2P2">执行可信 · Runtime Shield / 权限·收据 / 21.3</text>
+        </g>
+
+        <!-- L2 中央 -->
+        <g id="l2-risk-axes">
+          <rect x="52" y="911" width="1576" height="448" rx="12" fill="rgba(40,10,45,0.18)" stroke="rgba(191,0,255,0.35)"/>
+          <text x="840" y="934" text-anchor="middle" fill="#e9b8ff" font-size="16" font-weight="900" data-i18n="l2Hub">L2 · 四轴线风险传导</text>
+          <!-- A -->
+          <g>
+            <rect x="52" y="939" width="394" height="408" rx="8" fill="rgba(60,10,70,0.14)" stroke="rgba(191,0,255,0.22)"/>
+            <text x="249" y="958" text-anchor="middle" fill="#ddaaff" font-size="13.5" font-weight="800" data-i18n="l2aT">轴A 上下文注入协议风险 (MCP Surface)</text>
+            <rect x="64" y="968" width="8" height="318" rx="2" fill="url(#gRisk)" opacity="0.62"/>
+            <rect x="61" y="984" width="14" height="30" fill="url(#gBeam)" opacity="0.22"><animate attributeName="y" values="984;1166;984" dur="2.7s" repeatCount="indefinite"/></rect>
+            <circle cx="68" cy="1016" r="5" fill="#ff3366"/><text x="84" y="1020" fill="#f5e0ff" font-size="13" data-i18n="l2a1">伪造 tools</text>
+            <circle cx="68" cy="1094" r="5" fill="#ff3366"/><text x="84" y="1098" fill="#f5e0ff" font-size="13" data-i18n="l2a2">语义穿透</text>
+            <circle cx="68" cy="1172" r="5" fill="#ff3366"/><text x="84" y="1176" fill="#f5e0ff" font-size="13" data-i18n="l2a3">JSON 污染</text>
+            <circle cx="68" cy="1316" r="5" fill="#ff3366"/><text x="84" y="1320" fill="#ffc8dc" font-size="13" font-weight="800" data-i18n="l2a4">→ ac_api 信任根失效</text>
+          </g>
+          <!-- B -->
+          <g>
+            <rect x="446" y="939" width="394" height="408" rx="8" fill="rgba(60,10,70,0.14)" stroke="rgba(191,0,255,0.22)"/>
+            <text x="643" y="958" text-anchor="middle" fill="#ddaaff" font-size="14" font-weight="800" data-i18n="l2bT">轴B 逻辑隔离与运行时环境安全</text>
+            <rect x="458" y="968" width="8" height="318" rx="2" fill="url(#gRisk)" opacity="0.58"/>
+            <rect x="455" y="1000" width="14" height="28" fill="url(#gBeam)" opacity="0.2"><animate attributeName="y" values="1000;1184;1000" dur="3.2s" repeatCount="indefinite"/></rect>
+            <circle cx="462" cy="1016" r="5" fill="#ff6644"/><text x="478" y="1020" fill="#f5e0ff" font-size="13" data-i18n="l2b1">边界渗漏</text>
+            <circle cx="462" cy="1094" r="5" fill="#ff6644"/><text x="478" y="1098" fill="#f5e0ff" font-size="13" data-i18n="l2b2">上下文泄漏</text>
+            <circle cx="462" cy="1172" r="5" fill="#ff6644"/><text x="478" y="1176" fill="#f5e0ff" font-size="13" data-i18n="l2b3">阻尼机制信任根失效</text>
+            <circle cx="462" cy="1316" r="5" fill="#ff6644"/><text x="478" y="1320" fill="#ffc8dc" font-size="13" font-weight="800" data-i18n="l2b4">→ 私密暴露</text>
+          </g>
+          <!-- C -->
+          <g>
+            <rect x="840" y="939" width="394" height="408" rx="8" fill="rgba(60,10,70,0.14)" stroke="rgba(191,0,255,0.22)"/>
+            <text x="1037" y="958" text-anchor="middle" fill="#ddaaff" font-size="14" font-weight="800" data-i18n="l2cT">轴C 跨域资源请求与 Web 载荷安全</text>
+            <rect x="852" y="968" width="8" height="318" rx="2" fill="url(#gRisk)" opacity="0.6"/>
+            <rect x="849" y="992" width="14" height="32" fill="url(#gBeam)" opacity="0.24"><animate attributeName="y" values="992;1176;992" dur="2.4s" repeatCount="indefinite"/></rect>
+            <circle cx="856" cy="1016" r="5" fill="#ff4488"/><text x="872" y="1020" fill="#f5e0ff" font-size="13" data-i18n="l2c1">恶意页面</text>
+            <circle cx="856" cy="1094" r="5" fill="#ff4488"/><text x="872" y="1098" fill="#f5e0ff" font-size="13" data-i18n="l2c2">链式扩张</text>
+            <circle cx="856" cy="1172" r="5" fill="#ff4488"/><text x="872" y="1176" fill="#f5e0ff" font-size="13" data-i18n="l2c3">欺诈载荷</text>
+            <circle cx="856" cy="1316" r="5" fill="#ff4488"/><text x="872" y="1320" fill="#ffc8dc" font-size="13" font-weight="800" data-i18n="l2c4">→ Web 洪水</text>
+          </g>
+          <!-- D -->
+          <g>
+            <rect x="1234" y="939" width="394" height="408" rx="8" fill="rgba(60,10,70,0.14)" stroke="rgba(191,0,255,0.22)"/>
+            <text x="1431" y="958" text-anchor="middle" fill="#ddaaff" font-size="13.5" font-weight="800" data-i18n="l2dT">轴D 多代理协同中的语义一致性风险</text>
+            <rect x="1246" y="968" width="8" height="318" rx="2" fill="url(#gRisk)" opacity="0.64"/>
+            <rect x="1243" y="996" width="14" height="34" fill="url(#gBeam)" opacity="0.25"><animate attributeName="y" values="996;1180;996" dur="2.9s" repeatCount="indefinite"/></rect>
+            <circle cx="1250" cy="1016" r="5" fill="#ff3366"/><text x="1266" y="1020" fill="#f5e0ff" font-size="13" data-i18n="l2d1">消息欺诈</text>
+            <circle cx="1250" cy="1094" r="5" fill="#ff3366"/><text x="1266" y="1098" fill="#f5e0ff" font-size="13" data-i18n="l2d2">权限不符</text>
+            <circle cx="1250" cy="1172" r="5" fill="#ff3366"/><text x="1266" y="1176" fill="#f5e0ff" font-size="13" data-i18n="l2d3">OS 调用</text>
+            <circle cx="1250" cy="1316" r="5" fill="#ff3366"/><text x="1266" y="1320" fill="#ffc8dc" font-size="13" font-weight="800" data-i18n="l2d4">→ 级联信任根失效</text>
+          </g>
+        </g>
+
+        <!-- L2→L3 标注（画布居中，收窄宽度） -->
+        <g transform="translate(480, 1366)">
+          <rect x="0" y="0" width="720" height="78" rx="10" fill="rgba(50,0,20,0.94)" stroke="#ff3366" stroke-width="1.5"/>
+          <text x="14" y="26" fill="#ffd0dc" font-size="13" font-weight="900" data-i18n="e2a">⚠ 跨层风险演化 #2（执行面前向 · Cross-layer Risk Evolution）</text>
+          <text x="14" y="46" fill="#ffb8c8" font-size="13" font-weight="600" data-i18n="e2b">轴A/D：权限爬升 + API 洪泛 · 轴C：URL 牵引的多跳工具 · 轴B：沙箱穿透导致私密上下文进入规划</text>
+          <text x="14" y="66" fill="#ff9eb5" font-size="12" data-i18n="e2c">对齐 Gentel：gw_mcp / gw_sandbox → ac_api / ac_rollback → 安全违例侧（权限外泄 / 物理破坏）</text>
+        </g>
+
+        <path d="M68,1254 C64,1364 69,1454 71,1546" fill="none" stroke="#ff3366" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrRisk)" opacity="0.82"/>
+        <path d="M462,1254 C458,1364 464,1474 596,1556" fill="none" stroke="#ff6644" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrRisk)" opacity="0.8"/>
+        <path d="M856,1254 C860,1364 900,1454 1121,1560" fill="none" stroke="#ff4488" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrRisk)" opacity="0.8"/>
+        <path d="M1250,1254 C1262,1374 1230,1474 1121,1566" fill="none" stroke="#ff3366" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrRisk)" opacity="0.8"/>
+        <path d="M1250,1254 C1250,1400 900,1480 71,1550" fill="none" stroke="#bf00ff" stroke-width="1.3" stroke-dasharray="5 3" marker-end="url(#arrRisk)" opacity="0.75"/>
+        <path d="M52,1600 C120,1500 200,1350 462,1300" fill="none" stroke="#00e5ff" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#arrGov)" opacity="0.48"/>
+
+        <!-- ========== Layer 3 band（加高底部留白，避免泳道与规划角标被 viewBox 裁切） -->
+        <rect x="36" y="1476" width="1608" height="736" rx="16" fill="rgba(6,28,22,0.4)" stroke="rgba(0,255,163,0.28)"/>
+        <rect x="36" y="1476" width="1608" height="736" rx="16" fill="none" stroke="url(#gFutureStroke)" stroke-width="2" opacity="0.92">
+          <animate attributeName="opacity" values="0.72;1;0.72" dur="4.5s" repeatCount="indefinite" begin="1.2s"/>
+        </rect>
+        <text x="840" y="1501" text-anchor="middle" fill="#00ffa3" font-size="21" font-weight="900" data-i18n="l3Tit">L3 基础设施层</text>
+        <text x="840" y="1529" text-anchor="middle" fill="#a9c4e0" font-size="15.5" data-i18n="l3Sub">去中心化身份 · 确定性实体确权与供应链溯源底座 · 指纹/水印与供应链完整性</text>
+        <g pointer-events="all">
+          <title data-i18n="l3Tip">2026–2030 规划侧重：身份可信（DID/VC、Agent Passport）、模型指纹与供应链溯源；数学可信（形式化验证、隐私保护推理）；生态与评测可信（多智能体信任与共谋治理、HAAF/全息评测、实验平台）；可认证世界模型安全（21.4）。</title>
+          <text x="840" y="2158" text-anchor="middle" fill="#ffc857" font-size="15" font-weight="900">★ 2026–2030</text>
+          <text x="840" y="2188" text-anchor="middle" fill="#d4b87a" font-size="13.5" font-weight="600" data-i18n="l3P2">身份·数学可信 · Passport / 指纹 · 评测生态 · 21.4</text>
+        </g>
+
+        <!-- L3 中央 -->
+        <g id="l3-risk-axes">
+          <rect x="52" y="1544" width="1576" height="582" rx="12" fill="rgba(0,35,28,0.2)" stroke="rgba(0,255,163,0.32)"/>
+          <text x="840" y="1568" text-anchor="middle" fill="#7dffc8" font-size="16" font-weight="900" data-i18n="l3Hub">L3 · 三轴线风险传导</text>
+          <!-- 轴Ⅰ -->
+          <g>
+            <rect x="52" y="1572" width="525" height="544" rx="8" fill="rgba(0,45,35,0.18)" stroke="rgba(0,255,163,0.22)"/>
+            <text x="314.5" y="1594" text-anchor="middle" fill="#00ffa3" font-size="14.5" font-weight="800" data-i18n="l3iT">轴Ⅰ 去中心化身份 (DID) 与归因根</text>
+            <rect x="66" y="1606" width="10" height="298" rx="3" fill="url(#gRisk)" opacity="0.55"/>
+            <rect x="62" y="1628" width="18" height="38" fill="url(#gBeam)" opacity="0.22"><animate attributeName="y" values="1628;1866;1628" dur="3.4s" repeatCount="indefinite"/></rect>
+            <circle cx="71" cy="1646" r="5" fill="#ff3366"/><text x="88" y="1650" fill="#d4ffe8" font-size="13" data-i18n="l3i1">伪造 DID</text>
+            <circle cx="71" cy="1730" r="5" fill="#ff3366"/><text x="88" y="1734" fill="#d4ffe8" font-size="13" data-i18n="l3i2">P2P 越权干预</text>
+            <circle cx="71" cy="1814" r="5" fill="#ff3366"/><text x="88" y="1818" fill="#d4ffe8" font-size="13" data-i18n="l3i3">图谱一致性信任根失效</text>
+            <circle cx="71" cy="1898" r="5" fill="#ff3366"/><text x="88" y="1902" fill="#ffc8dc" font-size="13" font-weight="800" data-i18n="l3i4">安全违例：信任根失效</text>
+          </g>
+          <!-- 轴Ⅱ -->
+          <g>
+            <rect x="577" y="1572" width="525" height="544" rx="8" fill="rgba(0,45,35,0.18)" stroke="rgba(0,255,163,0.22)"/>
+            <text x="839.5" y="1594" text-anchor="middle" fill="#00ffa3" font-size="14" font-weight="800" data-i18n="l3iiT">轴Ⅱ 模型资产确权与供应链完整性</text>
+            <rect x="591" y="1606" width="10" height="298" rx="3" fill="url(#gRisk)" opacity="0.52"/>
+            <rect x="587" y="1644" width="18" height="36" fill="url(#gBeam)" opacity="0.2"><animate attributeName="y" values="1644;1886;1644" dur="2.8s" repeatCount="indefinite"/></rect>
+            <circle cx="596" cy="1646" r="5" fill="#ff5544"/><text x="613" y="1650" fill="#d4ffe8" font-size="13" data-i18n="l3ii1">窃取/迁移</text>
+            <circle cx="596" cy="1730" r="5" fill="#ff5544"/><text x="613" y="1734" fill="#d4ffe8" font-size="13" data-i18n="l3ii2">后门关联</text>
+            <circle cx="596" cy="1814" r="5" fill="#ff5544"/><text x="613" y="1818" fill="#d4ffe8" font-size="13" data-i18n="l3ii3">对抗擦除</text>
+            <circle cx="596" cy="1898" r="5" fill="#ff5544"/><text x="613" y="1902" fill="#ffc8dc" font-size="13" font-weight="800" data-i18n="l3ii4">安全违例：确权信任根失效</text>
+          </g>
+          <!-- 轴Ⅲ -->
+          <g>
+            <rect x="1102" y="1572" width="526" height="544" rx="8" fill="rgba(0,45,35,0.18)" stroke="rgba(0,255,163,0.22)"/>
+            <text x="1365" y="1594" text-anchor="middle" fill="#00ffa3" font-size="13.5" font-weight="800" data-i18n="l3iiiT">轴Ⅲ 异构工具编排的统计安全性监测</text>
+            <rect x="1116" y="1606" width="10" height="298" rx="3" fill="url(#gRisk)" opacity="0.58"/>
+            <rect x="1112" y="1632" width="18" height="36" fill="url(#gBeam)" opacity="0.24"><animate attributeName="y" values="1632;1886;1632" dur="3s" repeatCount="indefinite"/></rect>
+            <circle cx="1121" cy="1646" r="5" fill="#ff3388"/><text x="1138" y="1650" fill="#d4ffe8" font-size="13" data-i18n="l3iii1">混合权重扰动</text>
+            <circle cx="1121" cy="1730" r="5" fill="#ff3388"/><text x="1138" y="1734" fill="#d4ffe8" font-size="13" data-i18n="l3iii2">统计污染</text>
+            <circle cx="1121" cy="1814" r="5" fill="#ff3388"/><text x="1138" y="1818" fill="#d4ffe8" font-size="13" data-i18n="l3iii3">路由越权干预</text>
+            <circle cx="1121" cy="1898" r="5" fill="#ff3388"/><text x="1138" y="1902" fill="#ffc8dc" font-size="13" font-weight="800" data-i18n="l3iii4">安全违例：调用畸变</text>
+          </g>
+        </g>
+
+        <!-- L3 → L4：数字底座 → 具身世界表征（与 L3 三轴对齐的下传连线） -->
+        <path d="M71,2128 C71,2168 71,2238 71,2308" fill="none" stroke="#00ffa3" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrRisk)" opacity="0.78"/>
+        <path d="M596,2128 C596,2168 596,2238 596,2308" fill="none" stroke="#ffaa44" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrRisk)" opacity="0.78"/>
+        <path d="M1121,2128 C1121,2168 1121,2238 1121,2308" fill="none" stroke="#44ddff" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrRisk)" opacity="0.78"/>
+        <path d="M71,2128 C420,2240 840,2288 1121,2315" fill="none" stroke="#00e5ff" stroke-width="1.15" stroke-dasharray="4 4" marker-end="url(#arrGov)" opacity="0.42"/>
+        <path d="M1121,2128 C780,2240 380,2290 71,2315" fill="none" stroke="#00e5ff" stroke-width="1.15" stroke-dasharray="4 4" marker-end="url(#arrGov)" opacity="0.38"/>
+
+        <!-- ========== Layer 4：具身环境层（神经渲染 · 三维重建 · 与智能体执行面相衔接） ========== -->
+        <rect x="36" y="2218" width="1608" height="628" rx="16" fill="rgba(40,22,8,0.42)" stroke="rgba(255,160,80,0.35)"/>
+        <rect x="36" y="2218" width="1608" height="628" rx="16" fill="none" stroke="url(#gFutureStroke)" stroke-width="2" opacity="0.72">
+          <animate attributeName="opacity" values="0.55;0.88;0.55" dur="5s" repeatCount="indefinite" begin="1.5s"/>
+        </rect>
+        <text x="840" y="2250" text-anchor="middle" fill="#ffc266" font-size="21" font-weight="900" data-i18n="l4Tit">L4 具身环境层</text>
+        <text x="840" y="2282" text-anchor="middle" fill="#a9c4e0" font-size="15" data-i18n="l4Sub">可观测三维世界表征 · 神经渲染与几何重建 · 支撑感知—规划—执行闭环与世界模型评测</text>
+        <g pointer-events="all">
+          <title data-i18n="l4Tip">与 L3 基础设施衔接：可信传感器 / 模型资产确权延伸至实体场景几何；工具编排下行至仿真与真实环境渲染管线。</title>
+          <text x="1628" y="2244" text-anchor="end" fill="#ffc857" font-size="14" font-weight="900">★ Sim2Real</text>
+          <text x="1628" y="2272" text-anchor="end" fill="#d4b87a" font-size="12.5" font-weight="600" data-i18n="l4P2">世界模型 · 沉浸评测 · 物理一致渲染</text>
+        </g>
+
+        <g id="l4-risk-axes">
+          <rect x="52" y="2302" width="1576" height="528" rx="12" fill="rgba(55,28,8,0.22)" stroke="rgba(255,140,60,0.38)"/>
+          <text x="840" y="2328" text-anchor="middle" fill="#ffcc88" font-size="16" font-weight="900" data-i18n="l4Hub">L4 · 三维重建 / 神经渲染 · 三轴技术谱系</text>
+          <!-- 轴A 几何重建 -->
+          <g>
+            <rect x="52" y="2338" width="525" height="484" rx="8" fill="rgba(70,35,12,0.2)" stroke="rgba(255,140,60,0.28)"/>
+            <text x="314.5" y="2362" text-anchor="middle" fill="#ffb870" font-size="14.5" font-weight="800" data-i18n="l4aT">轴A 几何重建 · 多视角融合 · 物理先验</text>
+            <rect x="66" y="2376" width="10" height="268" rx="3" fill="url(#gRisk)" opacity="0.35"/>
+            <circle cx="71" cy="2410" r="4" fill="#ffaa44"/><text x="88" y="2414" fill="#ffe8cc" font-size="12" data-i18n="l4a1">稀疏 / 稠密深度</text>
+            <circle cx="71" cy="2478" r="4" fill="#ffaa44"/><text x="88" y="2482" fill="#ffe8cc" font-size="12" data-i18n="l4a2">水下介质 · 散射</text>
+            <circle cx="71" cy="2546" r="4" fill="#ffaa44"/><text x="88" y="2550" fill="#ffe8cc" font-size="12" data-i18n="l4a3">张量 / PlenOctree</text>
+            <circle cx="71" cy="2614" r="4" fill="#ff8866"/><text x="88" y="2618" fill="#ffd4c4" font-size="12" font-weight="700" data-i18n="l4a4">↓ 资产级几何确权</text>
+          </g>
+          <!-- 轴B 神经辐射场 -->
+          <g>
+            <rect x="577" y="2338" width="525" height="484" rx="8" fill="rgba(40,50,70,0.18)" stroke="rgba(100,200,255,0.28)"/>
+            <text x="839.5" y="2362" text-anchor="middle" fill="#8fd4ff" font-size="14.5" font-weight="800" data-i18n="l4bT">轴B 神经辐射场 · 动态系数 · 逆渲染</text>
+            <rect x="591" y="2376" width="10" height="268" rx="3" fill="url(#gRisk)" opacity="0.32"/>
+            <circle cx="596" cy="2410" r="4" fill="#66ccff"/><text x="613" y="2414" fill="#dceeff" font-size="12" data-i18n="l4b1">MPI / Tensor RF</text>
+            <circle cx="596" cy="2478" r="4" fill="#66ccff"/><text x="613" y="2482" fill="#dceeff" font-size="12" data-i18n="l4b2">辐射场分解</text>
+            <circle cx="596" cy="2546" r="4" fill="#66ccff"/><text x="613" y="2550" fill="#dceeff" font-size="12" data-i18n="l4b3">材质 · 光照联合</text>
+            <circle cx="596" cy="2614" r="4" fill="#88aaff"/><text x="613" y="2618" fill="#dde8ff" font-size="12" font-weight="700" data-i18n="l4b4">↓ 可微渲染管线</text>
+          </g>
+          <!-- 轴C 新视角合成 -->
+          <g>
+            <rect x="1102" y="2338" width="526" height="484" rx="8" fill="rgba(50,30,55,0.18)" stroke="rgba(200,130,255,0.28)"/>
+            <text x="1365" y="2362" text-anchor="middle" fill="#ddb8ff" font-size="14" font-weight="800" data-i18n="l4cT">轴C 新视角合成 · 扩散 · 光场与沉浸显示</text>
+            <rect x="1116" y="2376" width="10" height="268" rx="3" fill="url(#gRisk)" opacity="0.32"/>
+            <circle cx="1121" cy="2410" r="4" fill="#cc88ff"/><text x="1138" y="2414" fill="#f0e0ff" font-size="12" data-i18n="l4c1">扩散反演 NVS</text>
+            <circle cx="1121" cy="2478" r="4" fill="#cc88ff"/><text x="1138" y="2482" fill="#f0e0ff" font-size="12" data-i18n="l4c2">尺度一致融合</text>
+            <circle cx="1121" cy="2546" r="4" fill="#cc88ff"/><text x="1138" y="2550" fill="#f0e0ff" font-size="12" data-i18n="l4c3">光场合成</text>
+            <circle cx="1121" cy="2614" r="4" fill="#ee99ee"/><text x="1138" y="2618" fill="#ffe8ff" font-size="12" font-weight="700" data-i18n="l4c4">↓ 评测与可视化底座</text>
+          </g>
+        </g>
+        <!-- /translate(0,124) -->
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      if (typeof applyTopologyI18n === 'function') applyTopologyI18n();
+
+      var SVG_NS = 'http://www.w3.org/2000/svg';
+      var XHTML_NS = 'http://www.w3.org/1999/xhtml';
+      var embed = document.body.classList.contains('topology-embed');
+
+      /* 与站点 papers.js / PATENTS_FULL 对齐：仅含课题组（邢文鹏等）论著与代表性专利 */
+      var papers = [
+        { layer: 1, lane: 0, short: 'Gentel-safe', venue: 'arXiv 2024', full: 'Gentel-safe: A unified benchmark and shielding framework for defending against prompt injection attacks' },
+        { layer: 1, lane: 0, short: 'ICPO', venue: 'ICASSP 2026', full: 'ICPO: Illocution-Calibrated Policy Optimization for Multi-Turn Conversation' },
+        { layer: 1, lane: 0, short: 'Spectral Logit', venue: 'ICASSP 2026', full: 'Spectral Logit Sculpting: Adaptive Low-Rank Logit Transformation for Controlled Text Generation' },
+        { layer: 1, lane: 0, short: 'SproutBench', venue: 'AAAI 2026 ws', full: 'SproutBench: A Benchmark for Safe and Ethical Large Language Models for Youth' },
+        { layer: 1, lane: 0, short: 'Dev. Alignment', venue: 'Under review', full: 'From Refusal to Developmental Alignment: Reimagining Safety for Children and Adolescents in Large Language Models' },
+        { layer: 1, lane: 1, short: 'DISF', venue: 'ACL 2026', full: 'DISF: Detecting Hallucinations in Retrieval-Augmented Generation via Dual-path Internal State Forcing Framework' },
+        { layer: 1, lane: 1, short: 'LatentAudit', venue: 'arXiv 2026', full: 'LatentAudit: Real-Time White-Box Faithfulness Monitoring for Retrieval-Augmented Generation with Verifiable Deployment' },
+        { layer: 1, lane: 1, short: 'RETINA-SAFE', venue: 'arXiv 2026', full: 'From Retinal Evidence to Safe Decisions: RETINA-SAFE and ECRT for Hallucination Risk Triage in Medical LLMs' },
+        { layer: 1, lane: 1, short: 'Tri-Stress Test', venue: 'arXiv 2026', full: 'Beyond Accuracy: A Tri-Dimensional Behavioral Stress Test for Uncovering Safety Risks in Small Medical LLMs' },
+        { layer: 1, lane: 2, short: 'Latent Fusion JB', venue: 'arXiv 2025', full: 'Latent Fusion Jailbreak: Blending Harmful and Harmless Representations to Elicit Unsafe LLM Outputs' },
+        { layer: 1, lane: 2, short: 'CRA / Guardrails', venue: 'ACL 2026', full: 'Silencing the Guardrails: Inference-Time Jailbreaking via Dynamic Contextual Representation Ablation' },
+        { layer: 1, lane: 2, short: 'Param Relearning', venue: 'ICASSP 2026', full: 'Parameter Localization and Relearning for Safety Disalignment in Large Language Models' },
+        /* L4 具身环境层 — 轴A 几何重建 */
+        { layer: 4, lane: 0, short: 'UW-3DGS', venue: 'arXiv 2025', full: 'UW-3DGS: Underwater 3D Reconstruction with Physics-Aware Gaussian Splatting' },
+        { layer: 4, lane: 0, short: 'MVSPlenOctree', venue: 'ACM MM 2022', full: 'MVSPlenOctree: Fast and Generic Reconstruction of Radiance Fields in PlenOctree from Multi-view Stereo' },
+        { layer: 4, lane: 0, short: '水下 3DGS', venue: 'CN 在审', full: '基于三维高斯泼溅与水下成像模型的水下三维场景重建方法和装置（邢文鹏等）· 202510083143.1' },
+        { layer: 4, lane: 0, short: 'NeRF 张量分解', venue: 'CN 授权', full: '基于神经基和张量分解的神经辐射场渲染方法和装置（邢文鹏等）· CN119180898B' },
+        /* L4 — 轴B 神经辐射场 / 逆渲染 */
+        { layer: 4, lane: 1, short: 'CoDe-NeRF', venue: 'arXiv 2025', full: 'CoDe-NeRF: Neural Rendering via Dynamic Coefficient Decomposition' },
+        { layer: 4, lane: 1, short: 'Temporal-MPI', venue: 'ECCV 2022', full: 'Temporal-MPI: Enabling Multi-Plane Images for Dynamic Scene Modelling via Temporal Basis Learning' },
+        { layer: 4, lane: 1, short: 'IRCasTRF', venue: 'ACM MM 2023', full: 'IRCasTRF: Inverse Rendering by Optimizing Cascaded Tensorial Radiance Fields, Lighting, and Materials from Multi-view Images' },
+        { layer: 4, lane: 1, short: 'CasTensoRF', venue: 'ICME 2023', full: 'CasTensoRF: Cascaded Tensorial Radiance Fields for Novel View Synthesis' },
+        { layer: 4, lane: 1, short: 'Nex+', venue: 'ICASSP 2022', full: 'Nex+: Novel View Synthesis with Neural Regularisation over Multi-Plane Images' },
+        /* L4 — 轴C 新视角合成 · 光场 · 扩散 */
+        { layer: 4, lane: 2, short: 'NCDI-Diffusion', venue: 'ICASSP 2025', full: 'NCDI-Diffusion: Neural Contextual and Directional Inversion to Diffusion Models for Novel View Synthesis' },
+        { layer: 4, lane: 2, short: 'SC Fusion (TIP)', venue: 'IEEE TIP 2022', full: 'Scale-Consistent Fusion: from Heterogeneous Local Sampling to Global Immersive Rendering' },
+        { layer: 4, lane: 2, short: 'Light Field (MIR)', venue: 'MIR 2023', full: 'Robust Local Light Field Synthesis via Occlusion-aware Sampling and Deep Visual Feature Fusion' },
+        { layer: 4, lane: 2, short: '扩散新视角', venue: 'CN 在审', full: '基于扩散模型的新视角图片生成方法（邢文鹏等）· 202510245286.8' },
+        { layer: 2, lane: 0, short: 'MCP-Guard', venue: 'ACL 2026', full: 'MCP-Guard: A Defense Framework for Model Context Protocol Integrity in Large Language Model Applications' },
+        { layer: 2, lane: 0, short: 'HGMF', venue: 'arXiv 2025', full: 'HGMF: A Hierarchical Gaussian Mixture Framework for Scalable Tool Invocation by Large Language Model' },
+        { layer: 2, lane: 1, short: 'Distill To Detect', venue: 'ICASSP 2025', full: 'Distill To Detect: Amplifying Anomalies in Backdoor Models through Knowledge Distillation' },
+        { layer: 2, lane: 2, short: 'IDCNet (TIFS)', venue: 'IEEE TIFS', full: 'IDCNet: Image Decomposition and Cross-view Distillation for Generalizable Deepfake Detection' },
+        { layer: 2, lane: 3, short: 'IDE', venue: 'ICASSP 2025', full: 'IDE: A Multi-Agent-Driven Iterative Framework for Dynamic Evaluation of LLMs' },
+        { layer: 2, lane: 3, short: 'Embodied Survey', venue: 'ACM CSUR 2026', full: 'Towards robust and secure embodied AI: A survey on vulnerabilities and attacks' },
+        { layer: 3, lane: 0, short: 'Anon. Agent Sys.', venue: 'CN 专利', full: '一种支持多用户匿名身份代理的智能体交互系统及方法（含邢文鹏）· 在审' },
+        { layer: 3, lane: 0, short: 'BC + DP 发布', venue: 'CN 专利', full: '基于区块链与差分隐私的交易过程数据发布方法和系统（含邢文鹏）· 在审' },
+        { layer: 3, lane: 0, short: 'PSO 链上监测', venue: 'CN 专利', full: '基于分层粒子群优化的区块链系统资源监测与动态调度方法（邢文鹏等）· 在审' },
+        { layer: 3, lane: 1, short: 'InSty', venue: 'SCIENTIA', full: 'InSty: A Robust Multi-Level Cross-Granularity Fingerprint Embedding Algorithm for Multi-Turn Dialogue in Large Language Models' },
+        { layer: 3, lane: 1, short: 'MEraser', venue: 'ACL 2025', full: 'MEraser: An Effective Fingerprint Erasure Approach for Large Language Models' },
+        { layer: 3, lane: 1, short: 'KINGUARD', venue: 'ICASSP 2026', full: 'KINGUARD: Hierarchical Kinship-Aware Fingerprinting to Defend Against Large Language Model Stealing' },
+        { layer: 3, lane: 1, short: 'ForgetMark', venue: 'ICASSP 2026', full: 'FORGETMARK: Stealthy Fingerprint Embedding via Targeted Unlearning in Language Models' },
+        { layer: 3, lane: 1, short: 'Fp-vec', venue: 'arXiv 2024', full: 'Fp-vec: Fingerprinting large language models via efficient vector addition' },
+        { layer: 3, lane: 1, short: 'ZK-FPE', venue: 'Under review', full: 'ZK-FPE: Blockchain-Verifiable Model Fingerprinting with Zero-Knowledge Privacy for Ownership Attribution' },
+        { layer: 3, lane: 1, short: '侧支指纹注入', venue: 'CN 授权', full: '基于旁支网络的模型指纹注入与验证方法及设备（邢文鹏等）· 202511141549.7' },
+        { layer: 3, lane: 1, short: '权重确权', venue: 'CN 授权', full: '基于区块链和模型指纹的模型权重确权方法和装置（含邢文鹏）· 202510869757.2' },
+        { layer: 3, lane: 1, short: '幻觉上下文确权', venue: 'CN 授权', full: '基于幻觉上下文嵌入的大语言模型所有权认证方法和装置（邢文鹏等）· 202511171409.4' },
+        { layer: 3, lane: 1, short: '亲属关系指纹', venue: 'CN 授权', full: '基于亲属关系与文本特征匹配的模型版权保护方法和装置（含邢文鹏）· 202510737612.7' },
+        { layer: 3, lane: 1, short: '概率偏移指纹', venue: 'CN 授权', full: '一种基于指纹成员概率偏移信号的大语言模型版权保护方法和设备（含邢文鹏）· 202510683362.3' },
+        { layer: 3, lane: 1, short: '权重叠加指纹', venue: 'CN 授权', full: '一种基于权重叠加的大语言模型指纹添加方法和设备（韩蒙, 徐振华, 邢文鹏等）· 已授权' },
+        { layer: 3, lane: 1, short: '性能无损水印溯源', venue: 'CN 授权', full: '基于区块链的性能无损水印可信溯源方法和系统（含邢文鹏）' },
+        { layer: 3, lane: 2, short: 'MCP 高斯采样', venue: 'CN 在审', full: '一种基于高斯聚类的大语言模型上下文协议工具精准采样方法及装置（邢文鹏等）· 202511102851.1' },
+        { layer: 3, lane: 2, short: 'MCP 三层协同', venue: 'CN 在审', full: '一种面向大语言模型上下文协议的三层协同攻击检测与防御方法及装置（邢文鹏等）' },
+        { layer: 3, lane: 2, short: '分布式路由', venue: 'CN 在审', full: '一种基于多阶段自适应混合智能优化的分布式异构系统资源管理与智能路由方法和装置（邢文鹏等）' }
+      ];
+
+      // 泳道区域左侧绝对 X 坐标
+      var laneXs = {
+        1: [52, 577, 1102],
+        2: [52, 446, 840, 1234],
+        3: [52, 577, 1102],
+        4: [52, 577, 1102]
+      };
+
+      // ================= 彻底修复错位问题的核心坐标系 =================
+      var PILL_INNER_W13 = 525; // 3列宽
+      var PILL_INNER_W2 = 394;  // 4列宽
+      var PILL_PAD_R = 14;      // 右侧留白
+      var PILL_GAP = 12;        // L3 内部双列间距
+      var PILL_H = embed ? 54 : 44;
+      
+      // 修复横向遮盖：统一硬编码最安全的横向偏移量（保证不遮挡左侧任意长文本）
+      var L13_TEXT_SAFE = 215; 
+      var L2_TEXT_SAFE = 205;  
+
+      // 修复纵向溢出：彻底放弃相对数值，强行绑定到节点之间绝对且安全的留白区域
+      // (完美规避所有层级 Title 和 SVG 圆点文字)
+      var L1_SLOT_TOP = [316, 386, 456, 526, 596];
+      var L2_SLOT_TOP = [972, 1050, 1128, 1220, 1298];
+      var L3_SLOT_TOP = [1606, 1684, 1768, 1852, 1936];
+      var L3_LANE1_ROW_TOP = [1606, 1666, 1726, 1786, 1846, 1906, 1966, 2026, 2086];
+      var L4_SLOT_TOP = [2396, 2466, 2546, 2638, 2718];
+
+      function sliceSlotsCentered(slots, count) {
+        if (count <= 0 || !slots.length) return [];
+        if (count >= slots.length) return slots.slice();
+        var start = Math.floor((slots.length - count) / 2);
+        return slots.slice(start, start + count);
+      }
+
+      function paperBox(layer, lane, indexInLane, countInLane) {
+        var lx = laneXs[layer][lane];
+        var h = PILL_H;
+        var textSafe = (layer === 2) ? L2_TEXT_SAFE : L13_TEXT_SAFE;
+        var innerW = (layer === 2) ? PILL_INNER_W2 : PILL_INNER_W13;
+        var wFull = innerW - textSafe - PILL_PAD_R; // 单列胶囊最大安全宽度
+
+        // L3 轴Ⅱ（双列自适应布局，处理长列表不断行）
+        if (layer === 3 && lane === 1) {
+          var split = Math.ceil(countInLane / 2);
+          var col = indexInLane < split ? 0 : 1;
+          var row = col === 0 ? indexInLane : indexInLane - split;
+          
+          var wHalf = Math.floor((wFull - PILL_GAP) / 2);
+          var wRight = wFull - PILL_GAP - wHalf;
+          
+          var x0 = lx + textSafe;
+          var x1 = x0 + wHalf + PILL_GAP;
+          var x = col === 0 ? x0 : x1;
+          var w = col === 0 ? wHalf : wRight;
+          
+          // 容错补充（当论文量增加超标时自动往下排）
+          var yRow = L3_LANE1_ROW_TOP[row];
+          if (typeof yRow !== 'number') {
+            yRow = L3_LANE1_ROW_TOP[L3_LANE1_ROW_TOP.length - 1] + (row - L3_LANE1_ROW_TOP.length + 1) * 60;
+          }
+          return { x: x, y: yRow, w: w, h: h };
+        }
+
+        // 常规单列（L1 / L2 / L3 其他列 / L4）
+        var slots = layer === 1 ? L1_SLOT_TOP : (layer === 2 ? L2_SLOT_TOP : (layer === 4 ? L4_SLOT_TOP : L3_SLOT_TOP));
+        var ys = sliceSlotsCentered(slots, countInLane);
+        var y = ys[indexInLane];
+
+        // 高度容错补充（极少触发）
+        if (typeof y !== 'number') {
+          var step = layer === 2 ? 80 : (layer === 4 ? 68 : 70);
+          y = slots[slots.length - 1] + (indexInLane - slots.length + 1) * step;
+        }
+
+        return { x: lx + textSafe, y: y, w: wFull, h: h };
+      }
+
+      function layerGroupId(layer) {
+        if (layer === 1) return 'l1-risk-axes';
+        if (layer === 2) return 'l2-risk-axes';
+        if (layer === 3) return 'l3-risk-axes';
+        if (layer === 4) return 'l4-risk-axes';
+        return 'l1-risk-axes';
+      }
+
+      function appendPaperFo(host, p, box) {
+        var fo = document.createElementNS(SVG_NS, 'foreignObject');
+        fo.setAttribute('overflow', 'visible');
+        fo.setAttribute('x', String(Math.round(box.x)));
+        fo.setAttribute('y', String(Math.round(box.y)));
+        fo.setAttribute('width', String(Math.round(box.w)));
+        fo.setAttribute('height', String(Math.round(box.h)));
+        var wrap = document.createElementNS(XHTML_NS, 'div');
+        wrap.setAttribute('xmlns', XHTML_NS);
+        wrap.className = 'paper-badge-wrap';
+        var div = document.createElementNS(XHTML_NS, 'div');
+        div.className = 'axis-paper-block' + (p.layer === 2 ? ' layer2' : p.layer === 3 ? ' layer3' : p.layer === 4 ? ' layer-l4' : '');
+        var pv = document.createElementNS(XHTML_NS, 'span');
+        pv.className = 'pv';
+        pv.textContent = p.venue;
+        var tit = document.createElementNS(XHTML_NS, 'span');
+        tit.className = 'paper-short';
+        tit.textContent = p.short;
+        div.appendChild(pv);
+        div.appendChild(tit);
+        var tip = document.createElementNS(XHTML_NS, 'div');
+        tip.className = 'paper-tooltip';
+        tip.setAttribute('role', 'tooltip');
+        tip.textContent = p.full.split('\n\n').join('\n');
+        wrap.appendChild(div);
+        wrap.appendChild(tip);
+        fo.appendChild(wrap);
+        host.appendChild(fo);
+
+        /* SVG 中 foreignObject 的叠放由文档顺序决定，仅靠 CSS z-index 无法压过后插入的兄弟节点 */
+        var restoreBefore = null;
+        wrap.addEventListener('mouseenter', function () {
+          var p = fo.parentNode;
+          if (!p) return;
+          restoreBefore = fo.nextSibling;
+          p.appendChild(fo);
+        });
+        wrap.addEventListener('mouseleave', function () {
+          var p = fo.parentNode;
+          if (!p) return;
+          if (restoreBefore && restoreBefore.parentNode === p) {
+            p.insertBefore(fo, restoreBefore);
+          }
+        });
+
+        requestAnimationFrame(function () {
+          try {
+            var minH = parseFloat(fo.getAttribute('height')) || 0;
+            var need = Math.ceil(wrap.getBoundingClientRect().height) + 6;
+            if (need > minH) fo.setAttribute('height', String(need));
+          } catch (e) { /* ignore */ }
+        });
+      }
+
+      var buckets = {};
+      papers.forEach(function (p) {
+        var k = p.layer + ':' + p.lane;
+        if (!buckets[k]) buckets[k] = [];
+        buckets[k].push(p);
+      });
+
+      Object.keys(buckets).forEach(function (k) {
+        var list = buckets[k];
+        var layer = list[0].layer;
+        var lane = list[0].lane;
+        var host = document.getElementById(layerGroupId(layer));
+        if (!host) return;
+        list.forEach(function (p, i) {
+          var box = paperBox(layer, lane, i, list.length);
+          appendPaperFo(host, p, box);
+        });
+      });
+
+      var megaEl = document.getElementById('mega');
+      function notifyParentHeight() {
+        if (!embed || !megaEl || !window.parent || window.parent === window) return;
+        var h = Math.ceil(megaEl.getBoundingClientRect().height + 8);
+        if (h < 400) return;
+        try {
+          window.parent.postMessage({ type: 'ifrc-topology-height', height: h }, '*');
+        } catch (e) { /* ignore */ }
+      }
+      requestAnimationFrame(function () {
+        requestAnimationFrame(notifyParentHeight);
+      });
+      window.addEventListener('load', notifyParentHeight);
+      if (typeof ResizeObserver !== 'undefined' && megaEl) {
+        new ResizeObserver(notifyParentHeight).observe(megaEl);
+      }
+
+      if (!embed) {
+        for (var i = 0; i < 36; i++) {
+          var d = document.createElement('div');
+          d.setAttribute('aria-hidden', 'true');
+          d.style.cssText = 'position:fixed;width:2px;height:2px;border-radius:50%;pointer-events:none;z-index:0;opacity:.45;' +
+            'left:' + Math.random() * 100 + '%;top:' + Math.random() * 100 + '%;' +
+            'background:' + (Math.random() > 0.5 ? 'rgba(0,229,255,0.45)' : 'rgba(191,0,255,0.35)') + ';' +
+            'animation:twinkle ' + (6 + Math.random() * 8) + 's ease-in-out infinite;' +
+            'animation-delay:' + (-Math.random() * 8) + 's';
+          document.body.appendChild(d);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

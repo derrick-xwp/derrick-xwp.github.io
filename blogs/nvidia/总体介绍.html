@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>总体介绍 · NVIDIA 具身平台调研</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <div class="site-topbar-nav">
+      <a class="site-back" id="site-back-blogs" href="../">← 返回博客</a>
+      <span class="site-topbar-sep" aria-hidden="true">·</span>
+      <a class="site-back" id="site-back-home" href="../../">← 返回主页</a>
+    </div>
+    <span class="site-topbar-label">Blog · 技术调研</span>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>NVIDIA 具身平台调研</h1>
+        <p>Isaac Sim · Isaac Lab · Cosmos</p>
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">总体</div>
+<a class="nav-link active" href="总体介绍.html"><span class="nav-link-title">总体介绍</span><span class="nav-link-desc">三者定位、协作关系与许可说明（Sim 5.1 · Lab 2.3.2）</span></a>
+</div>
+<div class="nav-section"><div class="nav-section-title">Isaac Sim</div>
+<a class="nav-link" href="issac_sim/介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">架构、传感器、域随机化、ROS 2</span></a>
+<a class="nav-link" href="issac_sim/基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">安装、启动与常用操作</span></a>
+<a class="nav-link" href="issac_sim/不同格式3d文件的介绍.html"><span class="nav-link-title">3D 资产格式</span><span class="nav-link-desc">URDF、MJCF、CAD、OBJ/FBX/STL</span></a>
+</div>
+<div class="nav-section"><div class="nav-section-title">Isaac Lab</div>
+<a class="nav-link" href="issac_lab/介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">包结构、Manager-Based / Direct</span></a>
+<a class="nav-link" href="issac_lab/基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">环境、训练、Mimic 数据管线</span></a>
+<a class="nav-link" href="issac_lab/训练流程.html"><span class="nav-link-title">训练流程</span><span class="nav-link-desc">RSL-RL 训练与 checkpoint</span></a>
+<a class="nav-link" href="issac_lab/任务基本介绍.html"><span class="nav-link-title">任务基本介绍</span><span class="nav-link-desc">14 个任务与奖励配置索引</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>NVIDIA 具身平台调研</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><a href="总体介绍.html">NVIDIA 具身平台调研</a> <span> / </span> <span>总体</span> <span> / </span> <span>总体介绍</span></div>
+          <article class="article"><h1 id="nvidia-isaac-simisaac-lab--cosmos--">NVIDIA Isaac Sim、Isaac Lab 与 Cosmos — 定位与协作</h1>
+<blockquote>
+<p>调研文档 · 延伸阅读：<a href="issac_sim/介绍.html">issac_sim/介绍.md</a> · <a href="issac_lab/介绍.html">issac_lab/介绍.md</a><br />
+官方仓库：Isaac Sim <a href="https://github.com/isaac-sim/IsaacSim/blob/main/VERSION">5.1.0-rc.19</a> · Isaac Lab <a href="https://github.com/isaac-sim/IsaacLab/blob/main/VERSION">2.3.2</a></p>
+</blockquote>
+<p>NVIDIA 为机器人仿真与训练提供互补工具：<strong>Isaac Sim</strong> 负责高保真仿真，<strong>Isaac Lab</strong> 负责策略训练与基准，<strong>Cosmos</strong> 负责视觉域迁移与合成数据增强。三者分工不同，常组合使用。</p>
+<hr />
+<h2 id="1.-nvidia-isaac-sim">1. NVIDIA Isaac Sim</h2>
+<h3 id="定位-2">定位</h3>
+<p>高保真机器人仿真与数字孪生平台，基于 <strong>NVIDIA Omniverse</strong> 与 <strong>OpenUSD</strong>（见 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/README.md">Isaac Sim README</a>）。</p>
+<h3 id="-1">核心能力</h3>
+<ul>
+<li><strong>场景与资产</strong>：USD 原生场景；URDF、MJCF、CAD、OBJ/FBX/STL 等导入（详见 <a href="issac_sim/不同格式3d文件的介绍.html">issac_sim/不同格式3d文件的介绍.md</a>）。</li>
+<li><strong>物理</strong>：GPU 加速 <strong>PhysX</strong> 仿真（当前栈对应 PhysX 5.6.x 文档），刚体、关节、接触、可变形体等。</li>
+<li><strong>传感器</strong>：RTX 相机（RGB/深度）、RTX LiDAR/Radar、IMU、接触与力矩（Effort）等（见 <a href="issac_sim/介绍.html">issac_sim/介绍.md §3.2</a>）。</li>
+<li><strong>机器人</strong>：Create 菜单内置 Ant、Spot、Franka、Humanoid、Nova Carter、Quadcopter 等；UR10 等可通过 URDF 或 <code>/Isaac/Robots/</code> 资产加载；支持 Surface Gripper（吸盘类）。</li>
+<li><strong>域随机化 / SDG</strong>：<code>isaacsim.replicator.domain_randomization</code>、Omniverse Replicator 合成数据管线。</li>
+<li><strong>接口</strong>：Python API（<code>from isaacsim import SimulationApp</code>）、ROS 2 桥接、OpenXR 等。</li>
+</ul>
+<h3 id="-2">与训练的关系</h3>
+<p>Isaac Sim <strong>不提供 RL/IL 训练循环</strong>，输出可步进的仿真世界与传感器流。策略训练通常由 <strong>Isaac Lab</strong> 在 Sim 之上封装并行环境与 MDP 后完成。</p>
+<p><strong>资源</strong>：<a href="https://developer.nvidia.com/isaac-sim">开发者页面</a> · <a href="https://docs.isaacsim.omniverse.nvidia.com/latest/index.html">在线文档</a></p>
+<hr />
+<h2 id="2.-nvidia-isaac-lab">2. NVIDIA Isaac Lab</h2>
+<h3 id="-3">定位</h3>
+<p><strong>开源、GPU 加速</strong>的机器人学习框架（Isaac Gym 的继承者），构建于 Isaac Sim 之上（见 <a href="https://github.com/isaac-sim/IsaacLab/blob/main/README.md">Isaac Lab README</a>）。</p>
+<h3 id="-4">核心能力</h3>
+<ul>
+<li><strong>并行环境</strong>：单 GPU 上 <code>num_envs</code> 可达数千；观测、动作、奖励为 PyTorch 张量 <code>(num_envs, …)</code>，减少 CPU–GPU 拷贝。</li>
+<li><strong>任务库</strong>（<code>isaaclab_tasks</code>）：30+ 预置环境，含经典控制、四足/人形运动、Franka 操作（Lift/Stack）、OpenArm 双臂 Reach、Dexsuite 灵巧手、Factory 装配等；Gymnasium 接口（详见 <a href="issac_lab/任务基本介绍.html">issac_lab/任务基本介绍.md</a>）。</li>
+<li><strong>强化学习</strong>：主路径 <strong>RSL-RL + PPO</strong>（<a href="https://github.com/isaac-sim/IsaacLab/blob/main/scripts/reinforcement_learning/rsl_rl/train.py">train.py</a>）；亦支持 <strong>RL-Games、skrl、Stable-Baselines3</strong>（skrl 可选 SAC 等算法）。</li>
+<li><strong>模仿学习</strong>：遥操作录制 HDF5（<a href="https://github.com/isaac-sim/IsaacLab/blob/main/scripts/tools/record_demos.py">record_demos.py</a>）→ <strong>Robomimic BC</strong>；<strong>Isaac Lab Mimic</strong>（基于 MimicGen 思路）与 <strong>SkillGen</strong>（cuRobo 运动规划扩增）。</li>
+<li><strong>域随机化</strong>：各任务 <code>EventCfg</code> 中配置 reset/interval 随机化；<strong>ADR</strong> 见于 Dexsuite 等少数任务；<strong>PBT</strong> 在 RL-Games 集成中提供（RSL-RL 默认路径不启用）。</li>
+<li><strong>观测</strong>：支持向量本体感觉及 RGB/深度等字典观测（按任务配置）。</li>
+<li><strong>遥操作设备</strong>：keyboard、SpaceMouse、gamepad、handtracking；VR/CloudXR 见官方 CloudXR 文档。</li>
+<li><strong>编排</strong>：可通过 <a href="https://developer.nvidia.com/osmo">NVIDIA OSMO</a> 编排多节点/多容器训练工作流（见 Isaac Lab 参考架构文档）。</li>
+</ul>
+<h3 id="-5">与训练的关系</h3>
+<p>Isaac Lab 是<strong>直接训练机器人策略的核心平台</strong>：定义 MDP → rollout → 保存 checkpoint（<code>logs/rsl_rl/...</code>）→ <code>play.py</code> 验证 → 部署真机。</p>
+<p><strong>资源</strong>：<a href="https://github.com/isaac-sim/IsaacLab">GitHub isaac-sim/IsaacLab</a> · <a href="https://isaac-sim.github.io/IsaacLab/">在线文档</a></p>
+<hr />
+<h2 id="3.-nvidia-cosmos">3. NVIDIA Cosmos</h2>
+<h3 id="-6">定位</h3>
+<p>面向物理世界的 <strong>World Foundation Model</strong> 与视觉迁移工具，用于缩小仿真与真实之间的<strong>视觉域差距</strong>（非仿真器、非训练框架）。</p>
+<h3 id="-7">核心能力</h3>
+<ul>
+<li><strong>Cosmos Transfer</strong>：将仿真渲染图转为更逼真的照片级图像。</li>
+<li><strong>Cosmos World Foundation Model</strong>：生成逼真场景视频，用于感知训练或数据增强。</li>
+<li>典型场景：自动驾驶、机器人导航、室内操作等感知闭环。</li>
+<li>Isaac Lab 文档中有 Cosmos Transfer 与 Mimic/Stack 等集成示例（如 <code>augmented_imitation.rst</code>）。</li>
+</ul>
+<h3 id="-8">与训练的关系</h3>
+<p>Cosmos <strong>不提供仿真环境或策略训练接口</strong>；处理 Sim/Lab 输出的图像/视频，作视觉增强或额外训练数据。Sim-to-real 链路中常位于「渲染输出 → Cosmos → 策略/感知训练」之间。</p>
+<p><strong>资源</strong>：<a href="https://developer.nvidia.com/cosmos">NVIDIA Cosmos</a> · 更多细节见 <a href="https://blogs.nvidia.com/?s=cosmos">NVIDIA 博客检索 &quot;Cosmos&quot;</a></p>
+<hr />
+<h2 id="4.-">4. 三者对比</h2>
+<table>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th>Isaac Sim</th>
+<th>Isaac Lab</th>
+<th>Cosmos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>主要用途</strong></td>
+<td>高保真仿真与数字孪生</td>
+<td>策略训练、基准、IL 数据管线</td>
+<td>视觉迁移与合成数据</td>
+</tr>
+<tr class="even">
+<td><strong>仿真环境</strong></td>
+<td>✅ 提供</td>
+<td>❌ 依赖 Sim</td>
+<td>❌ 不提供</td>
+</tr>
+<tr class="odd">
+<td><strong>训练框架</strong></td>
+<td>❌ 不提供</td>
+<td>✅ RL / IL</td>
+<td>❌ 不提供</td>
+</tr>
+<tr class="even">
+<td><strong>典型输出</strong></td>
+<td>传感器流、渲染图</td>
+<td>策略 checkpoint、HDF5 数据集</td>
+<td>逼真图像/视频</td>
+</tr>
+<tr class="odd">
+<td><strong>可独立使用</strong></td>
+<td>✅</td>
+<td>✅（需 Sim 运行时）</td>
+<td>✅（需外部图像源）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-9">协作关系</h3>
+<div class="mermaid">graph LR
+    A[Isaac Sim<br/>物理仿真与渲染] --> B[Isaac Lab<br/>并行环境与策略训练]
+    B --> C[策略部署<br/>到真实机器人]
+    A --> D[Cosmos Transfer<br/>图像风格迁移]
+    D --> B
+    A --> E[Cosmos World Model<br/>合成视频]
+    E --> B</div>
+<p>典型流程：在 <strong>Isaac Sim</strong> 中准备 USD 场景与机器人 → <strong>Isaac Lab</strong> 定义任务并训练 → 可选 <strong>Cosmos</strong> 增强视觉观测 → 真机部署。</p>
+<hr />
+<h2 id="5.-">5. 许可说明</h2>
+<p>需区分 <strong>预编译产品</strong> 与 <strong>GitHub 源码仓库</strong>：</p>
+<h3 id="isaac-sim">Isaac Sim</h3>
+<table>
+<thead>
+<tr class="header">
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>预编译包</strong></td>
+<td>在 <a href="https://developer.nvidia.com/isaac-sim">developer.nvidia.com/isaac-sim</a> 注册后可免费下载；运行依赖 <strong>Omniverse Kit SDK</strong> 等附加组件，见 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/LICENSE">LICENSE 附加条款</a></td>
+</tr>
+<tr class="even">
+<td><strong>GitHub 仓库</strong></td>
+<td>官方仓库 <a href="https://github.com/isaac-sim/IsaacSim/blob/main/">IsaacSim</a> 采用 <strong>Apache 2.0</strong>，含大量扩展与示例源码；<strong>不等于</strong>全部 Kit 运行时闭源组件</td>
+</tr>
+<tr class="odd">
+<td><strong>产品许可</strong></td>
+<td>商业大规模部署等场景须阅读 <a href="https://developer.nvidia.com/omniverse/license">NVIDIA Omniverse License</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="isaac-lab">Isaac Lab</h3>
+<ul>
+<li><strong>BSD-3-Clause</strong> 开源（<a href="https://github.com/isaac-sim/IsaacLab/blob/main/LICENSE">LICENSE</a>），托管于 <a href="https://github.com/isaac-sim/IsaacLab">github.com/isaac-sim/IsaacLab</a>。</li>
+<li>可免费用于学术与商业项目，但<strong>运行时仍依赖 Isaac Sim</strong>。</li>
+</ul>
+<h3 id="-10">相关开源组件</h3>
+<ul>
+<li><strong>PhysX SDK</strong>：开源于 <a href="https://github.com/NVIDIA-Omniverse/PhysX">NVIDIA-Omniverse/PhysX</a>（含 Omniverse 扩展与 USD schema）。</li>
+<li><strong>omni.physx</strong>：随 Isaac Lab 2.3 起开源（<a href="https://forums.developer.nvidia.com/t/physics-power-unlocked-nvidia-isaac-lab-2-3-is-generally-available-and-omni-physx-is-now-open-source/350982">NVIDIA 公告</a>）。</li>
+<li><strong>OpenUSD</strong>：Pixar 开源场景描述格式。</li>
+</ul>
+<h3 id="-11">总结</h3>
+<table>
+<thead>
+<tr class="header">
+<th>组件</th>
+<th>免费使用</th>
+<th>源码开放</th>
+<th>主要许可</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Isaac Sim（预编译）</strong></td>
+<td>✅（需注册）</td>
+<td>Kit 核心闭源</td>
+<td>Omniverse License</td>
+</tr>
+<tr class="even">
+<td><strong>Isaac Sim（GitHub）</strong></td>
+<td>✅</td>
+<td>✅ 扩展与示例（Apache 2.0）</td>
+<td>Apache 2.0 + 附加组件</td>
+</tr>
+<tr class="odd">
+<td><strong>Isaac Lab</strong></td>
+<td>✅</td>
+<td>✅</td>
+<td>BSD-3-Clause</td>
+</tr>
+<tr class="even">
+<td><strong>PhysX / omni.physx</strong></td>
+<td>✅</td>
+<td>✅</td>
+<td>BSD-3 等</td>
+</tr>
+</tbody>
+</table>
+<p><strong>推荐实践</strong>：以开源 <strong>Isaac Lab</strong> 组织训练与任务开发，以 <strong>Isaac Sim</strong> 作为仿真运行时；需修改物理集成时可参考开源 <strong>PhysX / omni.physx</strong> 仓库。</p>
+<hr />
+<h2 id="6.-">6. 文档索引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>主题</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Isaac Sim 详解</td>
+<td><a href="issac_sim/介绍.html">issac_sim/介绍.md</a></td>
+</tr>
+<tr class="even">
+<td>3D 资产格式</td>
+<td><a href="issac_sim/不同格式3d文件的介绍.html">issac_sim/不同格式3d文件的介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>Isaac Lab 详解</td>
+<td><a href="issac_lab/介绍.html">issac_lab/介绍.md</a></td>
+</tr>
+<tr class="even">
+<td>任务与奖励</td>
+<td><a href="issac_lab/任务基本介绍.html">issac_lab/任务基本介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>训练流程</td>
+<td><a href="issac_lab/训练流程.html">issac_lab/训练流程.md</a></td>
+</tr>
+<tr class="even">
+<td>文档站点</td>
+<td><a href="..html">在线文档站点</a></td>
+</tr>
+</tbody>
+</table>
+<p><em>Isaac Sim 5.1 · Isaac Lab 2.3.2 · 调研文档</em></p></article>
+          <p class="footer-note">
+            源码链接指向
+            <a href="https://github.com/isaac-sim/IsaacSim" target="_blank" rel="noopener">Isaac Sim</a>
+            与
+            <a href="https://github.com/isaac-sim/IsaacLab" target="_blank" rel="noopener">Isaac Lab</a>
+            官方 GitHub 仓库。
+          </p>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-nvidia-isaac-sim">1. NVIDIA Isaac Sim</a></li><li><a class="level-3" href="#定位-2">定位</a></li><li><a class="level-3" href="#-1">核心能力</a></li><li><a class="level-3" href="#-2">与训练的关系</a></li><li><a class="" href="#2.-nvidia-isaac-lab">2. NVIDIA Isaac Lab</a></li><li><a class="level-3" href="#-3">定位</a></li><li><a class="level-3" href="#-4">核心能力</a></li><li><a class="level-3" href="#-5">与训练的关系</a></li><li><a class="" href="#3.-nvidia-cosmos">3. NVIDIA Cosmos</a></li><li><a class="level-3" href="#-6">定位</a></li><li><a class="level-3" href="#-7">核心能力</a></li><li><a class="level-3" href="#-8">与训练的关系</a></li><li><a class="" href="#4.-">4. 三者对比</a></li><li><a class="level-3" href="#-9">协作关系</a></li><li><a class="" href="#5.-">5. 许可说明</a></li><li><a class="level-3" href="#isaac-sim">Isaac Sim</a></li><li><a class="level-3" href="#isaac-lab">Isaac Lab</a></li><li><a class="level-3" href="#-10">相关开源组件</a></li><li><a class="level-3" href="#-11">总结</a></li><li><a class="" href="#6.-">6. 文档索引</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../site-paths.js"></script>
+  <script src="./nav.js"></script>
+  <script src="./vendor/mermaid.min.js"></script>
+  <script src="./mermaid-init.js"></script>
+</body>
+</html>
