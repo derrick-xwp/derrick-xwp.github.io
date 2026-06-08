@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>技术介绍 · CHALET</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>CHALET</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">CHALET</div>
+<a class="nav-link active" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">58 rooms、10 houses、动作空间、CHAI 关系</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">Binary、WebGL、CIFF、源码构建</span></a>
+<a class="nav-link" href="CHAI语料与评测.html"><span class="nav-link-title">CHAI 语料与评测</span><span class="nav-link-desc">EMNLP 2018 数据、指标、LINGUNET baseline</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>CHALET</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>CHALET</span> <span> / </span> <span>技术介绍</span></div>
+          <article class="article"><h1 id="chalet-">CHALET 技术介绍</h1>
+<blockquote>
+<p><strong>Cornell LIL 实验室</strong>（Yoav Artzi 组）· Unity 3D · 模块化多房间房屋 + 语言规划<br />
+官方仓库：<a href="https://github.com/lil-lab/chalet">lil-lab/chalet</a> · 训练框架：<a href="https://github.com/lil-lab/ciff">lil-lab/ciff</a><br />
+本地源码：<code>https://github.com/lil-lab/chalet/blob/master/</code>（核心 C# 脚本）· <code>https://github.com/lil-lab/ciff/blob/master/</code>（CHAI 训练/评测）<br />
+论文：<a href="https://arxiv.org/abs/1801.07357">arXiv:1801.07357</a> · 发布：<strong>v0.1</strong><br />
+同目录延伸阅读：<a href="基本使用流程.html">基本使用流程.md</a> · <a href="CHAI语料与评测.html">CHAI语料与评测.md</a></p>
+</blockquote>
+<h2 id="1.-">1. 概述</h2>
+<p><strong>CHALET</strong>（<strong>C</strong>ornell <strong>H</strong>ouse <strong>A</strong>gent <strong>L</strong>earning <strong>E</strong>nvironment**）是 2018 年发布的 <strong>3D 家庭模拟器</strong>，面向 <strong>导航 + 物体操作 + 自然语言指令</strong> 研究。与当时多数「单房间」仿真器不同，CHALET 强调：</p>
+<ul>
+<li><strong>多房间整屋布局</strong>：58 个 room 模块 + <strong>10 套默认房屋</strong>（每屋 4–7 房间）</li>
+<li><strong>丰富操作</strong>：pick/place、开关电器、开关容器、容器内外取放</li>
+<li><strong>部分可观测 + 记忆需求</strong>：第一人称视角，仅见前方视野</li>
+<li><strong>语言 grounding 友好</strong>：同类型多实例物体，必须用空间关系消歧</li>
+</ul>
+<p>官方 README 将其定位为支持 navigation、manipulation、instruction following 与 interactive QA 的平台（<a href="https://github.com/lil-lab/chalet/blob/master/README.md">README.md L3</a>）。</p>
+<p><strong>生态关系</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>组件</th>
+<th>角色</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>CHALET</strong></td>
+<td>Unity 3D 仿真器（Standalone / Simulator / Client）</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/">CHALET-main/src/Assets/Scripts/</a></td>
+</tr>
+<tr class="even">
+<td><strong>CHAI</strong></td>
+<td>在 CHALET 中采集的 NL 指令 + 人类 demonstration</td>
+<td>Misra EMNLP 2018 数据包</td>
+</tr>
+<tr class="odd">
+<td><strong>CIFF</strong></td>
+<td>统一 Blocks / LANI / <strong>CHAI</strong> / Touchdown 的训练与评测</td>
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/">CIFF-main/src/</a></td>
+</tr>
+</tbody>
+</table>
+<p>论文摘要：<a href="https://arxiv.org/abs/1801.07357">CHALET: Cornell House Agent Learning Environment</a></p>
+<hr />
+<h2 id="2.-">2. 核心架构</h2>
+<div class="mermaid">flowchart TB
+    subgraph Unity["CHALET Unity 5.4.1"]
+        RM[RoomManager<br/>房间物体/Spawn]
+        LR[LoadRoom<br/>跨房间异步加载]
+        INT[Interact + Hover<br/>射线交互]
+        DC[DataCollection<br/>轨迹 JSON]
+        SM[SocketManager<br/>TCP :11000]
+    end
+    subgraph Modes["运行模式"]
+        ST[Standalone 键鼠]
+        SIM[Simulator 回放]
+        CL[Client Socket]
+    end
+    subgraph CIFF["CIFF Python"]
+        HS[HouseServer<br/>socket 客户端]
+        AS[ActionSpace<br/>5+32×32 动作]
+    end
+    ST --> DC
+    SIM --> DC
+    CL --> SM
+    SM <-->|ReliableConnect| HS
+    HS --> AS</div>
+<table>
+<thead>
+<tr class="header">
+<th>层级</th>
+<th>职责</th>
+<th>源码入口</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Player</strong></td>
+<td>第一人称移动、射线检测、pick/drop/toggle</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Player/Interact.cs">Player/Interact.cs</a> · <a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Player/Hover.cs">Hover.cs</a></td>
+</tr>
+<tr class="even">
+<td><strong>SceneLoading</strong></td>
+<td>门触发 → 序列化 RoomData → 异步加载下一 room</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/SceneLoading/LoadRoom.cs">LoadRoom.cs</a></td>
+</tr>
+<tr class="odd">
+<td><strong>Managers</strong></td>
+<td>按 RoomData 放置/实例化物体、Spawn 玩家</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Managers/RoomManager.cs">RoomManager.cs</a></td>
+</tr>
+<tr class="even">
+<td><strong>Scriptable Objects</strong></td>
+<td>房间 catalogue、Prefab 查找</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Scriptable%20Objects/RoomData.cs">RoomData.cs</a> · <a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Scriptable%20Objects/PrefabDB.cs">PrefabDB.cs</a></td>
+</tr>
+<tr class="odd">
+<td><strong>API / Client</strong></td>
+<td>Socket 服务、Bot 控制、reward 钩子</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/API%20stuff/SocketManager.cs">SocketManager.cs</a> · <a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/API%20stuff/Actions.cs">Actions.cs</a></td>
+</tr>
+<tr class="even">
+<td><strong>DataCollection</strong></td>
+<td>每秒 DIOS + 场景切换 → JSON</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Data%20Collection/DataCollection.cs">DataCollection.cs</a></td>
+</tr>
+<tr class="odd">
+<td><strong>CIFF house</strong></td>
+<td>Python 侧 socket 客户端、动作空间、实验脚本</td>
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/server_house/house_server.py">server_house/house_server.py</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3.-">3. 环境规模（论文数据）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th>数量 / 说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Rooms</strong></td>
+<td><strong>58</strong> 个可组合房间模块</td>
+</tr>
+<tr class="even">
+<td><strong>Houses</strong></td>
+<td><strong>10</strong> 套默认布局；每屋 <strong>4–7</strong> 房间</td>
+</tr>
+<tr class="odd">
+<td><strong>Object types</strong></td>
+<td><strong>150</strong> 种</td>
+</tr>
+<tr class="even">
+<td><strong>可操纵类型</strong></td>
+<td><strong>71</strong>：60 pick-and-place · 6 open/close 容器 · 5 toggle</td>
+</tr>
+<tr class="odd">
+<td><strong>实例物体</strong></td>
+<td>330（同 type 不同 texture）</td>
+</tr>
+<tr class="even">
+<td><strong>每房间物体</strong></td>
+<td>平均 <strong>~30</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>典型房间尺寸</strong></td>
+<td>约 <strong>6×6</strong>（CHAI 实验配置）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3.1-10--house-">3.1 10 套默认 House 映射</h3>
+<p>源码 <a href="https://github.com/lil-lab/chalet/blob/master/src/README.md">src/README.md</a>（内部称 Elmer Environments）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>House</th>
+<th>房间组合</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>house1</td>
+<td>Livingroom1, Kitchen3, Bedroom1, Bathroom1</td>
+</tr>
+<tr class="even">
+<td>house2</td>
+<td>Livingroom2, Kitchen2, Bedroom2, Bathroom2</td>
+</tr>
+<tr class="odd">
+<td>house3</td>
+<td>Livingroom3, Kitchen1, Bedroom3, Bathroom3</td>
+</tr>
+<tr class="even">
+<td>house4</td>
+<td>Livingroom6, Kitchen5, Bedroom4, Bathroom4, Guestroom1, Hallway1</td>
+</tr>
+<tr class="odd">
+<td>house5</td>
+<td>Livingroom5, Kitchen6, Bedroom5, Bathroom5, Guestroom3, Hallway3</td>
+</tr>
+<tr class="even">
+<td>house6</td>
+<td>Livingroom4, Kitchen4, Bedroom6, Bathroom6, Guestroom2, Hallway2</td>
+</tr>
+<tr class="odd">
+<td>house7</td>
+<td>Livingroom7, Kitchen9, Bedroom10, Bathroom9, Guestroom5, Hallway5, Diningroom4</td>
+</tr>
+<tr class="even">
+<td>house8</td>
+<td>Livingroom8, Kitchen8, Bedroom9, Bathroom10, Guestroom7, Hallway6, Diningroom2</td>
+</tr>
+<tr class="odd">
+<td>house9</td>
+<td>Livingroom9, Kitchen10, Bedroom7, Bathroom8, Guestroom4, Hallway4, Diningroom1</td>
+</tr>
+<tr class="even">
+<td>house10</td>
+<td>Livingroom10, Kitchen7, Bedroom8, Bathroom7, Guestroom6, Hallway7, Diningroom3</td>
+</tr>
+</tbody>
+</table>
+<p>CHAI 实验使用其中 <strong>5 套</strong>（<a href="https://github.com/lil-lab/ciff/blob/master/src/experiments_house/test_stop.py">test_stop.py L76</a>：<code>house_ids = [1, 2, 3, 4, 5]</code>）。</p>
+<h3 id="3.2-">3.2 容器与嵌套操作</h3>
+<p>可 open/close 的物体为 <strong>container</strong>（洗碗机、橱柜、抽屉等）。<code>Interact.cs</code> 通过 tag 区分交互类型（<a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Player/Interact.cs">Interact.cs L96–114</a>）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Tag 片段</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>object</code> + <code>openable</code></td>
+<td>进入 <code>isPulling</code> 状态（拉抽屉/开门）</td>
+</tr>
+<tr class="even">
+<td><code>object</code> + <code>effects</code></td>
+<td>触发 toggle（电视、水龙头等）</td>
+</tr>
+<tr class="odd">
+<td><code>object</code>（普通）</td>
+<td><code>Freeze()</code> 拾取 → <code>isHolding</code></td>
+</tr>
+</tbody>
+</table>
+<p>物体可 <strong>跨房间携带</strong>（<code>DDOL.cs</code> 保持 player 与所持物体）、<strong>放入/取出容器</strong>；支持简单 <strong>collision + gravity</strong> 物理（<code>Physics.Raycast</code>，距离 <code>rayDistance=2f</code>）。</p>
+<hr />
+<h2 id="4.-">4. 智能体与动作空间</h2>
+<h3 id="4.1-">4.1 观测</h3>
+<ul>
+<li><strong>第一人称 RGB</strong>；<code>Hover</code> 每帧向前 <code>Raycast</code> 2 单位检测可交互物体（<a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Player/Hover.cs">Hover.cs L12–31</a>）</li>
+<li>位姿：<strong>2D 位置 + 2D 朝向</strong></li>
+<li>CIFF Client 模式：每步返回 <code>image</code> + <code>meta_data</code>（bot-position、navigation-error、manipulation-accuracy 等，<a href="https://github.com/lil-lab/ciff/blob/master/src/server_house/house_server.py">house_server.py L38–46</a>）</li>
+<li>CHAI 训练：初始 <strong>360° panorama</strong>（6 张 128×128，<code>explore()</code> · <a href="https://github.com/lil-lab/ciff/blob/master/src/server_house/house_server.py">house_server.py L100–117</a>）</li>
+</ul>
+<h3 id="4.2-chalet--api-table-i">4.2 低层动作（CHALET 完整 API，论文 Table I）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>动作</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>move-forward</code> / <code>move-back</code></td>
+<td>沿当前朝向前进/后退</td>
+</tr>
+<tr class="even">
+<td><code>strafe-right</code> / <code>strafe-left</code></td>
+<td>侧向平移</td>
+</tr>
+<tr class="odd">
+<td><code>look-left</code> / <code>look-right</code> / <code>look-up</code> / <code>look-down</code></td>
+<td>视角；上下看可推 drawer/cabinet</td>
+</tr>
+<tr class="even">
+<td><code>interact</code></td>
+<td>pick / drop / toggle / 开容器</td>
+</tr>
+</tbody>
+</table>
+<p>轨迹 JSON 中记录为字符串动作（<a href="https://github.com/lil-lab/ciff/blob/master/src/dataset_agreement_house/dataset_parser.py">dataset_parser.py L6</a>：<code>forward</code>, <code>back</code>, <code>slideleft</code>, <code>slideright</code>, <code>lookleft</code>, <code>lookright</code>, <code>stop</code>）。</p>
+<h3 id="4.3-chai-/-ciff-">4.3 CHAI / CIFF 简化动作空间</h3>
+<p>CIFF 将 CHAI 动作编码为配置驱动的 <strong>ActionSpace</strong>（<a href="https://github.com/lil-lab/ciff/blob/master/src/dataset_agreement_house/action_space.py">action_space.py L6–21</a>）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>基础动作</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FORWARD</code></td>
+<td>步长 <strong>0.1</strong>（config）</td>
+</tr>
+<tr class="even">
+<td><code>TURNLEFT</code> / <code>TURNRIGHT</code></td>
+<td>转角 <strong>90°</strong></td>
+</tr>
+<tr class="odd">
+<td><code>STOP</code></td>
+<td>结束子目标</td>
+</tr>
+<tr class="even">
+<td><code>interact row col</code></td>
+<td>视野 <strong>32×32</strong> 网格，共 <strong>1024</strong> 种 INTERACT 变体</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># action_space.py L12–16 — use_manipulation=True 时展开 interact 网格</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="cf">for</span> row <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="va">self</span>.num_manipulation_row):</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">    <span class="cf">for</span> col <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="va">self</span>.num_manipulation_col):</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">        <span class="va">self</span>.act_names.append(<span class="st">&quot;interact </span><span class="sc">%r</span><span class="st"> </span><span class="sc">%r</span><span class="st">&quot;</span> <span class="op">%</span> (row, col))</a></code></pre></div>
+<p>配置键见 <a href="https://github.com/lil-lab/ciff/blob/master/src/setup_agreement_house/validate_setup_house.py">validate_setup_house.py L3–11</a>：<code>action_names</code>, <code>use_manipulation</code>, <code>num_manipulation_row/col</code>, <code>stop_action</code>, <code>image_height/width</code>。</p>
+<p><strong>复现 EMNLP 2018 须用 CIFF 5 动作 + 32×32 INTERACT</strong>，而非 Table I 九动作。</p>
+<hr />
+<h2 id="5.-">5. 三种运行模式</h2>
+<table>
+<thead>
+<tr class="header">
+<th>模式</th>
+<th>用途</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Standalone</strong></td>
+<td>键鼠控制；轨迹存 JSON；WebGL + AMT 众包</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Data%20Collection/DataCollection.cs">DataCollection.cs</a></td>
+</tr>
+<tr class="even">
+<td><strong>Simulator</strong></td>
+<td>从 JSON 回放 demonstration（Bot Elmer）</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/SceneLoading/LoadRoom.cs">LoadRoom.cs L44–52</a> · Bot Elmer 脚本</td>
+</tr>
+<tr class="odd">
+<td><strong>Client</strong></td>
+<td>外部进程经 <strong>TCP socket</strong> 发动作</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/API%20stuff/SocketManager.cs">SocketManager.cs L71–75</a> 默认 <strong>port 11000</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="mermaid">flowchart LR
+    Py[CIFF HouseServer] -->|send action string| SM[SocketManager]
+    SM -->|RGB image + meta#...| Py</div>
+<p>Socket 反馈格式（<a href="https://github.com/lil-lab/ciff/blob/master/src/server_house/house_server.py">house_server.py L38–40</a>）：</p>
+<pre><code>reward#scene-name#action-success#bot-position#bot-angles#tracking#goal-screen#
+distance-to-final-goal#distance-to-next-goal#goal-type#manipulation-accuracy
+</code></pre>
+<p>框架还提供 <strong>reward API</strong>（<a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/API%20stuff/Rewards.cs">Rewards.cs</a>）、运行时 <strong>程序化改场景</strong>（<code>PrefabDB</code> + surface annotation）。</p>
+<hr />
+<h2 id="6.-">6. 模块化房屋与跨房间状态</h2>
+<h3 id="6.1-">6.1 场景加载流程</h3>
+<p><code>LoadRoom</code> 挂在门上，<code>OnTriggerEnter</code> 时（<a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/SceneLoading/LoadRoom.cs">LoadRoom.cs L28–37、L68–79</a>）：</p>
+<ol>
+<li>收集当前 room 所有 <code>object</code> tag 物体</li>
+<li>写入 <code>RoomData</code> ScriptableObject（位置/旋转/scale）</li>
+<li>激活 Loading Screen，<strong>异步</strong>加载下一 Unity scene</li>
+</ol>
+<h3 id="6.2-roommanager-">6.2 RoomManager 与状态保持</h3>
+<p><code>RoomManager.OnEnable</code>（<a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Managers/RoomManager.cs">RoomManager.cs L28–44</a>）：</p>
+<ul>
+<li>读取 <code>RoomIdentifier.lastRoom</code>，在对应 spawn point 放置玩家</li>
+<li><code>placeObjects(thisRoomData)</code> 恢复/实例化物体</li>
+<li><code>DeactivateRemoved()</code> 处理已移除物体</li>
+</ul>
+<p><code>RoomData</code> 存储 catalogue（<a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Scriptable%20Objects/RoomData.cs">RoomData.cs L14–21</a>）：<code>objsinRoom</code>, <code>objSpawns</code>, <code>deactivatedObjects</code> 等。</p>
+<h3 id="6.3--room-">6.3 新建 Room 检查清单</h3>
+<p><a href="https://github.com/lil-lab/chalet/blob/master/src/README.md">src/README.md</a> 要求每个 room 包含：</p>
+<ul>
+<li>[ ] <code>RoomManager</code></li>
+<li>[ ] Safety Net</li>
+<li>[ ] Spawn Points（≥1）</li>
+<li>[ ] FPS Screen</li>
+<li>[ ] 至少一扇 <code>PRE_DOO_Main_door_02_05</code> 连接门</li>
+</ul>
+<hr />
+<h2 id="7.-">7. 语言任务设计动机</h2>
+<table>
+<thead>
+<tr class="header">
+<th>挑战</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>实例消歧</strong></td>
+<td>浴室多条毛巾 → <em>yellow towel left of the sink</em></td>
+</tr>
+<tr class="even">
+<td><strong>名词短语 + 关系</strong></td>
+<td><em>glass <strong>from the</strong> cupboard</em></td>
+</tr>
+<tr class="odd">
+<td><strong>多容器探索</strong></td>
+<td>多个 cupboard 时须决定打开哪一个</td>
+</tr>
+<tr class="even">
+<td><strong>部分可观测</strong></td>
+<td>需 memory 或历史观测</td>
+</tr>
+</tbody>
+</table>
+<p>CHAI 段落级指令平均 <strong>7.7 句/段</strong>、<strong>54.5 动作/句</strong>（见 <a href="CHAI语料与评测.html">CHAI语料与评测.md</a>）。</p>
+<hr />
+<h2 id="8.-">8. 评测指标</h2>
+<h3 id="8.1-chalet-yan-2018">8.1 CHALET 原论文（Yan 2018）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>指标</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Navigation error</strong></td>
+<td>分 room 欧氏路径误差之和</td>
+</tr>
+<tr class="even">
+<td><strong>Manipulation F1</strong></td>
+<td>有序 interaction 列表 F1；place 容差 <strong>1.0 m</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="8.2-chai-/-ciff-misra-2018">8.2 CHAI / CIFF 主指标（Misra 2018）</h3>
+<p>Unity 通过 socket 返回 <code>navigation-error</code> 与 <code>manipulation-accuracy</code>（<a href="https://github.com/lil-lab/ciff/blob/master/src/server_house/house_server.py">house_server.py L44–46、L63–70</a>）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>指标</th>
+<th>缩写</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Stop distance</strong></td>
+<td>SD</td>
+<td>最终位姿与标注终点的 aerial 距离（分 room 累加）</td>
+</tr>
+<tr class="even">
+<td><strong>Manipulation accuracy</strong></td>
+<td>MA</td>
+<td>manipulation 动作集合对比（百分比）</td>
+</tr>
+</tbody>
+</table>
+<p>复现 EMNLP 2018 以 <strong>SD + MA</strong> 为准。</p>
+<hr />
+<h2 id="9.-">9. 实现技术栈</h2>
+<table>
+<thead>
+<tr class="header">
+<th>项目</th>
+<th>说明</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>引擎</strong></td>
+<td>Unity <strong>5.4.1</strong></td>
+<td>Wiki / 论文</td>
+</tr>
+<tr class="even">
+<td><strong>逻辑语言</strong></td>
+<td>C# · namespace <code>Cyan</code></td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Player/Interact.cs">Interact.cs L4</a></td>
+</tr>
+<tr class="odd">
+<td><strong>Client 通信</strong></td>
+<td>TCP Socket · 默认 <strong>11000</strong></td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/API%20stuff/SocketManager.cs">SocketManager.cs L71–75</a></td>
+</tr>
+<tr class="even">
+<td><strong>训练框架</strong></td>
+<td>CIFF · <strong>PyTorch</strong></td>
+<td><a href="https://github.com/lil-lab/ciff/blob/master/README.md">CIFF README.md</a></td>
+</tr>
+<tr class="odd">
+<td><strong>WebGL build</strong></td>
+<td>约 <strong>386 MB</strong></td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/README.md">src/README.md L5–6</a></td>
+</tr>
+<tr class="even">
+<td><strong>许可</strong></td>
+<td>CHALET 代码 <strong>CC BY 4.0</strong></td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/README.md">README.md</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="9.1--vs-">9.1 二进制 vs 源码</h3>
+<table>
+<thead>
+<tr class="header">
+<th>方式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Released binary（推荐）</strong></td>
+<td><a href="http://clic.nlp.cornell.edu/resources/CHALET/">clic.nlp.cornell.edu/resources/CHALET/</a> · <strong>无需</strong> Asset Store</td>
+</tr>
+<tr class="even">
+<td><strong>Source（不稳定）</strong></td>
+<td>GitHub <code>src/</code> · 需 Nekobolt Home Interior Pack V3 + 邮件获取修改资产</td>
+</tr>
+</tbody>
+</table>
+<p>源码 <strong>不含</strong> Asset Store 专有 mesh；<a href="https://github.com/lil-lab/chalet/blob/master/README.md">README.md L31–33</a> 要求联系 <a href="mailto:chalet-3d@googlegroups.com">chalet-3d@googlegroups.com</a> 获取修改版资源。</p>
+<hr />
+<h2 id="10.-ciff-chai-domain">10. CIFF 训练栈（CHAI domain）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>目录</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/experiments_house/">experiments_house/</a></td>
+<td>实验入口：<code>test_stop.py</code>, <code>train_chaplot_baseline_house.py</code> 等</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/server_house/">server_house/</a></td>
+<td><code>HouseServer</code> · socket 协议</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/dataset_agreement_house/">dataset_agreement_house/</a></td>
+<td>JSON 解析 · ActionSpace</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/baselines/chaplot_baseline_house.py">baselines/chaplot_baseline_house.py</a></td>
+<td>Chaplot18 baseline</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/agents/house_decoupled_predictor_navigator_model.py">agents/house_decoupled_predictor_navigator_model.py</a></td>
+<td>LINGUNET 两阶段 agent</td>
+</tr>
+</tbody>
+</table>
+<p>CIFF 四域对照（<a href="https://github.com/lil-lab/ciff/blob/master/README.md">CIFF README.md L14–18</a>）：Blocks · LANI · <strong>CHAI (house)</strong> · Touchdown。</p>
+<hr />
+<h2 id="11.-">11. 与同类平台对比</h2>
+<table>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th>CHALET</th>
+<th>AI2-THOR (2018)</th>
+<th>VirtualHome</th>
+<th>Habitat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>环境数</td>
+<td>58 rooms / 10 houses</td>
+<td>120 rooms</td>
+<td>固定场景 + 图</td>
+<td>HM3D 等</td>
+</tr>
+<tr class="even">
+<td>跨房间</td>
+<td>✅ 整屋</td>
+<td>当时单 room 为主</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>Manipulation</td>
+<td>pick/place/toggle/container</td>
+<td>离散 API</td>
+<td>程序级高层动作</td>
+<td>Rearrange 有限</td>
+</tr>
+<tr class="even">
+<td>原生 NL 数据</td>
+<td><strong>CHAI</strong></td>
+<td>较少</td>
+<td>Activity KB</td>
+<td>较少</td>
+</tr>
+<tr class="odd">
+<td>维护活跃度</td>
+<td><strong>低</strong>（2018）</td>
+<td><strong>高</strong></td>
+<td>中</td>
+<td><strong>高</strong></td>
+</tr>
+<tr class="even">
+<td>ML 接口</td>
+<td>CIFF socket</td>
+<td>Python API</td>
+<td>程序执行器</td>
+<td>Gym</td>
+</tr>
+</tbody>
+</table>
+<p>CHALET 的历史地位：<strong>最早强调 multi-room + manipulation + 真实众包 NL</strong> 的 Unity 家庭仿真之一。</p>
+<hr />
+<h2 id="12.-">12. 演进与局限</h2>
+<table>
+<thead>
+<tr class="header">
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>版本</strong></td>
+<td>公开 <strong>v0.1</strong>；源码含 Elmer 内部迭代</td>
+</tr>
+<tr class="even">
+<td><strong>Unity</strong></td>
+<td>5.4.1 较旧，现代系统可能需虚拟机</td>
+</tr>
+<tr class="odd">
+<td><strong>物理</strong></td>
+<td>简单 Raycast + collision，非精确操作仿真</td>
+</tr>
+<tr class="even">
+<td><strong>CIFF 状态</strong></td>
+<td>README 标注 <strong>unstable</strong>；见 <a href="https://github.com/lil-lab/ciff/issues">ciff issues</a></td>
+</tr>
+<tr class="odd">
+<td><strong>后续</strong></td>
+<td>Touchdown、LANI+CHAI 同一 CIFF 生态</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="13.-">13. 官方仓库索引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>用途</th>
+<th>CHALET (Unity)</th>
+<th>CIFF (Python)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>项目说明</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/README.md">README.md</a></td>
+<td><a href="https://github.com/lil-lab/ciff/blob/master/README.md">README.md</a></td>
+</tr>
+<tr class="even">
+<td>Unity 工程说明</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/README.md">src/README.md</a></td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>玩家交互</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Player/Interact.cs">Player/Interact.cs</a></td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>跨房间加载</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/SceneLoading/LoadRoom.cs">LoadRoom.cs</a></td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>房间管理</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Managers/RoomManager.cs">RoomManager.cs</a></td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>Socket Client</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/API%20stuff/SocketManager.cs">SocketManager.cs</a></td>
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/server_house/house_server.py">house_server.py</a></td>
+</tr>
+<tr class="odd">
+<td>轨迹采集</td>
+<td><a href="https://github.com/lil-lab/chalet/blob/master/src/Assets/Scripts/Data%20Collection/DataCollection.cs">DataCollection.cs</a></td>
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/dataset_agreement_house/dataset_parser.py">dataset_parser.py</a></td>
+</tr>
+<tr class="even">
+<td>动作空间</td>
+<td>—</td>
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/dataset_agreement_house/action_space.py">action_space.py</a></td>
+</tr>
+<tr class="odd">
+<td>STOP baseline</td>
+<td>—</td>
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/experiments_house/test_stop.py">test_stop.py</a></td>
+</tr>
+<tr class="even">
+<td>Chaplot baseline</td>
+<td>—</td>
+<td><a href="https://github.com/lil-lab/ciff/blob/master/src/experiments_house/test_chaplot_baseline_house.py">test_chaplot_baseline_house.py</a></td>
+</tr>
+<tr class="odd">
+<td>Binary 下载</td>
+<td><a href="http://clic.nlp.cornell.edu/resources/CHALET/">clic CHALET</a></td>
+<td><a href="http://clic.nlp.cornell.edu/resources/Misra-EMNLP-2018/">Misra-EMNLP-2018</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="14.-">14. 本地文档索引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>文档</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="基本使用流程.html">基本使用流程.md</a></td>
+<td>下载 binary、WebGL、CIFF 实验、源码构建</td>
+</tr>
+<tr class="even">
+<td><a href="CHAI语料与评测.html">CHAI语料与评测.md</a></td>
+<td>数据集格式、采集流程、指标、baseline</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="15.-">15. 资源与引用</h2>
+<table>
+<thead>
+<tr class="header">
+<th>资源</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GitHub CHALET</td>
+<td><a href="https://github.com/lil-lab/chalet">https://github.com/lil-lab/chalet</a></td>
+</tr>
+<tr class="even">
+<td>GitHub CIFF</td>
+<td><a href="https://github.com/lil-lab/ciff">https://github.com/lil-lab/ciff</a></td>
+</tr>
+<tr class="odd">
+<td>Wiki</td>
+<td><a href="https://github.com/lil-lab/chalet/wiki">https://github.com/lil-lab/chalet/wiki</a></td>
+</tr>
+<tr class="even">
+<td>CHALET 下载</td>
+<td><a href="http://clic.nlp.cornell.edu/resources/CHALET/">http://clic.nlp.cornell.edu/resources/CHALET/</a></td>
+</tr>
+<tr class="odd">
+<td>CHAI/LANI 数据</td>
+<td><a href="http://clic.nlp.cornell.edu/resources/Misra-EMNLP-2018/">http://clic.nlp.cornell.edu/resources/Misra-EMNLP-2018/</a></td>
+</tr>
+<tr class="even">
+<td>CHALET 论文</td>
+<td><a href="https://arxiv.org/abs/1801.07357">https://arxiv.org/abs/1801.07357</a></td>
+</tr>
+<tr class="odd">
+<td>CHAI 论文</td>
+<td><a href="https://arxiv.org/abs/1809.00786">https://arxiv.org/abs/1809.00786</a></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="va">@article</span>{<span class="ot">yan2018chalet</span>,</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">  <span class="dt">title</span>={CHALET: Cornell House Agent Learning Environment},</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="dt">author</span>={Yan, Claudia and Misra, Dipendra and Bennett, Andrew and Walsman, Aaron and Bisk, Yonatan and Artzi, Yoav},</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">  <span class="dt">journal</span>={arXiv preprint arXiv:1801.07357},</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">  <span class="dt">year</span>={2018}</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">}</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="va">@inproceedings</span>{<span class="ot">misra2018mapping</span>,</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">  <span class="dt">title</span>={Mapping Instructions to Actions in 3D Environments with Visual Goal Prediction},</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">  <span class="dt">author</span>={Misra, Dipendra and Bennett, Andrew and Blukis, Valts and Niklasson, Eyvind and Shatkin, Max and Artzi, Yoav},</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">  <span class="dt">booktitle</span>={EMNLP},</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">  <span class="dt">year</span>={2018}</a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">}</a></code></pre></div>
+<hr />
+<p><em>基于本地源码 <code>code/CHALET-main</code> · <code>code/CIFF-main</code> 与官方文档编写。</em></p></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 概述</a></li><li><a class="" href="#2.-">2. 核心架构</a></li><li><a class="" href="#3.-">3. 环境规模（论文数据）</a></li><li><a class="level-3" href="#3.1-10--house-">3.1 10 套默认 House 映射</a></li><li><a class="level-3" href="#3.2-">3.2 容器与嵌套操作</a></li><li><a class="" href="#4.-">4. 智能体与动作空间</a></li><li><a class="level-3" href="#4.1-">4.1 观测</a></li><li><a class="level-3" href="#4.2-chalet--api-table-i">4.2 低层动作（CHALET 完整 API，论文 Table I）</a></li><li><a class="level-3" href="#4.3-chai-/-ciff-">4.3 CHAI / CIFF 简化动作空间</a></li><li><a class="" href="#5.-">5. 三种运行模式</a></li><li><a class="" href="#6.-">6. 模块化房屋与跨房间状态</a></li><li><a class="level-3" href="#6.1-">6.1 场景加载流程</a></li><li><a class="level-3" href="#6.2-roommanager-">6.2 RoomManager 与状态保持</a></li><li><a class="level-3" href="#6.3--room-">6.3 新建 Room 检查清单</a></li><li><a class="" href="#7.-">7. 语言任务设计动机</a></li><li><a class="" href="#8.-">8. 评测指标</a></li><li><a class="level-3" href="#8.1-chalet-yan-2018">8.1 CHALET 原论文（Yan 2018）</a></li><li><a class="level-3" href="#8.2-chai-/-ciff-misra-2018">8.2 CHAI / CIFF 主指标（Misra 2018）</a></li><li><a class="" href="#9.-">9. 实现技术栈</a></li><li><a class="level-3" href="#9.1--vs-">9.1 二进制 vs 源码</a></li><li><a class="" href="#10.-ciff-chai-domain">10. CIFF 训练栈（CHAI domain）</a></li><li><a class="" href="#11.-">11. 与同类平台对比</a></li><li><a class="" href="#12.-">12. 演进与局限</a></li><li><a class="" href="#13.-">13. 官方仓库索引</a></li><li><a class="" href="#14.-">14. 本地文档索引</a></li><li><a class="" href="#15.-">15. 资源与引用</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+  <script src="../vendor/mermaid.min.js"></script>
+  <script src="../mermaid-init.js"></script>
+</body>
+</html>

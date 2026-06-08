@@ -1,14 +1,13 @@
-/* Xing's Group · 六语内容 · 隶属 IFRC（数智融合研究中心）· 浙江大学滨江研究院 */
+/* Wenpeng Xing · 六语内容 · 浙江大学计算机科学与技术学院 · 滨江研究院数智融合研究中心 */
 window.LANGS = ['zh', 'zhtw', 'en', 'ja', 'ko', 'th'];
 
 window.RESUME = {
   zh: {
-    centerName: 'Xing\'s Group',
-    nav: { home: '首页', about: '招聘', piLead: '课题组负责人', research: '研究方向', people: '成员', news: '新闻', blogs: '博客', papers: '论文', patents: '专利', gallery: '相册', contact: '联系' },
-    heroSubtitle: 'Xing\'s Group 隶属于浙江大学 IFRC（数智融合研究中心）与浙江大学滨江研究院。',
+    centerName: 'Wenpeng Xing',
+    nav: { home: '首页', about: '招聘', piLead: '关于', research: '研究方向', people: '成员', news: '新闻', blogs: '博客', papers: '论文', patents: '专利', gallery: '相册', contact: '联系' },
+    heroSubtitle: '就职于浙江大学计算机科学与技术学院与浙江大学滨江研究院数智融合研究中心',
     heroDesc: '课题组研究方向包括神经渲染与高保真实时三维重建（3D Gaussian Splatting、NeRF）、大语言模型可信性与知识产权保护、多模态大模型安全与具身智能安全等。',
-    heroPi: '课题组负责人：邢文鹏 · <a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=zh-CN" target="_blank" rel="noopener">Google Scholar</a>',
-    heroCta: '了解更多',
+    heroPi: '<a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=zh-CN" target="_blank" rel="noopener">Google Scholar</a>',
     aboutTitle: '实习生招聘启示',
     aboutContent: "<div class=\"about-layout\"><header class=\"about-lead\"><div class=\"about-lead-copy\"><p class=\"about-kicker\">以初心致未来</p><p class=\"about-tagline\">让每一份对 AI 的热情，都能在这里找到生长的土壤。</p></div><figure class=\"about-figure\"><svg class=\"about-svg\" viewBox=\"0 0 320 200\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><defs><linearGradient id=\"about-glow\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" style=\"stop-color:#58a6ff;stop-opacity:0.35\"/><stop offset=\"100%\" style=\"stop-color:#00d4ff;stop-opacity:0.15\"/></linearGradient></defs><rect width=\"320\" height=\"200\" rx=\"14\" fill=\"#111820\" stroke=\"#21262d\"/><circle cx=\"158\" cy=\"102\" r=\"52\" fill=\"url(#about-glow)\" stroke=\"#58a6ff\" stroke-opacity=\"0.45\"/><g stroke=\"#58a6ff\" stroke-width=\"1.25\" fill=\"none\" opacity=\"0.65\"><path d=\"M36 108 Q96 48 158 102 T292 88\"/><path d=\"M72 168 Q132 72 210 124 T304 52\"/></g><circle cx=\"68\" cy=\"72\" r=\"7\" fill=\"#00d4ff\"/><circle cx=\"252\" cy=\"132\" r=\"7\" fill=\"#58a6ff\"/><circle cx=\"204\" cy=\"52\" r=\"5\" fill=\"#58a6ff\"/><circle cx=\"118\" cy=\"156\" r=\"5\" fill=\"#00d4ff\"/></svg></figure></header><section class=\"about-panel about-panel-split\" aria-labelledby=\"about-focus-title\"><div class=\"about-split-text\"><h3 id=\"about-focus-title\" class=\"about-panel-title\">研究方向（摘要）</h3><p class=\"about-lede\">可信 AI 全生命周期：语料可信、模型鲁棒、算法公平、隐私与可解释性；以及意图识别、幻觉检测、对抗学习、智能体与多模态生成式 AI 等前沿方向。</p><p class=\"about-jump\"><a href=\"#research\">在交互拓扑图中探索详情 →</a></p></div><div class=\"about-split-visual\" aria-hidden=\"true\"><div class=\"about-mini-chart\"><span class=\"mini-bar b1\"></span><span class=\"mini-bar b2\"></span><span class=\"mini-bar b3\"></span><span class=\"mini-bar b4\"></span></div><p class=\"about-mini-caption\">可信 · 智能体 · 产业协同</p></div></section><section class=\"about-panel\" aria-labelledby=\"about-seek-title\"><h3 id=\"about-seek-title\" class=\"about-panel-title\">我们寻找怎样的你</h3><p class=\"about-lede\">不限国籍、学历与背景，欢迎多元伙伴：</p><ul class=\"about-checklist\"><li>对 AI 有真挚热情的本科二、三、四年级同学</li><li>深入钻研的硕士、博士研究生</li><li>寻找全职研究或工程岗位的准毕业生</li><li>已工作或在 Gap Year、仍向往科研的你</li></ul></section><section class=\"about-panel\"><h3 class=\"about-panel-title\">在这里，你将收获什么（摘要）</h3><div class=\"about-cards\"><article class=\"about-card\"><h4>顶尖科研环境</h4><p>与浙大及海内外学者并肩，面向真实问题产出论文与专利。</p></article><article class=\"about-card\"><h4>全链路实战</h4><p>覆盖可信语料、训练与对齐、智能体与幻觉治理等关键课题。</p></article><article class=\"about-card\"><h4>产业深度融合</h4><p>与一线产品团队协同，把技术送进亿级用户场景。</p></article><article class=\"about-card\"><h4>创造价值</h4><p>坚持「有用的 AI」，用工程回应真实需求。</p></article></div></section><section class=\"about-panel about-panel-muted\"><p class=\"about-lede\"><strong>理念：</strong>平等坦诚、开放协作；彼此双向奔赴，对时间与成长负责。</p><p class=\"about-jump\"><a href=\"mailto:recruit@zju-if.com\">联系 recruit@zju-if.com</a></p></section></div>",
     researchTitle: '研究方向',
@@ -20,19 +19,39 @@ window.RESUME = {
     newsTitle: '新闻与活动',
     blogsTitle: '博客',
     blogHubTitle: '技术博客',
-    blogHubDesc: '按平台分类的调研笔记与实践文档，持续更新。',
+    blogHubDesc: '',
     blogHubBack: '← 返回主页',
     blogHubReadMore: '进入专栏 →',
-    blogPlatforms: [
-      {
-        vendor: 'NVIDIA',
-        title: 'NVIDIA 具身智能平台调研',
-        summary: 'Isaac Sim、Isaac Lab 与 Cosmos 的定位、协作关系、许可说明与使用流程；含任务库、训练链路与 3D 资产格式等专题文档。',
-        link: 'nvidia/',
-        tags: ['具身智能', 'Isaac Sim', 'Isaac Lab', 'Cosmos'],
-        updatedLabel: '2026年6月更新'
-      }
-    ],
+    embodiedSeries: {
+      title: '具身智能平台调研',
+      summary: '涵盖 NVIDIA Isaac 生态与 9 大开源仿真平台；含多维度能力矩阵、选型决策与各平台技术文档。',
+      seriesBadge: 'Embodied AI',
+      platformCountLabel: '10 个平台',
+      overviewHeading: '选型总览',
+      platformsHeading: '平台专栏',
+      overviewUrl: 'embodied-platforms/主页.html',
+      viewFullOverview: '查看完整总览 →',
+      loadingLabel: '正在加载选型总览…',
+      loadErrorLabel: '总览加载失败，请进入完整总览页查看。',
+      overviewLegend: true,
+      legendHigh: '核心优势',
+      legendMid: '可用',
+      legendLow: '有限',
+      legendNone: '不具备',
+      defaultOpen: true,
+      platforms: [
+        { vendor: 'NVIDIA', title: 'NVIDIA Isaac', summary: 'Isaac Sim、Isaac Lab 与 Cosmos：定位、许可、任务库、训练链路与 3D 资产格式。', link: 'nvidia/', tags: ['Isaac Sim', 'Isaac Lab', 'Cosmos'] },
+        { vendor: 'Allen AI', title: 'AI2-THOR', summary: 'Unity 交互式室内仿真：物体语义状态机、ManipulaTHOR / RoboTHOR / ProcTHOR 与 Controller API。', link: 'embodied-platforms/ai2thor/介绍.html', tags: ['Unity', 'Embodied AI'] },
+        { vendor: 'haosulab', title: 'SAPIEN / ManiSkill', summary: 'SAPIEN 3 ECS 与 PhysX GPU 仿真；ManiSkill3 高吞吐 RL/IL benchmark 与任务库。', link: 'embodied-platforms/sapien/介绍.html', tags: ['ManiSkill', 'GPU 并行'] },
+        { vendor: 'MIT', title: 'ThreeDWorld', summary: 'Build + Controller 架构、Clatter/Flex 物理、Replicant 智能体与多模态感知数据集。', link: 'embodied-platforms/tdw/介绍.html', tags: ['物理仿真', '多模态'] },
+        { vendor: 'Stanford', title: 'iGibson', summary: 'Gibson 572 场景与 15 套可交互室内、PBR 渲染、LiDAR 与 Fetch 操作任务。', link: 'embodied-platforms/igibson/介绍.html', tags: ['室内导航', 'PyBullet'] },
+        { vendor: 'DeepMind', title: 'DeepMind Lab', summary: '基于 Quake 的 3D 导航 benchmark：DMLab-30、Psychlab 记忆套件与 dm_env 接口。', link: 'embodied-platforms/deepmind_lab/介绍.html', tags: ['导航', 'RL Benchmark'] },
+        { vendor: 'UCLA / MIT', title: 'VirtualHome', summary: '程序 + 图谱双表示、Unity 与 Evolving Graph 仿真、语言指令与 WAH 数据集。', link: 'embodied-platforms/virtualhome/介绍.html', tags: ['语言任务', '程序执行'] },
+        { vendor: 'Cornell', title: 'CHALET', summary: '58 房间 / 10 房屋语言导航仿真器，CHAI 语料与 CIFF 训练评测框架。', link: 'embodied-platforms/chalet/介绍.html', tags: ['语言导航', 'CHAI'] },
+        { vendor: 'Sorbonne', title: 'VRKitchen', summary: 'UE4 厨房仿真、VR 人类示教、VR Chef Challenge 与工具/菜品操作 API。', link: 'embodied-platforms/vrkitchen/介绍.html', tags: ['VR', '厨房操作'] },
+        { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: '1000 项家务 BDDL 任务、OmniGibson 流体/关节状态与 2025 Challenge 评测栈。', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
+      ]
+    },
     blogs: [
       {
         date: '2026-06',
@@ -41,6 +60,38 @@ window.RESUME = {
         summary: 'Isaac Sim、Isaac Lab 与 Cosmos 的定位、协作关系、许可说明与使用流程；含任务库、训练链路与 3D 资产格式等专题文档。',
         link: 'blogs/nvidia/',
         tags: ['具身智能', 'NVIDIA', 'Isaac Sim', 'Isaac Lab']
+      },
+      {
+        date: '2026-06',
+        dateLabel: '2026年6月',
+        title: 'AI2-THOR 调研',
+        summary: 'Unity 交互式室内仿真：物体语义状态机、ManipulaTHOR / RoboTHOR / ProcTHOR 与 Controller API。',
+        link: 'blogs/embodied-platforms/ai2thor/介绍.html',
+        tags: ['仿真平台', 'AI2-THOR', 'Unity']
+      },
+      {
+        date: '2026-06',
+        dateLabel: '2026年6月',
+        title: 'SAPIEN / ManiSkill 调研',
+        summary: 'SAPIEN 3 物理引擎与 ManiSkill3 GPU 并行 benchmark、任务库与训练 baseline。',
+        link: 'blogs/embodied-platforms/sapien/介绍.html',
+        tags: ['仿真平台', 'ManiSkill', 'SAPIEN']
+      },
+      {
+        date: '2026-06',
+        dateLabel: '2026年6月',
+        title: 'BEHAVIOR-1K 调研',
+        summary: '1000 项家务 BDDL 任务、OmniGibson 与 2025 Challenge 评测。',
+        link: 'blogs/embodied-platforms/behavior_1k/介绍.html',
+        tags: ['仿真平台', 'BEHAVIOR-1K', 'OmniGibson']
+      },
+      {
+        date: '2026-06',
+        dateLabel: '2026年6月',
+        title: '仿真平台选型总览',
+        summary: '9 大平台多维度对比、选型决策与完整文档索引。',
+        link: 'blogs/embodied-platforms/主页.html',
+        tags: ['仿真平台', '具身智能', 'Benchmark']
       }
     ],
     pubTitle: '论文',
@@ -55,15 +106,17 @@ window.RESUME = {
     navAriaLabel: '主导航',
     menuAriaLabel: '打开菜单',
     heroAriaLabel: '首页',
-    heroBgAriaLabel: '背景图',
+    heroBgAriaLabel: '可交互律动折线与 LLM token 流动背景',
     zjuTitle: '浙江大学',
     zjuAlt: '浙江大学',
+    ibjTitle: '浙江大学滨江研究院',
+    ibjAlt: '浙江大学滨江研究院',
     galleryImageAlt: '实验室照片',
     lightboxImageAlt: '相册图片',
     pi: {
       name: '邢文鹏',
-      role: '课题组负责人 · 博士后研究员',
-      bio: '博士后，浙江大学滨江研究院；Xing\'s Group 负责人。香港浸会大学计算机科学博士（导师：陈杰副教授），哈尔滨工业大学土木工程学士。曾任香港 NVIDIA AI 技术中心、新加坡 A*STAR、亚马逊 AWS 等单位研究或工程实习。主持浙江省自然科学基金、博士后项目等；第一/通讯作者发表 CCF-A/B 论文 10 余篇，中国授权/受理发明专利 30 余项。',
+      role: '博士后研究员',
+      bio: '博士后，浙江大学滨江研究院与浙江大学计算机科学与技术学院。香港浸会大学计算机科学博士（导师：陈杰副教授），哈尔滨工业大学土木工程学士。曾任香港 NVIDIA AI 技术中心、新加坡 A*STAR、亚马逊 AWS 等单位研究或工程实习。主持浙江省自然科学基金项目、参与多个省部级重点研发项目；第一/通讯作者发表 CCF-A/B 论文 10 余篇，中国授权/受理发明专利 30 余项。',
       email: 'wpxing@zju.edu.cn',
       scholar: 'https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=zh-CN',
       avatar: '',
@@ -110,12 +163,11 @@ window.RESUME = {
     ]
   },
   zhtw: {
-    centerName: 'Xing\'s Group',
-    nav: { home: '首頁', about: '招聘', piLead: '課題組負責人', research: '研究方向', people: '成員', news: '新聞', blogs: '博客', papers: '論文', patents: '專利', gallery: '相冊', contact: '聯繫' },
-    heroSubtitle: 'Xing\'s Group 隸屬於浙江大學 IFRC（數智融合研究中心）與浙江大學濱江研究院。',
+    centerName: 'Wenpeng Xing',
+    nav: { home: '首頁', about: '招聘', piLead: '關於', research: '研究方向', people: '成員', news: '新聞', blogs: '博客', papers: '論文', patents: '專利', gallery: '相冊', contact: '聯繫' },
+    heroSubtitle: '就職於浙江大學計算機科學與技術學院與浙江大學濱江研究院數智融合研究中心',
     heroDesc: '課題組研究方向包括神經渲染與高保真實時三維重建（3D Gaussian Splatting、NeRF）、大語言模型可信性與知識產權保護、多模態大模型安全與具身智能安全等。',
-    heroPi: '課題組負責人：邢文鵬 · <a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=zh-TW" target="_blank" rel="noopener">Google Scholar</a>',
-    heroCta: '了解更多',
+    heroPi: '<a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=zh-TW" target="_blank" rel="noopener">Google Scholar</a>',
     researchTitle: '研究方向',
     researchTopologyIntro: '',
     researchTopologyIframeTitle: '智能體跨層風險傳播與三層可信治理體系互動拓撲圖',
@@ -153,35 +205,52 @@ window.RESUME = {
     ],
     blogsTitle: '博客',
     blogHubTitle: '技術博客',
-    blogHubDesc: '按平台分類的調研筆記與實踐文檔，持續更新。',
+    blogHubDesc: '',
     blogHubBack: '← 返回主頁',
     blogHubReadMore: '進入專欄 →',
-    blogPlatforms: [
-      {
-        vendor: 'NVIDIA',
-        title: 'NVIDIA 具身智能平台調研',
-        summary: 'Isaac Sim、Isaac Lab 與 Cosmos 的定位、協作關係、許可說明與使用流程；含任務庫、訓練鏈路與 3D 資產格式等專題文檔。',
-        link: 'nvidia/',
-        tags: ['具身智能', 'Isaac Sim', 'Isaac Lab', 'Cosmos'],
-        updatedLabel: '2026年6月更新'
-      }
-    ],
+    embodiedSeries: {
+      title: '具身智能平台調研',
+      summary: '涵蓋 NVIDIA Isaac 生態與 9 大開源仿真平台；含多維度能力矩陣、選型決策與各平台技術文檔。',
+      seriesBadge: 'Embodied AI',
+      platformCountLabel: '10 個平台',
+      overviewHeading: '選型總覽',
+      platformsHeading: '平台專欄',
+      overviewUrl: 'embodied-platforms/主页.html',
+      viewFullOverview: '查看完整總覽 →',
+      loadingLabel: '正在載入選型總覽…',
+      loadErrorLabel: '總覽載入失敗，請進入完整總覽頁查看。',
+      overviewLegend: true,
+      legendHigh: '核心優勢',
+      legendMid: '可用',
+      legendLow: '有限',
+      legendNone: '不具備',
+      defaultOpen: true,
+      platforms: [
+        { vendor: 'NVIDIA', title: 'NVIDIA Isaac', summary: 'Isaac Sim、Isaac Lab 與 Cosmos：定位、許可、任務庫、訓練鏈路與 3D 資產格式。', link: 'nvidia/', tags: ['Isaac Sim', 'Isaac Lab', 'Cosmos'] },
+        { vendor: 'Allen AI', title: 'AI2-THOR', summary: 'Unity 互動式室內仿真：物體語義狀態機、ManipulaTHOR / RoboTHOR / ProcTHOR 與 Controller API。', link: 'embodied-platforms/ai2thor/介绍.html', tags: ['Unity', 'Embodied AI'] },
+        { vendor: 'haosulab', title: 'SAPIEN / ManiSkill', summary: 'SAPIEN 3 ECS 與 PhysX GPU 仿真；ManiSkill3 高吞吐 RL/IL benchmark 與任務庫。', link: 'embodied-platforms/sapien/介绍.html', tags: ['ManiSkill', 'GPU 並行'] },
+        { vendor: 'MIT', title: 'ThreeDWorld', summary: 'Build + Controller、Clatter/Flex 物理、Replicant 與多模態感知數據集。', link: 'embodied-platforms/tdw/介绍.html', tags: ['物理仿真', '多模態'] },
+        { vendor: 'Stanford', title: 'iGibson', summary: 'Gibson 572 場景、PBR 渲染、LiDAR 與 Fetch 操作任務。', link: 'embodied-platforms/igibson/介绍.html', tags: ['室內導航', 'PyBullet'] },
+        { vendor: 'DeepMind', title: 'DeepMind Lab', summary: 'Quake 3D 導航 benchmark：DMLab-30、Psychlab 與 dm_env 介面。', link: 'embodied-platforms/deepmind_lab/介绍.html', tags: ['導航', 'RL Benchmark'] },
+        { vendor: 'UCLA / MIT', title: 'VirtualHome', summary: '程序 + 圖譜雙表示、Unity 仿真、語言指令與 WAH 數據集。', link: 'embodied-platforms/virtualhome/介绍.html', tags: ['語言任務', '程序執行'] },
+        { vendor: 'Cornell', title: 'CHALET', summary: '58 房間語言導航仿真器，CHAI 語料與 CIFF 評測框架。', link: 'embodied-platforms/chalet/介绍.html', tags: ['語言導航', 'CHAI'] },
+        { vendor: 'Sorbonne', title: 'VRKitchen', summary: 'UE4 廚房仿真、VR 示教與 VR Chef Challenge API。', link: 'embodied-platforms/vrkitchen/介绍.html', tags: ['VR', '廚房操作'] },
+        { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: '1000 項家務 BDDL 任務、OmniGibson 與 2025 Challenge。', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
+      ]
+    },
     blogs: [
-      {
-        date: '2026-06',
-        dateLabel: '2026年6月',
-        title: 'NVIDIA 具身智能平台調研',
-        summary: 'Isaac Sim、Isaac Lab 與 Cosmos 的定位、協作關係、許可說明與使用流程；含任務庫、訓練鏈路與 3D 資產格式等專題文檔。',
-        link: 'blogs/nvidia/',
-        tags: ['具身智能', 'NVIDIA', 'Isaac Sim', 'Isaac Lab']
-      }
+      { date: '2026-06', dateLabel: '2026年6月', title: 'NVIDIA 具身智能平台調研', summary: 'Isaac Sim、Isaac Lab 與 Cosmos 定位與使用流程。', link: 'blogs/nvidia/', tags: ['具身智能', 'NVIDIA', 'Isaac Sim'] },
+      { date: '2026-06', dateLabel: '2026年6月', title: 'AI2-THOR 調研', summary: 'Unity 互動室內仿真與 Controller API。', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['仿真平台', 'AI2-THOR'] },
+      { date: '2026-06', dateLabel: '2026年6月', title: 'SAPIEN / ManiSkill 調研', summary: 'GPU 並行物理仿真與 ManiSkill3 benchmark。', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['仿真平台', 'ManiSkill'] },
+      { date: '2026-06', dateLabel: '2026年6月', title: 'BEHAVIOR-1K 調研', summary: 'BDDL 任務體系與 OmniGibson。', link: 'blogs/embodied-platforms/behavior_1k/介绍.html', tags: ['仿真平台', 'BEHAVIOR-1K'] },
+      { date: '2026-06', dateLabel: '2026年6月', title: '仿真平台選型總覽', summary: '9 大平台多維度對比與文檔索引。', link: 'blogs/embodied-platforms/主页.html', tags: ['仿真平台', 'Benchmark'] }
     ],
     footerAffiliation: 'IFRC（數智融合研究中心）· 浙江大學濱江研究院',
     footerContactLabel: '聯繫：wpxing@zju.edu.cn | IFRC：contact@zju-if.com | 地址：杭州市濱江區火炬創新中心',
     pi: {
       name: '邢文鵬',
-      role: '課題組負責人 · 博士後研究員',
-      bio: '博士後，浙江大學濱江研究院；Xing\'s Group 負責人。香港浸會大學電腦科學博士（導師：陳杰副教授），哈爾濱工業大學土木工程學士。曾任香港 NVIDIA AI 技術中心、新加坡 A*STAR、亞馬遜 AWS 等單位研究或工程實習。主持浙江省自然科學基金、博士後項目等；第一／通訊作者發表 CCF-A/B 論文 10 餘篇，中國授權／受理發明專利 30 餘項。',
+      role: '博士後研究員',
+      bio: '博士後，浙江大學濱江研究院與浙江大學計算機科學與技術學院。香港浸會大學電腦科學博士（導師：陳杰副教授），哈爾濱工業大學土木工程學士。曾任香港 NVIDIA AI 技術中心、新加坡 A*STAR、亞馬遜 AWS 等單位研究或工程實習。主持浙江省自然科學基金項目、參與多個省部級重點研發項目；第一／通訊作者發表 CCF-A/B 論文 10 餘篇，中國授權／受理發明專利 30 餘項。',
       email: 'wpxing@zju.edu.cn',
       scholar: 'https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=zh-TW',
       avatar: '',
@@ -200,19 +269,20 @@ window.RESUME = {
     navAriaLabel: '主導航',
     menuAriaLabel: '打開菜單',
     heroAriaLabel: '首頁',
-    heroBgAriaLabel: '背景圖',
+    heroBgAriaLabel: '可互動律動折線與 LLM token 流動背景',
     zjuTitle: '浙江大學',
     zjuAlt: '浙江大學',
+    ibjTitle: '浙江大學濱江研究院',
+    ibjAlt: '浙江大學濱江研究院',
     galleryImageAlt: '實驗室照片',
     lightboxImageAlt: '相冊圖片'
   },
   en: {
-    centerName: 'Xing\'s Group',
-    nav: { home: 'Home', about: 'Recruitment', piLead: 'Group PI', research: 'Research', people: 'People', news: 'News', blogs: 'Blog', papers: 'Publications', patents: 'Patents', gallery: 'Gallery', contact: 'Contact' },
-    heroSubtitle: 'Xing\'s Group is affiliated with Zhejiang University IFRC (Intelligence Fusion Research Center) and the Binjiang Institute of Zhejiang University.',
+    centerName: 'Wenpeng Xing',
+    nav: { home: 'Home', about: 'Recruitment', piLead: 'About', research: 'Research', people: 'People', news: 'News', blogs: 'Blog', papers: 'Publications', patents: 'Patents', gallery: 'Gallery', contact: 'Contact' },
+    heroSubtitle: 'College of Computer Science and Technology, Zhejiang University; Intelligence Fusion Research Center, Binjiang Institute of Zhejiang University.',
     heroDesc: 'Our group works on neural rendering and high-fidelity real-time 3D reconstruction (3D Gaussian Splatting, NeRF), trustworthiness and intellectual-property protection for large language models, multimodal LLM security, and embodied AI safety.',
-    heroPi: 'Group head: Wenpeng Xing · <a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>',
-    heroCta: 'Learn More',
+    heroPi: '<a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>',
     aboutTitle: 'Intern Recruitment',
     aboutContent: "<div class=\"about-layout\"><header class=\"about-lead\"><div class=\"about-lead-copy\"><p class=\"about-kicker\">From Original Intention to Future</p><p class=\"about-tagline\">Let every passion for AI find its soil for growth here.</p></div><figure class=\"about-figure\"><svg class=\"about-svg\" viewBox=\"0 0 320 200\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><defs><linearGradient id=\"about-glow-en\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" style=\"stop-color:#58a6ff;stop-opacity:0.35\"/><stop offset=\"100%\" style=\"stop-color:#00d4ff;stop-opacity:0.15\"/></linearGradient></defs><rect width=\"320\" height=\"200\" rx=\"14\" fill=\"#111820\" stroke=\"#21262d\"/><circle cx=\"158\" cy=\"102\" r=\"52\" fill=\"url(#about-glow-en)\" stroke=\"#58a6ff\" stroke-opacity=\"0.45\"/><g stroke=\"#58a6ff\" stroke-width=\"1.25\" fill=\"none\" opacity=\"0.65\"><path d=\"M36 108 Q96 48 158 102 T292 88\"/><path d=\"M72 168 Q132 72 210 124 T304 52\"/></g><circle cx=\"68\" cy=\"72\" r=\"7\" fill=\"#00d4ff\"/><circle cx=\"252\" cy=\"132\" r=\"7\" fill=\"#58a6ff\"/><circle cx=\"204\" cy=\"52\" r=\"5\" fill=\"#58a6ff\"/><circle cx=\"118\" cy=\"156\" r=\"5\" fill=\"#00d4ff\"/></svg></figure></header><section class=\"about-panel about-panel-split\" aria-labelledby=\"about-focus-title\"><div class=\"about-split-text\"><h3 id=\"about-focus-title\" class=\"about-panel-title\">Research Focus (Summary)</h3><p class=\"about-lede\">Trustworthy AI across the lifecycle—corpus quality, robust models, fairness, privacy, interpretability—plus intent understanding, hallucination mitigation, adversarial learning, agents, and multimodal generative AI.</p><p class=\"about-jump\"><a href=\"#research\">Explore the interactive diagram →</a></p></div><div class=\"about-split-visual\" aria-hidden=\"true\"><div class=\"about-mini-chart\"><span class=\"mini-bar b1\"></span><span class=\"mini-bar b2\"></span><span class=\"mini-bar b3\"></span><span class=\"mini-bar b4\"></span></div><p class=\"about-mini-caption\">Trust · Agents · Industry</p></div></section><section class=\"about-panel\" aria-labelledby=\"about-seek-title\"><h3 id=\"about-seek-title\" class=\"about-panel-title\">Who We Are Looking For</h3><p class=\"about-lede\">We welcome diverse backgrounds—nationality, degree path, and prior experience are not barriers:</p><ul class=\"about-checklist\"><li>Undergraduates (years 2–4) with genuine enthusiasm for AI</li><li>Master's and PhD students who love deep research</li><li>Graduating students targeting research or engineering roles</li><li>Professionals or gap-year explorers returning to research</li></ul></section><section class=\"about-panel\"><h3 class=\"about-panel-title\">What You Will Gain (Summary)</h3><div class=\"about-cards\"><article class=\"about-card\"><h4>Top-tier environment</h4><p>Work with scholars from ZJU and partner universities on real problems and strong publications.</p></article><article class=\"about-card\"><h4>End-to-end practice</h4><p>Trusted data, training & alignment, agents, hallucination control, and robustness—full stack exposure.</p></article><article class=\"about-card\"><h4>Industry integration</h4><p>Partner with product teams shipping technology to hundreds of millions of users.</p></article><article class=\"about-card\"><h4>Impact</h4><p>We build useful AI—engineering that answers real operational needs.</p></article></div></section><section class=\"about-panel about-panel-muted\"><p class=\"about-lede\"><strong>Values:</strong> candor, equality, open collaboration—and mutual commitment to time well spent.</p><p class=\"about-jump\"><a href=\"mailto:recruit@zju-if.com\">recruit@zju-if.com</a></p></section></div>",
     researchTitle: 'Research',
@@ -224,28 +294,45 @@ window.RESUME = {
     newsTitle: 'News & Events',
     blogsTitle: 'Blog',
     blogHubTitle: 'Technical Blog',
-    blogHubDesc: 'Platform-organized survey notes and practical documentation, updated over time.',
+    blogHubDesc: '',
     blogHubBack: '← Back to home',
     blogHubReadMore: 'Open series →',
-    blogPlatforms: [
-      {
-        vendor: 'NVIDIA',
-        title: 'NVIDIA Embodied AI Platform Survey',
-        summary: 'Positioning and collaboration of Isaac Sim, Isaac Lab, and Cosmos; licensing, task library, training pipeline, and 3D asset formats.',
-        link: 'nvidia/',
-        tags: ['Embodied AI', 'Isaac Sim', 'Isaac Lab', 'Cosmos'],
-        updatedLabel: 'Updated Jun 2026'
-      }
-    ],
+    embodiedSeries: {
+      title: 'Embodied AI Platform Survey',
+      summary: 'NVIDIA Isaac ecosystem plus nine open-source simulators: capability matrix, selection guide, and per-platform docs.',
+      seriesBadge: 'Embodied AI',
+      platformCountLabel: '10 platforms',
+      overviewHeading: 'Selection overview',
+      platformsHeading: 'Platform series',
+      overviewUrl: 'embodied-platforms/主页.html',
+      viewFullOverview: 'View full overview →',
+      loadingLabel: 'Loading selection overview…',
+      loadErrorLabel: 'Failed to load overview. Open the full overview page instead.',
+      overviewLegend: true,
+      legendHigh: 'Core strength',
+      legendMid: 'Available',
+      legendLow: 'Limited',
+      legendNone: 'N/A',
+      defaultOpen: true,
+      platforms: [
+        { vendor: 'NVIDIA', title: 'NVIDIA Isaac', summary: 'Isaac Sim, Isaac Lab, and Cosmos: positioning, licensing, task library, training pipeline, and 3D assets.', link: 'nvidia/', tags: ['Isaac Sim', 'Isaac Lab', 'Cosmos'] },
+        { vendor: 'Allen AI', title: 'AI2-THOR', summary: 'Unity interactive indoor sim: object state machines, ManipulaTHOR / RoboTHOR / ProcTHOR, and Controller API.', link: 'embodied-platforms/ai2thor/介绍.html', tags: ['Unity', 'Embodied AI'] },
+        { vendor: 'haosulab', title: 'SAPIEN / ManiSkill', summary: 'SAPIEN 3 ECS and PhysX GPU sim; ManiSkill3 high-throughput RL/IL benchmarks and task library.', link: 'embodied-platforms/sapien/介绍.html', tags: ['ManiSkill', 'GPU'] },
+        { vendor: 'MIT', title: 'ThreeDWorld', summary: 'Build + Controller, Clatter/Flex physics, Replicant agents, and multimodal perception datasets.', link: 'embodied-platforms/tdw/介绍.html', tags: ['Physics', 'Multimodal'] },
+        { vendor: 'Stanford', title: 'iGibson', summary: 'Gibson 572 scenes, PBR rendering, LiDAR, and Fetch manipulation tasks.', link: 'embodied-platforms/igibson/介绍.html', tags: ['Navigation', 'PyBullet'] },
+        { vendor: 'DeepMind', title: 'DeepMind Lab', summary: 'Quake-based 3D navigation: DMLab-30, Psychlab memory suite, and dm_env API.', link: 'embodied-platforms/deepmind_lab/介绍.html', tags: ['Navigation', 'RL Benchmark'] },
+        { vendor: 'UCLA / MIT', title: 'VirtualHome', summary: 'Program + graph representation, Unity sim, language instructions, and WAH dataset.', link: 'embodied-platforms/virtualhome/介绍.html', tags: ['Language', 'Programs'] },
+        { vendor: 'Cornell', title: 'CHALET', summary: '58-room language navigation simulator; CHAI corpus and CIFF evaluation framework.', link: 'embodied-platforms/chalet/介绍.html', tags: ['Language Nav', 'CHAI'] },
+        { vendor: 'Sorbonne', title: 'VRKitchen', summary: 'UE4 kitchen sim, VR demonstrations, and VR Chef Challenge APIs.', link: 'embodied-platforms/vrkitchen/介绍.html', tags: ['VR', 'Manipulation'] },
+        { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: '1000 household BDDL tasks, OmniGibson fluids/states, and 2025 Challenge stack.', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
+      ]
+    },
     blogs: [
-      {
-        date: '2026-06',
-        dateLabel: 'June 2026',
-        title: 'NVIDIA Embodied AI Platform Survey',
-        summary: 'Positioning and collaboration of Isaac Sim, Isaac Lab, and Cosmos; licensing notes, workflows, task library, training pipeline, and 3D asset formats.',
-        link: 'blogs/nvidia/',
-        tags: ['Embodied AI', 'NVIDIA', 'Isaac Sim', 'Isaac Lab']
-      }
+      { date: '2026-06', dateLabel: 'June 2026', title: 'NVIDIA Embodied AI Platform Survey', summary: 'Isaac Sim, Isaac Lab, and Cosmos workflows.', link: 'blogs/nvidia/', tags: ['Embodied AI', 'NVIDIA'] },
+      { date: '2026-06', dateLabel: 'June 2026', title: 'AI2-THOR Survey', summary: 'Unity interactive indoor simulation and Controller API.', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['Simulation', 'AI2-THOR'] },
+      { date: '2026-06', dateLabel: 'June 2026', title: 'SAPIEN / ManiSkill Survey', summary: 'GPU-parallel physics and ManiSkill3 benchmarks.', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['Simulation', 'ManiSkill'] },
+      { date: '2026-06', dateLabel: 'June 2026', title: 'BEHAVIOR-1K Survey', summary: 'BDDL tasks and OmniGibson.', link: 'blogs/embodied-platforms/behavior_1k/介绍.html', tags: ['Simulation', 'BEHAVIOR-1K'] },
+      { date: '2026-06', dateLabel: 'June 2026', title: 'Platform Selection Overview', summary: 'Multi-dimensional comparison across nine platforms.', link: 'blogs/embodied-platforms/主页.html', tags: ['Simulation', 'Benchmark'] }
     ],
     pubTitle: 'Publications',
     pubJournalLabel: 'Journal Papers',
@@ -257,8 +344,8 @@ window.RESUME = {
     footerContactLabel: 'Contact: wpxing@zju.edu.cn | IFRC: contact@zju-if.com | Address: Torch Innovation Center, Binjiang, Hangzhou',
     pi: {
       name: 'Wenpeng Xing',
-      role: 'Group head · Postdoctoral researcher',
-      bio: 'Postdoctoral researcher at the Binjiang Institute of Zhejiang University; head of Xing\'s Group. Ph.D. in Computer Science, Hong Kong Baptist University (supervisor: Dr. Jie Chen); B.Eng. in Civil Engineering, Harbin Institute of Technology. Former research/engineering intern at NVIDIA AI Technology Center (Hong Kong), A*STAR (Singapore), and Amazon AWS. PI on Zhejiang Provincial NSF and postdoctoral grants; first/corresponding author of 10+ CCF-A/B papers; 30+ Chinese patents granted or filed.',
+      role: 'Postdoctoral researcher',
+      bio: 'Postdoctoral researcher at the Binjiang Institute of Zhejiang University and the College of Computer Science and Technology, Zhejiang University. Ph.D. in Computer Science, Hong Kong Baptist University (supervisor: Dr. Jie Chen); B.Eng. in Civil Engineering, Harbin Institute of Technology. Former research/engineering intern at NVIDIA AI Technology Center (Hong Kong), A*STAR (Singapore), and Amazon AWS. PI on Zhejiang Provincial NSF projects; participates in multiple provincial and ministerial key R&D programs; first/corresponding author of 10+ CCF-A/B papers; 30+ Chinese patents granted or filed.',
       email: 'wpxing@zju.edu.cn',
       scholar: 'https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=en',
       avatar: '',
@@ -301,25 +388,26 @@ window.RESUME = {
     collaboratorsTitle: '',
     collaborators: [],
     news: [
-      { date: '2026-04', dateLabel: 'Apr 2026', title: 'ACL 2026: seven group papers; three with Wenpeng Xing', summary: 'ACL 2026 acceptances are announced. <strong>Xing\'s Group has seven accepted papers</strong> (including ACL Findings), <strong>three of which are directly associated with the group head (Wenpeng Xing)</strong>.', link: '' }
+      { date: '2026-04', dateLabel: 'Apr 2026', title: 'ACL 2026: seven accepted papers; three with Wenpeng Xing', summary: 'ACL 2026 acceptances are announced. <strong>Seven papers were accepted</strong> (including ACL Findings), <strong>three of which are directly associated with Wenpeng Xing</strong>.', link: '' }
     ],
     footerLocation: 'Hangzhou · China',
     navAriaLabel: 'Main navigation',
     menuAriaLabel: 'Open menu',
     heroAriaLabel: 'Home',
-    heroBgAriaLabel: 'Background image',
+    heroBgAriaLabel: 'Interactive rhythmic polylines with LLM token flow',
     zjuTitle: 'Zhejiang University',
     zjuAlt: 'Zhejiang University',
+    ibjTitle: 'Binjiang Institute of Zhejiang University',
+    ibjAlt: 'Binjiang Institute of Zhejiang University',
     galleryImageAlt: 'Lab photo',
     lightboxImageAlt: 'Gallery image'
   },
   ja: {
-    centerName: 'Xing\'s Group',
-    nav: { home: 'ホーム', about: '募集', piLead: 'グループ責任者', research: '研究', people: 'メンバー', news: 'ニュース', blogs: 'ブログ', papers: '論文', patents: '特許', gallery: 'ギャラリー', contact: '連絡' },
-    heroSubtitle: 'Xing\'s Group は浙江大学 IFRC（数智融合研究中心）および浙江大学濱江研究院に所属しています。',
+    centerName: 'Wenpeng Xing',
+    nav: { home: 'ホーム', about: '募集', piLead: 'プロフィール', research: '研究', people: 'メンバー', news: 'ニュース', blogs: 'ブログ', papers: '論文', patents: '特許', gallery: 'ギャラリー', contact: '連絡' },
+    heroSubtitle: '浙江大学コンピュータサイエンス・技術学院および浙江大学濱江研究院数智融合研究中心に所属しています。',
     heroDesc: '研究テーマには、ニューラルレンダリングと高忠実度リアルタイム三次元再構成（3D Gaussian Splatting、NeRF）、大規模言語モデルの信頼性・知的財産保護、マルチモーダル LLM のセキュリティ、エンボディド AI の安全性などがあります。',
-    heroPi: 'グループ責任者：邢文鵬 · <a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=ja" target="_blank" rel="noopener">Google Scholar</a>',
-    heroCta: '詳しく',
+    heroPi: '<a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=ja" target="_blank" rel="noopener">Google Scholar</a>',
     researchTitle: '研究',
     researchTopologyIntro: '',
     researchTopologyIframeTitle: 'エージェント階層間リスク伝播と三層信頼ガバナンス体系 — 対話図',
@@ -329,28 +417,45 @@ window.RESUME = {
     newsTitle: 'ニュース・イベント',
     blogsTitle: 'ブログ',
     blogHubTitle: '技術ブログ',
-    blogHubDesc: 'プラットフォーム別の調査ノートと実践ドキュメント。随時更新。',
+    blogHubDesc: '',
     blogHubBack: '← ホームへ',
     blogHubReadMore: '専欄へ →',
-    blogPlatforms: [
-      {
-        vendor: 'NVIDIA',
-        title: 'NVIDIA エンボディド AI プラットフォーム調査',
-        summary: 'Isaac Sim・Isaac Lab・Cosmos の位置づけ、連携、ライセンス、タスク、学習パイプライン、3D アセット形式など。',
-        link: 'nvidia/',
-        tags: ['エンボディド AI', 'Isaac Sim', 'Isaac Lab', 'Cosmos'],
-        updatedLabel: '2026年6月更新'
-      }
-    ],
+    embodiedSeries: {
+      title: 'エンボディド AI 平台調査',
+      summary: 'NVIDIA Isaac エコシステムと 9 つの OSS 仿真平台。能力マトリクス、選定ガイド、各平台の技術文書。',
+      seriesBadge: 'Embodied AI',
+      platformCountLabel: '10 プラットフォーム',
+      overviewHeading: '選定総覧',
+      platformsHeading: '平台専欄',
+      overviewUrl: 'embodied-platforms/主页.html',
+      viewFullOverview: '完全な総覧を見る →',
+      loadingLabel: '選定総覧を読み込み中…',
+      loadErrorLabel: '総覧の読み込みに失敗しました。完全な総覧ページを開いてください。',
+      overviewLegend: true,
+      legendHigh: 'コア強み',
+      legendMid: '利用可',
+      legendLow: '限定的',
+      legendNone: '非対応',
+      defaultOpen: true,
+      platforms: [
+        { vendor: 'NVIDIA', title: 'NVIDIA Isaac', summary: 'Isaac Sim・Isaac Lab・Cosmos：位置づけ、ライセンス、タスク、学習パイプラインなど。', link: 'nvidia/', tags: ['Isaac Sim', 'Isaac Lab', 'Cosmos'] },
+        { vendor: 'Allen AI', title: 'AI2-THOR', summary: 'Unity 室内インタラクティブ仿真と Controller API。', link: 'embodied-platforms/ai2thor/介绍.html', tags: ['Unity', 'Embodied AI'] },
+        { vendor: 'haosulab', title: 'SAPIEN / ManiSkill', summary: 'SAPIEN 3 と ManiSkill3 GPU 並列 benchmark。', link: 'embodied-platforms/sapien/介绍.html', tags: ['ManiSkill', 'GPU'] },
+        { vendor: 'MIT', title: 'ThreeDWorld', summary: 'Build + Controller、Clatter/Flex、Replicant。', link: 'embodied-platforms/tdw/介绍.html', tags: ['物理', 'マルチモーダル'] },
+        { vendor: 'Stanford', title: 'iGibson', summary: 'Gibson 572 シーンと Fetch 操作タスク。', link: 'embodied-platforms/igibson/介绍.html', tags: ['ナビ', 'PyBullet'] },
+        { vendor: 'DeepMind', title: 'DeepMind Lab', summary: 'DMLab-30 と Psychlab。', link: 'embodied-platforms/deepmind_lab/介绍.html', tags: ['ナビ', 'RL Benchmark'] },
+        { vendor: 'UCLA / MIT', title: 'VirtualHome', summary: 'プログラム + グラフ、言語指示タスク。', link: 'embodied-platforms/virtualhome/介绍.html', tags: ['言語', 'プログラム'] },
+        { vendor: 'Cornell', title: 'CHALET', summary: 'CHAI コーパスと CIFF 評価。', link: 'embodied-platforms/chalet/介绍.html', tags: ['言語ナビ', 'CHAI'] },
+        { vendor: 'Sorbonne', title: 'VRKitchen', summary: 'UE4 キッチンと VR Chef Challenge。', link: 'embodied-platforms/vrkitchen/介绍.html', tags: ['VR', '操作'] },
+        { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: 'BDDL 1000 タスクと OmniGibson。', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
+      ]
+    },
     blogs: [
-      {
-        date: '2026-06',
-        dateLabel: '2026年6月',
-        title: 'NVIDIA エンボディド AI プラットフォーム調査',
-        summary: 'Isaac Sim・Isaac Lab・Cosmos の位置づけ、連携、ライセンス、タスク、学習パイプライン、3D アセット形式など。',
-        link: 'blogs/nvidia/',
-        tags: ['エンボディド AI', 'NVIDIA', 'Isaac Sim', 'Isaac Lab']
-      }
+      { date: '2026-06', dateLabel: '2026年6月', title: 'NVIDIA エンボディド AI プラットフォーム調査', summary: 'Isaac Sim・Isaac Lab・Cosmos。', link: 'blogs/nvidia/', tags: ['エンボディド AI', 'NVIDIA'] },
+      { date: '2026-06', dateLabel: '2026年6月', title: 'AI2-THOR 調査', summary: 'Unity 室内仿真。', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['シミュレーション', 'AI2-THOR'] },
+      { date: '2026-06', dateLabel: '2026年6月', title: 'SAPIEN / ManiSkill 調査', summary: 'GPU 並列物理仿真。', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['シミュレーション', 'ManiSkill'] },
+      { date: '2026-06', dateLabel: '2026年6月', title: 'BEHAVIOR-1K 調査', summary: 'BDDL と OmniGibson。', link: 'blogs/embodied-platforms/behavior_1k/介绍.html', tags: ['シミュレーション', 'BEHAVIOR-1K'] },
+      { date: '2026-06', dateLabel: '2026年6月', title: 'プラットフォーム選定総覧', summary: '9 プラットフォーム比較。', link: 'blogs/embodied-platforms/主页.html', tags: ['Benchmark'] }
     ],
     pubTitle: '論文',
     pubJournalLabel: '学術誌論文',
@@ -362,8 +467,8 @@ window.RESUME = {
     footerContactLabel: '連絡：wpxing@zju.edu.cn | IFRC：contact@zju-if.com | 住所：杭州市濱江区火炬創新中心',
     pi: {
       name: '邢文鵬',
-      role: 'グループ責任者 · ポストドクター研究員',
-      bio: '浙江大学濱江研究院のポストドクター研究員、Xing\'s Group の責任者。香港浸会大学コンピュータサイエンス博士（指導教員：陳杰准教授）、ハルビン工業大学土木工学士。香港 NVIDIA AI Technology Center、シンガポール A*STAR、Amazon AWS における研究・エンジニアリングインターン経験。浙江省自然科学基金やポストドクター項目などを主宰。第一著者・責任著者として CCF-A/B 採択論文 10 本超、中国における発明特許の授権・出願 30 件超。',
+      role: 'ポストドクター研究員',
+      bio: '浙江大学濱江研究院および浙江大学コンピュータサイエンス・技術学院のポストドクター研究員。香港浸会大学コンピュータサイエンス博士（指導教員：陳杰准教授）、ハルビン工業大学土木工学士。香港 NVIDIA AI Technology Center、シンガポール A*STAR、Amazon AWS における研究・エンジニアリングインターン経験。浙江省自然科学基金項目を主宰し、複数の省部級重点研究開発プログラムに参画。第一著者・責任著者として CCF-A/B 採択論文 10 本超、中国における発明特許の授権・出願 30 件超。',
       email: 'wpxing@zju.edu.cn',
       scholar: 'https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=ja',
       avatar: '',
@@ -406,25 +511,26 @@ window.RESUME = {
     collaboratorsTitle: '',
     collaborators: [],
     news: [
-      { date: '2026-04', dateLabel: '2026年4月', title: 'ACL 2026：グループ 7 件、責任者関連 3 件', summary: 'ACL 2026 の採択が発表されました。<strong>本グループから合計 7 件が採択</strong>（ACL Findings 等を含む）され、<strong>そのうちグループ責任者（邢文鵬）に直接関連する採択は 3 件</strong>です。IFRC 研究室全体の採択件数・一覧はセンター公式サイトでご確認ください。', link: '' }
+      { date: '2026-04', dateLabel: '2026年4月', title: 'ACL 2026：採択 7 件、本人関連 3 件', summary: 'ACL 2026 の採択が発表されました。<strong>合計 7 件が採択</strong>（ACL Findings 等を含む）され、<strong>そのうち邢文鵬本人に直接関連する採択は 3 件</strong>です。IFRC 研究室全体の採択件数・一覧はセンター公式サイトでご確認ください。', link: '' }
     ],
     footerLocation: '杭州 · 中国',
     navAriaLabel: 'メインナビゲーション',
     menuAriaLabel: 'メニューを開く',
     heroAriaLabel: 'ホーム',
-    heroBgAriaLabel: '背景画像',
+    heroBgAriaLabel: 'インタラクティブな律動折れ線と LLM トークン流れの背景',
     zjuTitle: '浙江大學',
     zjuAlt: '浙江大學',
+    ibjTitle: '浙江大学濱江研究院',
+    ibjAlt: '浙江大学濱江研究院',
     galleryImageAlt: 'ラボ写真',
     lightboxImageAlt: 'ギャラリー画像'
   },
   ko: {
-    centerName: 'Xing\'s Group',
-    nav: { home: '홈', about: '채용', piLead: '그룹 책임자', research: '연구', people: '멤버', news: '소식', blogs: '블로그', papers: '논문', patents: '특허', gallery: '갤러리', contact: '연락' },
-    heroSubtitle: 'Xing\'s Group은 저장대학 IFRC(Intelligence Fusion Research Center)와 저장대학 빈장연구원에 소속되어 있습니다.',
+    centerName: 'Wenpeng Xing',
+    nav: { home: '홈', about: '채용', piLead: '소개', research: '연구', people: '멤버', news: '소식', blogs: '블로그', papers: '논문', patents: '특허', gallery: '갤러리', contact: '연락' },
+    heroSubtitle: '저장대학 컴퓨터공학과 기술学院와 저장대학 빈장연구원 수지융합연구센터에 소속되어 있습니다.',
     heroDesc: '연구 주제로는 신경 렌더링과 고충실도 실시간 3차원 재구성(3D Gaussian Splatting, NeRF), 대규모 언어 모델의 신뢰성·지식재산 보호, 멀티모달 LLM 보안, 구현 AI 안전 등이 있습니다.',
-    heroPi: '그룹 책임자: 형원펑(邢文鵬) · <a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=ko" target="_blank" rel="noopener">Google Scholar</a>',
-    heroCta: '더 보기',
+    heroPi: '<a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=ko" target="_blank" rel="noopener">Google Scholar</a>',
     researchTitle: '연구',
     researchTopologyIntro: '',
     researchTopologyIframeTitle: '에이전트 계층 간 위험 전파 및 3계층 신뢰 거버넌스 — 대화형 도표',
@@ -434,28 +540,45 @@ window.RESUME = {
     newsTitle: '소식·행사',
     blogsTitle: '블로그',
     blogHubTitle: '기술 블로그',
-    blogHubDesc: '플랫폼별 조사 노트와 실습 문서. 지속 업데이트.',
+    blogHubDesc: '',
     blogHubBack: '← 홈으로',
     blogHubReadMore: '전문 보기 →',
-    blogPlatforms: [
-      {
-        vendor: 'NVIDIA',
-        title: 'NVIDIA 엠보디드 AI 플랫폼 조사',
-        summary: 'Isaac Sim, Isaac Lab, Cosmos의 역할·협업·라이선스, 태스크, 학습 파이프라인, 3D 자산 형식 등.',
-        link: 'nvidia/',
-        tags: ['엠보디드 AI', 'Isaac Sim', 'Isaac Lab', 'Cosmos'],
-        updatedLabel: '2026년 6월 업데이트'
-      }
-    ],
+    embodiedSeries: {
+      title: '엠보디드 AI 플랫폼 조사',
+      summary: 'NVIDIA Isaac 생태계와 9개 오픈소스 시뮬레이터. 능력 매트릭스, 선정 가이드, 플랫폼별 기술 문서.',
+      seriesBadge: 'Embodied AI',
+      platformCountLabel: '10개 플랫폼',
+      overviewHeading: '선정 개요',
+      platformsHeading: '플랫폼 칼럼',
+      overviewUrl: 'embodied-platforms/主页.html',
+      viewFullOverview: '전체 개요 보기 →',
+      loadingLabel: '선정 개요 불러오는 중…',
+      loadErrorLabel: '개요를 불러오지 못했습니다. 전체 개요 페이지를 열어주세요.',
+      overviewLegend: true,
+      legendHigh: '핵심 강점',
+      legendMid: '사용 가능',
+      legendLow: '제한적',
+      legendNone: '미지원',
+      defaultOpen: true,
+      platforms: [
+        { vendor: 'NVIDIA', title: 'NVIDIA Isaac', summary: 'Isaac Sim, Isaac Lab, Cosmos: 역할, 라이선스, 태스크, 학습 파이프라인.', link: 'nvidia/', tags: ['Isaac Sim', 'Isaac Lab', 'Cosmos'] },
+        { vendor: 'Allen AI', title: 'AI2-THOR', summary: 'Unity 상호작용 실내 시뮬레이션과 Controller API.', link: 'embodied-platforms/ai2thor/介绍.html', tags: ['Unity', 'Embodied AI'] },
+        { vendor: 'haosulab', title: 'SAPIEN / ManiSkill', summary: 'SAPIEN 3 및 ManiSkill3 GPU 병렬 benchmark.', link: 'embodied-platforms/sapien/介绍.html', tags: ['ManiSkill', 'GPU'] },
+        { vendor: 'MIT', title: 'ThreeDWorld', summary: 'Build + Controller, Clatter/Flex, Replicant.', link: 'embodied-platforms/tdw/介绍.html', tags: ['물리', '멀티모달'] },
+        { vendor: 'Stanford', title: 'iGibson', summary: 'Gibson 572 장면과 Fetch 조작 태스크.', link: 'embodied-platforms/igibson/介绍.html', tags: ['내비', 'PyBullet'] },
+        { vendor: 'DeepMind', title: 'DeepMind Lab', summary: 'DMLab-30 및 Psychlab.', link: 'embodied-platforms/deepmind_lab/介绍.html', tags: ['내비', 'RL Benchmark'] },
+        { vendor: 'UCLA / MIT', title: 'VirtualHome', summary: '프로그램+그래프, 언어 지시 태스크.', link: 'embodied-platforms/virtualhome/介绍.html', tags: ['언어', '프로그램'] },
+        { vendor: 'Cornell', title: 'CHALET', summary: 'CHAI 코퍼스와 CIFF 평가.', link: 'embodied-platforms/chalet/介绍.html', tags: ['언어 내비', 'CHAI'] },
+        { vendor: 'Sorbonne', title: 'VRKitchen', summary: 'UE4 주방과 VR Chef Challenge.', link: 'embodied-platforms/vrkitchen/介绍.html', tags: ['VR', '조작'] },
+        { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: 'BDDL 1000 태스크와 OmniGibson.', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
+      ]
+    },
     blogs: [
-      {
-        date: '2026-06',
-        dateLabel: '2026년 6월',
-        title: 'NVIDIA 엠보디드 AI 플랫폼 조사',
-        summary: 'Isaac Sim, Isaac Lab, Cosmos의 역할·협업·라이선스, 태스크, 학습 파이프라인, 3D 자산 형식 등.',
-        link: 'blogs/nvidia/',
-        tags: ['엠보디드 AI', 'NVIDIA', 'Isaac Sim', 'Isaac Lab']
-      }
+      { date: '2026-06', dateLabel: '2026년 6월', title: 'NVIDIA 엠보디드 AI 플랫폼 조사', summary: 'Isaac Sim, Isaac Lab, Cosmos.', link: 'blogs/nvidia/', tags: ['엠보디드 AI', 'NVIDIA'] },
+      { date: '2026-06', dateLabel: '2026년 6월', title: 'AI2-THOR 조사', summary: 'Unity 실내 시뮬레이션.', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['시뮬레이션', 'AI2-THOR'] },
+      { date: '2026-06', dateLabel: '2026년 6월', title: 'SAPIEN / ManiSkill 조사', summary: 'GPU 병렬 물리 시뮬레이션.', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['시뮬레이션', 'ManiSkill'] },
+      { date: '2026-06', dateLabel: '2026년 6월', title: 'BEHAVIOR-1K 조사', summary: 'BDDL과 OmniGibson.', link: 'blogs/embodied-platforms/behavior_1k/介绍.html', tags: ['시뮬레이션', 'BEHAVIOR-1K'] },
+      { date: '2026-06', dateLabel: '2026년 6월', title: '플랫폼 선정 개요', summary: '9개 플랫폼 비교.', link: 'blogs/embodied-platforms/主页.html', tags: ['Benchmark'] }
     ],
     pubTitle: '논문',
     pubJournalLabel: '학술지 논문',
@@ -467,8 +590,8 @@ window.RESUME = {
     footerContactLabel: '연락: wpxing@zju.edu.cn | IFRC: contact@zju-if.com | 주소: 항저우 빈장구 화쥐 혁신센터',
     pi: {
       name: '형원펑 (邢文鵬)',
-      role: '그룹 책임자 · 박사후연구원',
-      bio: '저장대학 빈장연구원 박사후연구원, Xing\'s Group 책임자. 홍콩 침회대학교 컴퓨터과학 박사(지도교수: 천제 박사), 하얼빈공업대학 토목공학 학사. 홍콩 NVIDIA AI Technology Center, 싱가포르 A*STAR, Amazon AWS 연구·엔지니어링 인턴 경력. 저장성 자연과학기금 및 박사후 과제 등 책임자. 제1·교신저자로 CCF-A/B 논문 10편 이상, 중국 발명특허 등록·출원 30건 이상.',
+      role: '박사후연구원',
+      bio: '저장대학 빈장연구원 및 저장대학 컴퓨터공학과 기술学院 박사후연구원. 홍콩 침회대학교 컴퓨터과학 박사(지도교수: 천제 박사), 하얼빈공업대학 토목공학 학사. 홍콩 NVIDIA AI Technology Center, 싱가포르 A*STAR, Amazon AWS 연구·엔지니어링 인턴 경력. 저장성 자연과학기금 프로젝트를 주관하고 여러 성부급 중점 연구개발 프로젝트에 참여. 제1·교신저자로 CCF-A/B 논문 10편 이상, 중국 발명특허 등록·출원 30건 이상.',
       email: 'wpxing@zju.edu.cn',
       scholar: 'https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=ko',
       avatar: '',
@@ -511,25 +634,26 @@ window.RESUME = {
     collaboratorsTitle: '',
     collaborators: [],
     news: [
-      { date: '2026-04', dateLabel: '2026년 4월', title: 'ACL 2026: 그룹 7편, 책임자 본인 관련 3편', summary: 'ACL 2026 채택 결과가 발표되었습니다. <strong>Xing\'s Group에서 총 7편이 채택</strong>되었으며(ACL Findings 등 포함), <strong>그중 그룹 책임자(형원펑)와 직접 관련된 채택은 3편</strong>입니다.', link: '' }
+      { date: '2026-04', dateLabel: '2026년 4월', title: 'ACL 2026: 채택 7편, 본인 관련 3편', summary: 'ACL 2026 채택 결과가 발표되었습니다. <strong>총 7편이 채택</strong>되었으며(ACL Findings 등 포함), <strong>그중 형원펑 본인과 직접 관련된 채택은 3편</strong>입니다.', link: '' }
     ],
     footerLocation: '항저우 · 중국',
     navAriaLabel: '메인 네비게이션',
     menuAriaLabel: '메뉴 열기',
     heroAriaLabel: '홈',
-    heroBgAriaLabel: '배경 이미지',
+    heroBgAriaLabel: '인터랙티브 리듬 폴리라인과 LLM 토큰 흐름 배경',
     zjuTitle: '저장대학',
     zjuAlt: '저장대학',
+    ibjTitle: '저장대학 빈장연구원',
+    ibjAlt: '저장대학 빈장연구원',
     galleryImageAlt: '연구실 사진',
     lightboxImageAlt: '갤러리 이미지'
   },
   th: {
-    centerName: 'Xing\'s Group',
-    nav: { home: 'หน้าแรก', about: 'รับสมัคร', piLead: 'หัวหน้ากลุ่มวิจัย', research: 'วิจัย', people: 'สมาชิก', news: 'ข่าว', blogs: 'บล็อก', papers: 'ผลงาน', patents: 'สิทธิบัตร', gallery: 'แกลเลอรี', contact: 'ติดต่อ' },
-    heroSubtitle: 'Xing\'s Group สังกัด IFRC (Intelligence Fusion Research Center) ของมหาวิทยาลัยเจ้อเจียง และ Binjiang Institute of Zhejiang University',
+    centerName: 'Wenpeng Xing',
+    nav: { home: 'หน้าแรก', about: 'รับสมัคร', piLead: 'เกี่ยวกับ', research: 'วิจัย', people: 'สมาชิก', news: 'ข่าว', blogs: 'บล็อก', papers: 'ผลงาน', patents: 'สิทธิบัตร', gallery: 'แกลเลอรี', contact: 'ติดต่อ' },
+    heroSubtitle: 'สังกัดวิทยาลัยวิทยาการคอมพิวเตอร์และเทคโนโลยี มหาวิทยาลัยเจ้อเจียง และศูนย์วิจัยการหลอมรวมปัญญา Binjiang Institute of Zhejiang University',
     heroDesc: 'ทิศทางวิจัยครอบคลุมการเรนเดอร์แบบประสาทและการสร้างโมเดลสามมิติแบบเรียลไทม์ที่มีความสมจริงสูง (3D Gaussian Splatting, NeRF) ความน่าเชื่อถือและการคุ้มครองทรัพย์สินทางปัญญาของโมเดลภาษาขนาดใหญ่ ความปลอดภัยของโมเดลภาษาหลายมัลติโมดัล และความปลอดภัยของ AI แบบมีร่างกาย',
-    heroPi: 'หัวหน้ากลุ่ม: Wenpeng Xing · <a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>',
-    heroCta: 'ดูเพิ่ม',
+    heroPi: '<a href="https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>',
     researchTitle: 'วิจัย',
     researchTopologyIntro: '',
     researchTopologyIframeTitle: 'การแพร่ความเสี่ยงข้ามชั้นของเอเจนต์และระบบกำกับความน่าเชื่อถือสามชั้น — แผนภาพแบบโต้ตอบ',
@@ -539,28 +663,45 @@ window.RESUME = {
     newsTitle: 'ข่าวและกิจกรรม',
     blogsTitle: 'บล็อก',
     blogHubTitle: 'บล็อกเทคนิค',
-    blogHubDesc: 'บันทึกสำรวจและเอกสารปฏิบัติจัดตามแพลตฟอร์ม อัปเดตอย่างต่อเนื่อง',
+    blogHubDesc: '',
     blogHubBack: '← กลับหน้าแรก',
     blogHubReadMore: 'เข้าชมบทความ →',
-    blogPlatforms: [
-      {
-        vendor: 'NVIDIA',
-        title: 'สำรวจแพลตฟอร์ม NVIDIA Embodied AI',
-        summary: 'บทบาทและการทำงานร่วมกันของ Isaac Sim, Isaac Lab, Cosmos รวมถึงไลเซนส์ งาน การฝึก และรูปแบบ 3D asset',
-        link: 'nvidia/',
-        tags: ['Embodied AI', 'Isaac Sim', 'Isaac Lab', 'Cosmos'],
-        updatedLabel: 'อัปเดต มิ.ย. 2026'
-      }
-    ],
+    embodiedSeries: {
+      title: 'สำรวจแพลตฟอร์ม Embodied AI',
+      summary: 'ระบบนิเวศ NVIDIA Isaac และจำลองโอเพนซอร์ส 9 แพลตฟอร์ม พร้อมเมทริกซ์ความสามารถและเอกสารแต่ละแพลตฟอร์ม',
+      seriesBadge: 'Embodied AI',
+      platformCountLabel: '10 แพลตฟอร์ม',
+      overviewHeading: 'ภาพรวมการเลือก',
+      platformsHeading: 'คอลัมน์แพลตฟอร์ม',
+      overviewUrl: 'embodied-platforms/主页.html',
+      viewFullOverview: 'ดูภาพรวมฉบับเต็ม →',
+      loadingLabel: 'กำลังโหลดภาพรวม…',
+      loadErrorLabel: 'โหลดภาพรวมไม่สำเร็จ กรุณาเปิดหน้าภาพรวมฉบับเต็ม',
+      overviewLegend: true,
+      legendHigh: 'จุดแข็งหลัก',
+      legendMid: 'ใช้ได้',
+      legendLow: 'จำกัด',
+      legendNone: 'ไม่รองรับ',
+      defaultOpen: true,
+      platforms: [
+        { vendor: 'NVIDIA', title: 'NVIDIA Isaac', summary: 'Isaac Sim, Isaac Lab, Cosmos และ pipeline การฝึก', link: 'nvidia/', tags: ['Isaac Sim', 'Isaac Lab', 'Cosmos'] },
+        { vendor: 'Allen AI', title: 'AI2-THOR', summary: 'Unity interactive indoor sim และ Controller API', link: 'embodied-platforms/ai2thor/介绍.html', tags: ['Unity', 'Embodied AI'] },
+        { vendor: 'haosulab', title: 'SAPIEN / ManiSkill', summary: 'SAPIEN 3 และ ManiSkill3 GPU benchmark', link: 'embodied-platforms/sapien/介绍.html', tags: ['ManiSkill', 'GPU'] },
+        { vendor: 'MIT', title: 'ThreeDWorld', summary: 'Build + Controller, Clatter/Flex, Replicant', link: 'embodied-platforms/tdw/介绍.html', tags: ['Physics', 'Multimodal'] },
+        { vendor: 'Stanford', title: 'iGibson', summary: 'Gibson 572 scenes และ Fetch tasks', link: 'embodied-platforms/igibson/介绍.html', tags: ['Navigation', 'PyBullet'] },
+        { vendor: 'DeepMind', title: 'DeepMind Lab', summary: 'DMLab-30 และ Psychlab', link: 'embodied-platforms/deepmind_lab/介绍.html', tags: ['Navigation', 'RL Benchmark'] },
+        { vendor: 'UCLA / MIT', title: 'VirtualHome', summary: 'Program + graph และ language tasks', link: 'embodied-platforms/virtualhome/介绍.html', tags: ['Language', 'Programs'] },
+        { vendor: 'Cornell', title: 'CHALET', summary: 'CHAI corpus และ CIFF evaluation', link: 'embodied-platforms/chalet/介绍.html', tags: ['Language Nav', 'CHAI'] },
+        { vendor: 'Sorbonne', title: 'VRKitchen', summary: 'UE4 kitchen และ VR Chef Challenge', link: 'embodied-platforms/vrkitchen/介绍.html', tags: ['VR', 'Manipulation'] },
+        { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: 'BDDL 1000 tasks และ OmniGibson', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
+      ]
+    },
     blogs: [
-      {
-        date: '2026-06',
-        dateLabel: 'มิถุนายน 2026',
-        title: 'สำรวจแพลตฟอร์ม NVIDIA Embodied AI',
-        summary: 'บทบาทและการทำงานร่วมกันของ Isaac Sim, Isaac Lab, Cosmos รวมถึงไลเซนส์ งาน การฝึก และรูปแบบ 3D asset',
-        link: 'blogs/nvidia/',
-        tags: ['Embodied AI', 'NVIDIA', 'Isaac Sim', 'Isaac Lab']
-      }
+      { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'สำรวจแพลตฟอร์ม NVIDIA Embodied AI', summary: 'Isaac Sim, Isaac Lab, Cosmos', link: 'blogs/nvidia/', tags: ['Embodied AI', 'NVIDIA'] },
+      { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'สำรวจ AI2-THOR', summary: 'Unity indoor simulation', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['Simulation', 'AI2-THOR'] },
+      { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'สำรวจ SAPIEN / ManiSkill', summary: 'GPU parallel physics', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['Simulation', 'ManiSkill'] },
+      { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'สำรวจ BEHAVIOR-1K', summary: 'BDDL และ OmniGibson', link: 'blogs/embodied-platforms/behavior_1k/介绍.html', tags: ['Simulation', 'BEHAVIOR-1K'] },
+      { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'ภาพรวมการเลือกแพลตฟอร์ม', summary: 'เปรียบเทียบ 9 แพลตฟอร์ม', link: 'blogs/embodied-platforms/主页.html', tags: ['Benchmark'] }
     ],
     pubTitle: 'ผลงานตีพิมพ์',
     pubJournalLabel: 'วารสาร',
@@ -572,8 +713,8 @@ window.RESUME = {
     footerContactLabel: 'ติดต่อ: wpxing@zju.edu.cn | IFRC: contact@zju-if.com | ที่อยู่: Torch Innovation Center, Binjiang, Hangzhou',
     pi: {
       name: 'Wenpeng Xing',
-      role: 'หัวหน้ากลุ่มวิจัย · นักวิจัยหลังปริญญาเอก',
-      bio: 'นักวิจัยหลังปริญญาเอกที่ Binjiang Institute of Zhejiang University และหัวหน้า Xing\'s Group ปริญญาเอกสาขาวิทยาการคอมพิวเตอร์ มหาวิทยาลัย Baptist ฮ่องกง (อาจารย์ที่ปรึกษา: ดร. Jie Chen) ปริญญาตรีวิศวกรรมโยธา สถาบันเทคโนโลยีฮาร์บิน เคยฝึกงาน/วิจัยที่ NVIDIA AI Technology Center (ฮ่องกง) A*STAR (สิงคโปร์) และ Amazon AWS หัวหน้าโครงการทุน NSF มณฑลเจ้อเจียงและโครงการหลังปริญญาเอก ผู้แต่งหลัก/ผู้รับผิดชอบบทความระดับ CCF-A/B มากกว่า 10 ชิ้น และสิทธิบัตรในจีนมากกว่า 30 เรื่อง',
+      role: 'นักวิจัยหลังปริญญาเอก',
+      bio: 'นักวิจัยหลังปริญญาเอกที่ Binjiang Institute of Zhejiang University และวิทยาลัยวิทยาการคอมพิวเตอร์และเทคโนโลยี มหาวิทยาลัยเจ้อเจียง ปริญญาเอกสาขาวิทยาการคอมพิวเตอร์ มหาวิทยาลัย Baptist ฮ่องกง (อาจารย์ที่ปรึกษา: ดร. Jie Chen) ปริญญาตรีวิศวกรรมโยธา สถาบันเทคโนโลยีฮาร์บิน เคยฝึกงาน/วิจัยที่ NVIDIA AI Technology Center (ฮ่องกง) A*STAR (สิงคโปร์) และ Amazon AWS หัวหน้าโครงการทุน NSF มณฑลเจ้อเจียงและเข้าร่วมโครงการวิจัยและพัฒนาระดับจังหวัดและกระทรวงหลายโครงการ ผู้แต่งหลัก/ผู้รับผิดชอบบทความระดับ CCF-A/B มากกว่า 10 ชิ้น และสิทธิบัตรในจีนมากกว่า 30 เรื่อง',
       email: 'wpxing@zju.edu.cn',
       scholar: 'https://scholar.google.com/citations?user=2S80TvwAAAAJ&hl=en',
       avatar: '',
@@ -616,15 +757,17 @@ window.RESUME = {
     collaboratorsTitle: '',
     collaborators: [],
     news: [
-      { date: '2026-04', dateLabel: 'เม.ย. 2026', title: 'ACL 2026: กลุ่ม 7 เรื่อง หัวหน้ากลุ่ม 3 เรื่อง', summary: 'ACL 2026 ประกาศผลการคัดเลือกแล้ว <strong>Xing\'s Group มีบทความได้รับการคัดเลือกรวม 7 เรื่อง</strong> (รวม ACL Findings) <strong>ในนั้นที่เกี่ยวข้องโดยตรงกับหัวหน้ากลุ่ม (Wenpeng Xing) จำนวน 3 เรื่อง</strong>', link: '' }
+      { date: '2026-04', dateLabel: 'เม.ย. 2026', title: 'ACL 2026: ได้รับการคัดเลือก 7 เรื่อง เกี่ยวข้องกับ Wenpeng Xing 3 เรื่อง', summary: 'ACL 2026 ประกาศผลการคัดเลือกแล้ว <strong>มีบทความได้รับการคัดเลือกรวม 7 เรื่อง</strong> (รวม ACL Findings) <strong>ในนั้นที่เกี่ยวข้องโดยตรงกับ Wenpeng Xing จำนวน 3 เรื่อง</strong>', link: '' }
     ],
     footerLocation: 'หางโจว · จีน',
     navAriaLabel: 'เมนูนำทางหลัก',
     menuAriaLabel: 'เปิดเมนู',
     heroAriaLabel: 'หน้าแรก',
-    heroBgAriaLabel: 'ภาพพื้นหลัง',
+    heroBgAriaLabel: 'พื้นหลังเส้นหักจังหวะแบบโต้ตอบได้พร้อมการไหลของ LLM token',
     zjuTitle: 'Zhejiang University',
     zjuAlt: 'Zhejiang University',
+    ibjTitle: 'Binjiang Institute of Zhejiang University',
+    ibjAlt: 'Binjiang Institute of Zhejiang University',
     galleryImageAlt: 'ภาพห้องปฏิบัติการ',
     lightboxImageAlt: 'ภาพแกลเลอรี'
   }

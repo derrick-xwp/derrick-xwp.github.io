@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>关卡与任务参考 · DeepMind Lab</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>DeepMind Lab</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">DeepMind Lab</div>
+<a class="nav-link" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Quake/ioquake3、动作/观测、DMLab-30、Psychlab</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">Bazel、PIP、headless、dm_env、level cache</span></a>
+<a class="nav-link active" href="关卡与任务参考.html"><span class="nav-link-title">关卡与任务参考</span><span class="nav-link-desc">nav_maze、DMLab-30 全表、Psychlab memory suite</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>DeepMind Lab</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>DeepMind Lab</span> <span> / </span> <span>关卡与任务参考</span></div>
+          <article class="article"><h1 id="deepmind-lab-">DeepMind Lab 关卡与任务参考</h1>
+<blockquote>
+<p>关卡根目录：<a href="https://github.com/google-deepmind/lab/tree/master/game_scripts/levels">game_scripts/levels/</a> · 全局选项：<a href="https://github.com/google-deepmind/lab/blob/master/docs/levels.md">docs/levels.md</a> · DMLab-30：<a href="https://github.com/google-deepmind/lab/blob/master/game_scripts/levels/contributed/dmlab30/README.md">README</a><br />
+<strong>本地源码</strong>：<code>https://github.com/google-deepmind/lab/blob/main/game_scripts/</code>（153 个 <code>.lua</code> 关卡 + factories）</p>
+</blockquote>
+<h2 id="1.-">1. 关卡命名与加载</h2>
+<p>Python 中 <code>level</code> 参数 = <strong>相对 <code>game_scripts/levels/</code> 的路径</strong>，<strong>不含 <code>.lua</code> 后缀</strong>：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># 根目录关卡</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">deepmind_lab.Lab(<span class="st">&#39;nav_maze_random_goal_01&#39;</span>, [<span class="st">&#39;RGB_INTERLEAVED&#39;</span>])</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># 子目录</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">deepmind_lab.Lab(<span class="st">&#39;contributed/dmlab30/explore_goal_locations_small&#39;</span>, [<span class="st">&#39;RGBD&#39;</span>])</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">deepmind_lab.Lab(<span class="st">&#39;demos/extra_entities&#39;</span>, [<span class="st">&#39;RGB_INTERLEAVED&#39;</span>])</a></code></pre></div>
+<p>Lua 中通过 <a href="https://github.com/google-deepmind/lab/blob/master/docs/developers/reference/lua_api.md">Lua API</a> 定义：</p>
+<ul>
+<li><code>api:init</code> — 读取 <code>kwargs.opts</code> 配置</li>
+<li>reward、termination、observation 注册</li>
+<li>程序化地图生成 hook</li>
+</ul>
+<h3 id="1.1-factory-">1.1 Factory 与程序化地图</h3>
+<p>多数关卡不直接写完整 API，而是 <strong><code>require 'factories.*'</code></strong> 返回 <code>createLevelApi()</code>。以随机迷宫为例，factory 在 <code>api:start</code> 里 <strong>seed RNG 并随机 goal</strong>：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode 40:59:https://github.com/google-deepmind/lab/blob/main/game_scripts/factories/random_goal_factory.lua"><code class="sourceCode lua"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">function</span> factory<span class="op">.</span>createLevelApi<span class="op">(</span>kwargs<span class="op">)</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">  kwargs<span class="op">.</span>scatteredRewardDensity <span class="op">=</span> kwargs<span class="op">.</span>scatteredRewardDensity <span class="kw">or</span> <span class="dv">0.1</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  kwargs<span class="op">.</span>episodeLengthSeconds <span class="op">=</span> kwargs<span class="op">.</span>episodeLengthSeconds <span class="kw">or</span> <span class="dv">600</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="kw">local</span> maze <span class="op">=</span> maze_generation<span class="op">.</span>mazeGeneration<span class="op">{</span>entity <span class="op">=</span> kwargs<span class="op">.</span>entityLayer<span class="op">}</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">  <span class="kw">local</span> api <span class="op">=</span> <span class="op">{}</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">  <span class="op">...</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">  <span class="kw">function</span> api<span class="op">:</span>start<span class="op">(</span>episode<span class="op">,</span> seed<span class="op">,</span> params<span class="op">)</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">    random<span class="op">:</span>seed<span class="op">(</span>seed<span class="op">)</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">    randomMap<span class="op">:</span>seed<span class="op">(</span>seed<span class="op">)</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">    api<span class="op">.</span>_timeRemaining <span class="op">=</span> kwargs<span class="op">.</span>episodeLengthSeconds</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">    <span class="op">...</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">    api<span class="op">.</span>_goal <span class="op">=</span> <span class="op">{</span>random<span class="op">:</span>uniformInt<span class="op">(</span><span class="dv">1</span><span class="op">,</span> height<span class="op">)</span> <span class="op">*</span> <span class="dv">2</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">                 random<span class="op">:</span>uniformInt<span class="op">(</span><span class="dv">1</span><span class="op">,</span> width<span class="op">)</span> <span class="op">*</span> <span class="dv">2</span><span class="op">}</span></a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th>Factory 路径</th>
+<th>用于</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/google-deepmind/lab/blob/master/game_scripts/factories/random_goal_factory.lua"><code>factories/random_goal_factory.lua</code></a></td>
+<td><code>nav_maze_random_goal_*</code></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/google-deepmind/lab/blob/master/game_scripts/factories/explore/goal_locations_factory.lua"><code>factories/explore/goal_locations_factory.lua</code></a></td>
+<td>DMLab-30 <code>explore_goal_locations_*</code></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/google-deepmind/lab/tree/master/game_scripts/factories/explore"><code>factories/explore/</code></a></td>
+<td>object_locations、obstructed_goals 等</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/google-deepmind/lab/tree/master/deepmind/engine"><code>dmlab.system.map_maker</code></a></td>
+<td>文本层 → BSP/PK3（C++ + Lua）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2.-">2. 内置核心关卡</h2>
+<p>位于 <code>game_scripts/levels/*.lua</code>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>能力</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>nav_maze_static_01</code> ~ <code>_03</code></td>
+<td>固定布局迷宫 → 目标点</td>
+</tr>
+<tr class="even">
+<td><code>nav_maze_random_goal_01</code> ~ <code>_03</code></td>
+<td><strong>随机迷宫</strong> + 随机 goal；难度递增</td>
+</tr>
+<tr class="odd">
+<td><code>lt_chasm</code></td>
+<td>窄通道 / 坠落风险</td>
+</tr>
+<tr class="even">
+<td><code>lt_hallway_slope</code></td>
+<td>坡度走廊</td>
+</tr>
+<tr class="odd">
+<td><code>lt_horseshoe_color</code></td>
+<td>颜色线索导航</td>
+</tr>
+<tr class="even">
+<td><code>lt_space_bounce_hard</code></td>
+<td>低重力平台跳跃</td>
+</tr>
+<tr class="odd">
+<td><code>seekavoid_arena_01</code></td>
+<td>追逐-躲避</td>
+</tr>
+<tr class="even">
+<td><code>stairway_to_melon</code></td>
+<td>到达/收集 melons</td>
+</tr>
+</tbody>
+</table>
+<p><code>demos/</code>、<code>tests/</code> 用于 smoke test 与 API 验证（如 <code>tests/empty_room_test</code>）。</p>
+<hr />
+<h2 id="3.-dmlab-30-">3. DMLab-30 完整列表</h2>
+<p>路径前缀：<code>contributed/dmlab30/</code>（本地 <a href="https://github.com/google-deepmind/lab/tree/master/game_scripts/levels/contributed/dmlab30"><code>game_scripts/levels/contributed/dmlab30/</code></a> 含 30 个环境 Lua + 详细 README）<br />
+加载示例：<code>contributed/dmlab30/rooms_watermaze</code></p>
+<p>多数任务观测：<strong>RGBD</strong> + 部分 <strong>language</strong>（<code>INSTR</code>）。</p>
+<h3 id="3.1-rooms5">3.1 Rooms（5）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>任务</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>rooms_collect_good_objects_train</code> / <code>_test</code></td>
+<td>收集「好」物体、避「坏」物体；<strong>train/test 物体×环境组合 hold-out</strong>（DARLA 等）</td>
+</tr>
+<tr class="even">
+<td><code>rooms_exploit_deferred_effects_train</code> / <code>_test</code></td>
+<td>延迟效应：拾取特殊物体 unlock 后续 reward</td>
+</tr>
+<tr class="odd">
+<td><code>rooms_select_nonmatching_object</code></td>
+<td>选择与展示物 <strong>不匹配</strong> 的对象（+10 vs -10）</td>
+</tr>
+<tr class="even">
+<td><code>rooms_watermaze</code></td>
+<td><strong>Morris water maze</strong> 式：找隐藏平台，测 episodic memory</td>
+</tr>
+<tr class="odd">
+<td><code>rooms_keys_doors_puzzle</code></td>
+<td><strong>彩色钥匙-门</strong> 规划 puzzle；顺序错误可达不了 goal</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3.2-language4">3.2 Language（4）</h3>
+<p>基于 <a href="https://arxiv.org/abs/1706.06551">Hermann et al. 2017 地面语言</a>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>任务</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>language_select_described_object</code></td>
+<td>按描述选物体</td>
+</tr>
+<tr class="even">
+<td><code>language_select_located_object</code></td>
+<td>「Pick the red object in the blue room」</td>
+</tr>
+<tr class="odd">
+<td><code>language_execute_random_task</code></td>
+<td>7 种任务类型随机</td>
+</tr>
+<tr class="even">
+<td><code>language_answer_quantitative_question</code></td>
+<td>是非/计数问题（选白/黑球回答）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3.3-lasertag4">3.3 LaserTag（4）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>对手</th>
+<th>地图</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>lasertag_one_opponent_small</code></td>
+<td>1 bot</td>
+<td>小</td>
+</tr>
+<tr class="even">
+<td><code>lasertag_three_opponents_small</code></td>
+<td>3 bots</td>
+<td>小</td>
+</tr>
+<tr class="odd">
+<td><code>lasertag_one_opponent_large</code></td>
+<td>1 bot</td>
+<td>大</td>
+</tr>
+<tr class="even">
+<td><code>lasertag_three_opponents_large</code></td>
+<td>3 bots</td>
+<td>大</td>
+</tr>
+</tbody>
+</table>
+<p>程序化.gadget/地图；考验 <strong>adaptation</strong>。</p>
+<h3 id="3.4-natlab3">3.4 NatLab（3）</h3>
+<p>蘑菇采集 <strong>自然地形</strong>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>记忆类型</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>natlab_fixed_large_map</code></td>
+<td><strong>长期记忆</strong> — 大地图，蘑菇不重生</td>
+</tr>
+<tr class="even">
+<td><code>natlab_varying_map_regrowth</code></td>
+<td><strong>短期</strong> — 小随机图，~1 分钟再生</td>
+</tr>
+<tr class="odd">
+<td><code>natlab_varying_map_randomized</code></td>
+<td>随机中等地图，蘑菇位置随机</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3.5-skymaze2">3.5 SkyMaze（2）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>任务</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>skymaze_irreversible_path_hard</code></td>
+<td><strong>不可逆路径</strong> — 禁用 jump，需规划避免困在低平台</td>
+</tr>
+<tr class="even">
+<td><code>skymaze_irreversible_path_varied</code></td>
+<td>随机难度变体</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3.6-psychlab4">3.6 PsychLab（4）</h3>
+<p><a href="https://arxiv.org/abs/1801.08116">Leibo et al. 2018 Psychlab</a>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>心理学范式</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>psychlab_arbitrary_visuomotor_mapping</code></td>
+<td>图像→动作 arbitrary mapping</td>
+</tr>
+<tr class="even">
+<td><code>psychlab_continuous_recognition</code></td>
+<td>连续识别（是否见过）</td>
+</tr>
+<tr class="odd">
+<td><code>psychlab_sequential_comparison</code></td>
+<td>两图是否相同（可变 delay）</td>
+</tr>
+<tr class="even">
+<td><code>psychlab_visual_search</code></td>
+<td>集合中是否存在粉色 T</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3.7-explore8">3.7 Explore（8）</h3>
+<p>程序化迷宫 + 主题随机；<strong>建议 level_cache</strong>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>任务</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>explore_object_locations_small</code> / <code>_large</code></td>
+<td>收集 <strong>apple</strong>；收完 reset</td>
+</tr>
+<tr class="even">
+<td><code>explore_obstructed_goals_small</code> / <code>_large</code></td>
+<td>找 goal + <strong>随机开关门</strong></td>
+</tr>
+<tr class="odd">
+<td><code>explore_goal_locations_small</code> / <code>_large</code></td>
+<td><strong>纯导航到 goal</strong>；经典记忆基准</td>
+</tr>
+<tr class="even">
+<td><code>explore_object_rewards_few</code> / <code>_many</code></td>
+<td>收集正/负 reward 物体类别</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4.-psychlab-memory-suite">4. Psychlab Memory Suite</h2>
+<p><code>contributed/psychlab/memory_suite_01/</code> 扩展 <strong>explore_goal_locations</strong> 的训练/评测 split：</p>
+<table>
+<thead>
+<tr class="header">
+<th>变体</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>explore_goal_locations_train_small</code> / <code>_large</code></td>
+<td>训练地图规模</td>
+</tr>
+<tr class="even">
+<td><code>explore_goal_locations_holdout_small</code> / <code>_large</code></td>
+<td>hold-out 评测</td>
+</tr>
+<tr class="odd">
+<td><code>explore_goal_locations_interpolate</code></td>
+<td>插值泛化</td>
+</tr>
+<tr class="even">
+<td><code>explore_goal_locations_extrapolate</code></td>
+<td>外推泛化</td>
+</tr>
+<tr class="odd">
+<td><code>explore_goal_locations_holdout_interpolate</code> / <code>_extrapolate</code></td>
+<td>组合 hold-out</td>
+</tr>
+</tbody>
+</table>
+<p>配合 <a href="https://github.com/deepmind/dm_memorytasks">dm_memorytasks</a> 共 <strong>13 项记忆任务</strong> 研究。</p>
+<hr />
+<h2 id="5.-">5. 观测与动作按任务选型</h2>
+<table>
+<thead>
+<tr class="header">
+<th>任务类型</th>
+<th>推荐 observations</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>纯视觉 RL</td>
+<td><code>RGB_INTERLEAVED</code> 或 <code>RGBD</code></td>
+<td>84×84 或 64×64 常见</td>
+</tr>
+<tr class="even">
+<td>语言 grounding</td>
+<td><code>RGBD</code> + <code>INSTR</code></td>
+<td>读 <code>env.observations()['INSTR']</code></td>
+</tr>
+<tr class="odd">
+<td>分析导航</td>
+<td>+ <code>VEL.TRANS</code>, <code>VEL.ROT</code></td>
+<td>非 agent 可用特权</td>
+</tr>
+<tr class="even">
+<td>调试</td>
+<td><code>DEBUG.POS.TRANS</code></td>
+<td>仅 analysis，非公平 benchmark</td>
+</tr>
+<tr class="odd">
+<td>LaserTag</td>
+<td><code>RGBD</code> + FIRE/JUMP</td>
+<td>启用 gadget 时加 config flags</td>
+</tr>
+</tbody>
+</table>
+<p>动作向量长度 = <code>len(env.action_spec())</code>，通常 <strong>7</strong>；Skymaze 等关卡内部将 JUMP 置为 NOOP。</p>
+<hr />
+<h2 id="6.--config--hold-out">6. 标准 config 与 hold-out</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1">config <span class="op">=</span> {</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="st">&#39;episodeLengthSeconds&#39;</span>: <span class="st">&#39;120&#39;</span>,</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">    <span class="st">&#39;allowHoldOutLevels&#39;</span>: <span class="st">&#39;true&#39;</span>,  <span class="co"># 字符串形式</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="st">&#39;logLevel&#39;</span>: <span class="st">&#39;WARNING&#39;</span>,</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">}</a></code></pre></div>
+<p><code>rooms_collect_good_objects_test</code> 等仅在 allow hold-out 时加载。</p>
+<hr />
+<h2 id="7.-">7. 自定义关卡（开发者）</h2>
+<ol>
+<li>在 <code>game_scripts/levels/my_task.lua</code> 编写 Lua（可参考 <code>nav_maze_random_goal_01.lua</code>）</li>
+<li>若需新 geometry：Quake <code>.map</code> → q3map2 → <code>.bsp</code> → PK3</li>
+<li>Bazel 重新打包或 pip rebuild</li>
+<li>文档：<a href="https://github.com/google-deepmind/lab/tree/master/docs/developers">developers/</a></li>
+</ol>
+<p>Lua 可注册 <strong>custom observations</strong> 与 <strong>events</strong>（<code>env.events()</code> 返回）。</p>
+<hr />
+<h2 id="8.-">8. 任务能力对照表（选型）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>研究目标</th>
+<th>推荐关卡</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>经典 maze navigation</td>
+<td><code>nav_maze_random_goal_*</code></td>
+</tr>
+<tr class="even">
+<td>Sample efficiency / IMPALA</td>
+<td><code>explore_goal_locations_small</code></td>
+</tr>
+<tr class="odd">
+<td>Episodic memory</td>
+<td><code>rooms_watermaze</code>, explore_*</td>
+</tr>
+<tr class="even">
+<td>Language + vision</td>
+<td><code>language_*</code></td>
+</tr>
+<tr class="odd">
+<td>Multi-task 30 环境</td>
+<td>全 <code>contributed/dmlab30/*</code></td>
+</tr>
+<tr class="even">
+<td>认知/psychology</td>
+<td><code>psychlab_*</code></td>
+</tr>
+<tr class="odd">
+<td>Zero-shot transfer</td>
+<td><code>rooms_collect_good_objects_{train,test}</code></td>
+</tr>
+<tr class="even">
+<td>规划 puzzle</td>
+<td><code>rooms_keys_doors_puzzle</code></td>
+</tr>
+<tr class="odd">
+<td>快速 smoke test</td>
+<td><code>demos/extra_entities</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9.-">9. 延伸阅读</h2>
+<table>
+<thead>
+<tr class="header">
+<th>资源</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DMLab-30 论文语境</td>
+<td>IMPALA、DARLA、Psychlab 原文</td>
+</tr>
+<tr class="even">
+<td>平台介绍</td>
+<td><a href="介绍.html">介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>构建运行</td>
+<td><a href="基本使用流程.html">基本使用流程.md</a></td>
+</tr>
+<tr class="even">
+<td>Release notes 新关卡</td>
+<td><a href="https://github.com/google-deepmind/lab/blob/master/RELEASE_NOTES.md">RELEASE_NOTES.md</a></td>
+</tr>
+</tbody>
+</table></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 关卡命名与加载</a></li><li><a class="level-3" href="#1.1-factory-">1.1 Factory 与程序化地图</a></li><li><a class="" href="#2.-">2. 内置核心关卡</a></li><li><a class="" href="#3.-dmlab-30-">3. DMLab-30 完整列表</a></li><li><a class="level-3" href="#3.1-rooms5">3.1 Rooms（5）</a></li><li><a class="level-3" href="#3.2-language4">3.2 Language（4）</a></li><li><a class="level-3" href="#3.3-lasertag4">3.3 LaserTag（4）</a></li><li><a class="level-3" href="#3.4-natlab3">3.4 NatLab（3）</a></li><li><a class="level-3" href="#3.5-skymaze2">3.5 SkyMaze（2）</a></li><li><a class="level-3" href="#3.6-psychlab4">3.6 PsychLab（4）</a></li><li><a class="level-3" href="#3.7-explore8">3.7 Explore（8）</a></li><li><a class="" href="#4.-psychlab-memory-suite">4. Psychlab Memory Suite</a></li><li><a class="" href="#5.-">5. 观测与动作按任务选型</a></li><li><a class="" href="#6.--config--hold-out">6. 标准 config 与 hold-out</a></li><li><a class="" href="#7.-">7. 自定义关卡（开发者）</a></li><li><a class="" href="#8.-">8. 任务能力对照表（选型）</a></li><li><a class="" href="#9.-">9. 延伸阅读</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+</body>
+</html>

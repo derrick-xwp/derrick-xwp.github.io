@@ -111,8 +111,6 @@
     if (heroDesc && d.heroDesc) heroDesc.textContent = d.heroDesc;
     var heroPi = document.getElementById('hero-pi');
     if (heroPi && d.heroPi) heroPi.innerHTML = d.heroPi;
-    var heroCta = document.getElementById('hero-cta');
-    if (heroCta && d.heroCta) heroCta.textContent = d.heroCta;
     var aboutTitle = document.getElementById('about-title');
     if (aboutTitle && dAbout.aboutTitle) aboutTitle.textContent = dAbout.aboutTitle;
     var aboutContent = document.getElementById('about-content');
@@ -171,9 +169,7 @@
     if (footerContactLabel && d.footerContactLabel) footerContactLabel.textContent = d.footerContactLabel;
     var footerLocation = document.getElementById('footer-location');
     if (footerLocation && d.footerLocation) footerLocation.textContent = d.footerLocation;
-    var heroCtaBtn = document.getElementById('hero-cta');
-    if (heroCtaBtn && d.heroCta) heroCtaBtn.textContent = d.heroCta;
-    
+
     // Set aria-labels and other accessibility attributes
     var navEl = document.getElementById('main-nav');
     if (navEl && d.navAriaLabel) navEl.setAttribute('aria-label', d.navAriaLabel);
@@ -187,6 +183,10 @@
     if (zjuLogo && d.zjuTitle) zjuLogo.setAttribute('title', d.zjuTitle);
     var zjuImg = document.querySelector('.header-zju-logo img');
     if (zjuImg && d.zjuAlt) zjuImg.setAttribute('alt', d.zjuAlt);
+    var ibjLogo = document.querySelector('.header-ibj-logo');
+    if (ibjLogo && d.ibjTitle) ibjLogo.setAttribute('title', d.ibjTitle);
+    var ibjImg = document.querySelector('.header-ibj-logo img');
+    if (ibjImg && d.ibjAlt) ibjImg.setAttribute('alt', d.ibjAlt);
     var lightboxImg = document.getElementById('lightbox-img');
     if (lightboxImg && d.lightboxImageAlt) lightboxImg.setAttribute('alt', d.lightboxImageAlt);
     

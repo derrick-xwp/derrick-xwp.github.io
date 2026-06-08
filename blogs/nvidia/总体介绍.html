@@ -42,6 +42,12 @@
 <a class="nav-link" href="issac_lab/训练流程.html"><span class="nav-link-title">训练流程</span><span class="nav-link-desc">RSL-RL 训练与 checkpoint</span></a>
 <a class="nav-link" href="issac_lab/任务基本介绍.html"><span class="nav-link-title">任务基本介绍</span><span class="nav-link-desc">14 个任务与奖励配置索引</span></a>
 </div>
+<div class="nav-section"><div class="nav-section-title">Cosmos</div>
+<a class="nav-link" href="comos/介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Cosmos 3 omni 模型、Predict/Transfer/Reason 演进</span></a>
+<a class="nav-link" href="comos/基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">Cookbook、推理 CLI、HF、NIM 与 Isaac 组合</span></a>
+<a class="nav-link" href="comos/官方仓库索引.html"><span class="nav-link-title">官方仓库索引</span><span class="nav-link-desc">GitHub / Hugging Face / NIM 链接</span></a>
+<a class="nav-link" href="comos/在线资源与Cookbook.html"><span class="nav-link-title">Cookbook 索引</span><span class="nav-link-desc">Cosmos Cookbook 配方与 case study 摘要</span></a>
+</div>
       </nav>
     </aside>
     <div class="main">
@@ -54,7 +60,7 @@
           <div class="breadcrumb"><a href="总体介绍.html">NVIDIA 具身平台调研</a> <span> / </span> <span>总体</span> <span> / </span> <span>总体介绍</span></div>
           <article class="article"><h1 id="nvidia-isaac-simisaac-lab--cosmos--">NVIDIA Isaac Sim、Isaac Lab 与 Cosmos — 定位与协作</h1>
 <blockquote>
-<p>调研文档 · 延伸阅读：<a href="issac_sim/介绍.html">issac_sim/介绍.md</a> · <a href="issac_lab/介绍.html">issac_lab/介绍.md</a><br />
+<p>调研文档 · 延伸阅读：<a href="issac_sim/介绍.html">issac_sim/介绍.md</a> · <a href="issac_lab/介绍.html">issac_lab/介绍.md</a> · <a href="comos/介绍.html">comos/介绍.md</a><br />
 官方仓库：Isaac Sim <a href="https://github.com/isaac-sim/IsaacSim/blob/main/VERSION">5.1.0-rc.19</a> · Isaac Lab <a href="https://github.com/isaac-sim/IsaacLab/blob/main/VERSION">2.3.2</a></p>
 </blockquote>
 <p>NVIDIA 为机器人仿真与训练提供互补工具：<strong>Isaac Sim</strong> 负责高保真仿真，<strong>Isaac Lab</strong> 负责策略训练与基准，<strong>Cosmos</strong> 负责视觉域迁移与合成数据增强。三者分工不同，常组合使用。</p>
@@ -95,17 +101,42 @@
 <hr />
 <h2 id="3.-nvidia-cosmos">3. NVIDIA Cosmos</h2>
 <h3 id="-6">定位</h3>
-<p>面向物理世界的 <strong>World Foundation Model</strong> 与视觉迁移工具，用于缩小仿真与真实之间的<strong>视觉域差距</strong>（非仿真器、非训练框架）。</p>
+<p>面向 <strong>Physical AI</strong> 的 <strong>World Foundation Model（WFM）</strong> 开放平台。<strong>Cosmos 3</strong>（2026）将 Reasoner（理解/推理）与 Generator（世界生成/动作预测）整合为单一 <strong>Mixture-of-Transformers</strong> 模型；此前独立的 Predict / Transfer / Reason 仍可用于遗留工作流。</p>
 <h3 id="-7">核心能力</h3>
+<table>
+<thead>
+<tr class="header">
+<th>能力</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Reasoner</strong></td>
+<td>视频/图像 caption、时序定位、物理 plausible 评分、2D grounding、embodied 推理</td>
+</tr>
+<tr class="even">
+<td><strong>Generator</strong></td>
+<td>T2I/T2V、I2V、带音频生成、动作条件 forward dynamics / policy rollout</td>
+</tr>
+<tr class="odd">
+<td><strong>Cosmos Transfer 2.x</strong></td>
+<td>MultiControlNet Sim2Real（depth/seg/edge 等）</td>
+</tr>
+<tr class="even">
+<td><strong>Post-training</strong></td>
+<td>机器人、AV、仓库等领域 LoRA/SFT（<code>cosmos-framework</code>）</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li><strong>Cosmos Transfer</strong>：将仿真渲染图转为更逼真的照片级图像。</li>
-<li><strong>Cosmos World Foundation Model</strong>：生成逼真场景视频，用于感知训练或数据增强。</li>
-<li>典型场景：自动驾驶、机器人导航、室内操作等感知闭环。</li>
+<li>典型场景：Sim2Real 视觉增强、合成轨迹（GR00T-Dreams）、感知训练 SDG、AV/仓库 VQA。</li>
 <li>Isaac Lab 文档中有 Cosmos Transfer 与 Mimic/Stack 等集成示例（如 <code>augmented_imitation.rst</code>）。</li>
+<li>官方 Cookbook 与 notebook 位于 <a href="https://github.com/nvidia/cosmos">nvidia/cosmos</a> 的 <code>cookbooks/cosmos3/</code>。</li>
 </ul>
 <h3 id="-8">与训练的关系</h3>
-<p>Cosmos <strong>不提供仿真环境或策略训练接口</strong>；处理 Sim/Lab 输出的图像/视频，作视觉增强或额外训练数据。Sim-to-real 链路中常位于「渲染输出 → Cosmos → 策略/感知训练」之间。</p>
-<p><strong>资源</strong>：<a href="https://developer.nvidia.com/cosmos">NVIDIA Cosmos</a> · 更多细节见 <a href="https://blogs.nvidia.com/?s=cosmos">NVIDIA 博客检索 &quot;Cosmos&quot;</a></p>
+<p>Cosmos <strong>不提供仿真环境或 RL 训练循环</strong>；处理 Sim/Lab 输出的图像/视频，或独立生成合成数据。Sim-to-real 链路中常位于「渲染输出 → Cosmos → 策略/感知训练」之间。</p>
+<p><strong>资源</strong>：<a href="https://developer.nvidia.com/cosmos">NVIDIA Cosmos</a> · 详解 <a href="comos/介绍.html">comos/介绍.md</a> · 流程 <a href="comos/基本使用流程.html">comos/基本使用流程.md</a> · Cookbook <a href="comos/在线资源与Cookbook.html">comos/在线资源与Cookbook.md</a></p>
 <hr />
 <h2 id="4.-">4. 三者对比</h2>
 <table>
@@ -265,17 +296,34 @@
 <td><a href="issac_lab/训练流程.html">issac_lab/训练流程.md</a></td>
 </tr>
 <tr class="even">
+<td>Cosmos 详解</td>
+<td><a href="comos/介绍.html">comos/介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>Cosmos 使用流程</td>
+<td><a href="comos/基本使用流程.html">comos/基本使用流程.md</a></td>
+</tr>
+<tr class="even">
+<td>Cosmos 仓库索引</td>
+<td><a href="comos/官方仓库索引.html">comos/官方仓库索引.md</a></td>
+</tr>
+<tr class="odd">
+<td>Cosmos Cookbook</td>
+<td><a href="comos/在线资源与Cookbook.html">comos/在线资源与Cookbook.md</a></td>
+</tr>
+<tr class="even">
 <td>文档站点</td>
 <td><a href="..html">在线文档站点</a></td>
 </tr>
 </tbody>
 </table>
-<p><em>Isaac Sim 5.1 · Isaac Lab 2.3.2 · 调研文档</em></p></article>
+<p><em>Isaac Sim 5.1 · Isaac Lab 2.3.2 · Cosmos 3 · 调研文档</em></p></article>
           <p class="footer-note">
             源码链接指向
-            <a href="https://github.com/isaac-sim/IsaacSim" target="_blank" rel="noopener">Isaac Sim</a>
-            与
+            <a href="https://github.com/isaac-sim/IsaacSim" target="_blank" rel="noopener">Isaac Sim</a>、
             <a href="https://github.com/isaac-sim/IsaacLab" target="_blank" rel="noopener">Isaac Lab</a>
+            与
+            <a href="https://github.com/nvidia/cosmos" target="_blank" rel="noopener">NVIDIA Cosmos</a>
             官方 GitHub 仓库。
           </p>
         </div>

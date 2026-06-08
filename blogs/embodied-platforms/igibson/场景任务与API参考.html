@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>场景任务与 API 参考 · iGibson</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>iGibson</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">iGibson</div>
+<a class="nav-link" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Gibson 572 + 15 交互场景、PBR、LiDAR、iGibson 2.0</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">pip/源码/Docker、ig_dataset、YAML、示例</span></a>
+<a class="nav-link active" href="场景任务与API参考.html"><span class="nav-link-title">场景任务与 API 参考</span><span class="nav-link-desc">InteractiveIndoorScene、Task、Fetch、config 字段</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>iGibson</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>iGibson</span> <span> / </span> <span>场景任务与 API 参考</span></div>
+          <article class="article"><h1 id="igibson--api-">iGibson 场景、任务与 API 参考</h1>
+<blockquote>
+<p>源码根目录：<a href="https://github.com/StanfordVL/iGibson">StanfordVL/iGibson</a> · 官方文档：<a href="https://stanfordvl.github.io/iGibson/scenes.html">Scenes</a> · <a href="https://stanfordvl.github.io/iGibson/environments.html">Environments</a> · <a href="https://stanfordvl.github.io/iGibson/robots.html">Robots</a> · <a href="https://stanfordvl.github.io/iGibson/objects.html">Objects</a><br />
+OmniGibson 对照：本地 <a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/"><code>https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/</code></a> · 见 §14</p>
+</blockquote>
+<hr />
+<h2 id="1.-scene-classes">1. 场景类型（Scene Classes）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>类</th>
+<th>数据源</th>
+<th>交互</th>
+<th>典型 <code>scene</code> config</th>
+<th>GitHub</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>EmptyScene</code></td>
+<td>平面</td>
+<td>—</td>
+<td><code>empty</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/scenes/empty_scene.py">empty_scene.py</a></td>
+</tr>
+<tr class="even">
+<td><code>StadiumScene</code></td>
+<td>PyBullet 默认</td>
+<td>—</td>
+<td><code>stadium</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/scenes/stadium_scene.py">stadium_scene.py</a></td>
+</tr>
+<tr class="odd">
+<td><code>StaticIndoorScene</code></td>
+<td><code>g_dataset_path</code></td>
+<td>❌ 单 mesh</td>
+<td><code>gibson</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/scenes/gibson_indoor_scene.py">gibson_indoor_scene.py</a></td>
+</tr>
+<tr class="even">
+<td><strong><code>InteractiveIndoorScene</code></strong></td>
+<td><code>ig_dataset_path</code></td>
+<td>✅ 全物体</td>
+<td><code>igibson</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/scenes/igibson_indoor_scene.py">igibson_indoor_scene.py</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="1.1-staticindoorscene-">1.1 StaticIndoorScene 能力</h3>
+<ul>
+<li>加载 <code>mesh_z_up.obj</code> 到 PyBullet</li>
+<li>按 floor 构建 <strong>traversability graph</strong>（<code>floor_trav_{i}.png</code>，<strong>1 pixel = 0.01 m</strong>）</li>
+<li><code>get_random_point(floor)</code>、<code>get_shortest_path(floor, p1, p2)</code></li>
+</ul>
+<p>示例：<code>python -m igibson.examples.scenes.g_scene_selector</code></p>
+<h3 id="1.2-interactiveindoorscene-">1.2 InteractiveIndoorScene 能力</h3>
+<p>类定义与 iGSDF 说明（<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/scenes/igibson_indoor_scene.py#L37-L44">igibson_indoor_scene.py L37–44</a>）：</p>
+<blockquote>
+<p>Create an interactive scene defined with <strong>iGibson Scene Description Format (iGSDF)</strong>. iGSDF is an extension of URDF that we use to define an interactive scene. It has support for URDF scaling, URDF nesting and randomization.</p>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th>API / 配置</th>
+<th>作用</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>randomize_texture()</code></td>
+<td>材质/动力学随机化</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/scenes/igibson_indoor_scene.py#L552">L552+</a></td>
+</tr>
+<tr class="even">
+<td><code>randomize_objects()</code></td>
+<td>同 category 换模型</td>
+<td>构造函数 <code>object_randomization</code></td>
+</tr>
+<tr class="odd">
+<td><code>load_object_categories: [chair, …]</code></td>
+<td>只加载指定类别</td>
+<td>构造函数 L89</td>
+</tr>
+<tr class="even">
+<td><code>load_room_types: [kitchen]</code></td>
+<td>只加载指定房间类型</td>
+<td>构造函数 L91</td>
+</tr>
+<tr class="odd">
+<td><code>set_articulated_object_states()</code></td>
+<td>批量开 fridge/oven 等</td>
+<td>场景加载逻辑</td>
+</tr>
+<tr class="even">
+<td><code>get_random_point_by_room_type(&quot;bedroom&quot;)</code></td>
+<td>按房间类型采样 spawn</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/scenes/igibson_indoor_scene.py#L957">L957+</a></td>
+</tr>
+<tr class="odd">
+<td><code>scene_source</code></td>
+<td><code>IG</code> / <code>CUBICASA</code> / <code>THREEDFRONT</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/scenes/igibson_indoor_scene.py#L33">L33</a></td>
+</tr>
+<tr class="even">
+<td><code>should_open_all_doors</code></td>
+<td>reset 时开门</td>
+<td>构造函数 L62</td>
+</tr>
+</tbody>
+</table>
+<p>示例：<code>python -m igibson.examples.scenes.ig_scene_selector</code></p>
+<p><strong>OmniGibson 对照</strong>：<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/scenes/interactive_traversable_scene.py"><code>InteractiveTraversableScene</code></a> 提供等价的 <code>load_object_categories</code>、<code>load_room_types</code>、<code>scene_model</code> 过滤（L52–57）。</p>
+<hr />
+<h2 id="2.--igibson-">2. 十五套 iGibson 交互场景</h2>
+<table>
+<thead>
+<tr class="header">
+<th>scene_id</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Beechwood_0_int</code> / <code>_1_int</code></td>
+<td>论文 held-out 评测</td>
+</tr>
+<tr class="even">
+<td><code>Benevolence_0_int</code> / <code>_1_int</code> / <code>_2_int</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>Ihlen_0_int</code> / <code>_1_int</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>Merom_0_int</code> / <code>_1_int</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>Pomaria_0_int</code> / <code>_1_int</code> / <code>_2_int</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong><code>Rs_int</code></strong></td>
+<td><strong>~200 articulated 物体</strong>；sim2real 标杆</td>
+</tr>
+<tr class="odd">
+<td><code>Wainscott_0_int</code> / <code>_1_int</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>列出可用场景：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="im">from</span> igibson.utils.assets_utils <span class="im">import</span> get_available_ig_scenes</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="bu">print</span>(get_available_ig_scenes())</a></code></pre></div>
+<p>Gibson 静态：<code>get_available_g_scenes()</code>。实现：<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/utils/assets_utils.py">assets_utils.py</a>。</p>
+<hr />
+<h2 id="3.-igsdf-">3. iGSDF 与场景格式</h2>
+<p>交互场景使用 <strong>iGibson Scene Definition Format (iGSDF)</strong>：</p>
+<ul>
+<li>布局：墙、门、窗、地板（URDF 扩展）</li>
+<li>物体：category、6 位 model id、位姿</li>
+<li>与 <strong>WordNet / BEHAVIOR category</strong> 对齐</li>
+</ul>
+<p>BEHAVIOR 物体目录结构（<code>OBJECT_NAME/</code>）：</p>
+<pre><code>OBJECT_NAME.urdf
+shape/visual/*.encrypted.obj
+shape/collision/*.obj
+material/DIFFUSE*.png, METALLIC, NORMAL, ROUGHNESS
+misc/metadata.json, material_groups.json
+</code></pre>
+<p>加载逻辑见 <a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/objects/articulated_object.py"><code>URDFObject</code></a> 与 <a href="https://stanfordvl.github.io/iGibson/objects.html">Objects 文档</a>。</p>
+<hr />
+<h2 id="4.-">4. 外部场景导入</h2>
+<table>
+<thead>
+<tr class="header">
+<th>来源</th>
+<th>规模</th>
+<th>文档 / 源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>CubiCasa5K</strong></td>
+<td>户型平面图</td>
+<td><a href="https://github.com/StanfordVL/iGibson/tree/master/igibson/utils/data_utils/ext_scene"><code>ext_scene/</code></a></td>
+</tr>
+<tr class="even">
+<td><strong>3D-FRONT</strong></td>
+<td>带家具布局</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<p>路径 config：<code>cubicasa_dataset_path</code>、<code>threedfront_dataset_path</code>（<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/global_config.yaml"><code>global_config.yaml</code></a>）。<code>scene_source</code> 设为 <code>CUBICASA</code> 或 <code>THREEDFRONT</code> 时，<code>InteractiveIndoorScene</code> 从对应路径加载（<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/scenes/igibson_indoor_scene.py#L114-L119">igibson_indoor_scene.py L114–119</a>）。</p>
+<hr />
+<h2 id="5.--task-">5. 内置 Task 一览</h2>
+<p><code>iGibsonEnv.load_task_setup()</code> 分发逻辑（<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/envs/igibson_env.py#L76-L100">igibson_env.py L76–100</a>）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Task 名（config <code>task</code>）</th>
+<th>类</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>point_nav_fixed</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/tasks/point_nav_fixed_task.py">PointNavFixedTask</a></td>
+<td>固定 goal</td>
+</tr>
+<tr class="even">
+<td><code>point_nav_random</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/tasks/point_nav_random_task.py">PointNavRandomTask</a></td>
+<td>每 reset 随机 goal</td>
+</tr>
+<tr class="odd">
+<td><code>interactive_nav_random</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/tasks/interactive_nav_random_task.py">InteractiveNavRandomTask</a></td>
+<td>导航 + <strong>可交互障碍</strong></td>
+</tr>
+<tr class="even">
+<td><code>dynamic_nav_random</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/tasks/dynamic_nav_random_task.py">DynamicNavRandomTask</a></td>
+<td>动态障碍 agent</td>
+</tr>
+<tr class="odd">
+<td><code>reaching_random</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/tasks/reaching_random_task.py">ReachingRandomTask</a></td>
+<td>机械臂 reach</td>
+</tr>
+<tr class="even">
+<td><code>room_rearrangement</code></td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/tasks/room_rearrangement_task.py">RoomRearrangementTask</a></td>
+<td>多物体 rearrangement</td>
+</tr>
+<tr class="odd">
+<td>BDDL activity 名</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/tasks/behavior_task.py">BehaviorTask</a></td>
+<td>BEHAVIOR 长 horizon（需 <code>bddl</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>Task 基类接口：<code>reset_scene</code>、<code>reset_agent</code>、<code>step</code>、<code>get_task_obs</code>（<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/tasks/task_base.py"><code>task_base.py</code></a>）。</p>
+<hr />
+<h2 id="6.-reward--termination">6. Reward 与 Termination</h2>
+<h3 id="6.1-reward-functions">6.1 Reward Functions</h3>
+<p>源码目录：<a href="https://github.com/StanfordVL/iGibson/tree/master/igibson/reward_functions"><code>igibson/reward_functions/</code></a></p>
+<table>
+<thead>
+<tr class="header">
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/reward_functions/point_goal_reward.py">PointGoalReward</a></td>
+<td>到达点目标</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/reward_functions/reaching_goal_reward.py">ReachingGoalReward</a></td>
+<td>末端到达</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/reward_functions/potential_reward.py">PotentialReward</a></td>
+<td>势函数 shaping</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/reward_functions/collision_reward.py">CollisionReward</a></td>
+<td>碰撞惩罚</td>
+</tr>
+</tbody>
+</table>
+<p>config 示例（摘自 <a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/configs/turtlebot_nav.yaml"><code>turtlebot_nav.yaml</code></a>）：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="fu">reward_type:</span><span class="at"> geodesic          </span><span class="co"># geodesic | l2 | sparse</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="fu">success_reward:</span><span class="at"> 10.0</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="fu">potential_reward_weight:</span><span class="at"> 1.0</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="fu">collision_reward_weight:</span><span class="at"> -0.1</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="fu">discount_factor:</span><span class="at"> 0.99</span></a></code></pre></div>
+<p><strong>OmniGibson 对照</strong>：<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/reward_functions/point_goal_reward.py"><code>PointGoalReward</code></a> 结构相同，通过 termination condition 判定 success（L22–24）。</p>
+<h3 id="6.2-termination-conditions">6.2 Termination Conditions</h3>
+<p>源码：<a href="https://github.com/StanfordVL/iGibson/tree/master/igibson/termination_conditions"><code>igibson/termination_conditions/</code></a></p>
+<table>
+<thead>
+<tr class="header">
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PointGoal</td>
+<td>进入 <code>dist_tol</code></td>
+</tr>
+<tr class="even">
+<td>ReachingGoal</td>
+<td>末端误差</td>
+</tr>
+<tr class="odd">
+<td>MaxCollision</td>
+<td>碰撞步数上限</td>
+</tr>
+<tr class="even">
+<td>Timeout</td>
+<td><code>max_step</code></td>
+</tr>
+<tr class="odd">
+<td>OutOfBound</td>
+<td>越界</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="fu">dist_tol:</span><span class="at"> 0.36</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="fu">max_step:</span><span class="at"> 500</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="fu">max_collisions_allowed:</span><span class="at"> 500</span></a></code></pre></div>
+<hr />
+<h2 id="7.--observation">7. 传感器与 observation</h2>
+<p><code>iGibsonEnv.load_observation_space()</code> 构建 Gym Dict（<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/envs/igibson_env.py#L118-L200">igibson_env.py L118–200</a>）。</p>
+<p>config <code>output</code> 列表决定 <code>env.step</code> 返回的 <code>obs</code> 键：</p>
+<table>
+<thead>
+<tr class="header">
+<th>键</th>
+<th>来源</th>
+<th>传感器类</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>task_obs</code></td>
+<td>Task.get_task_obs</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td><code>rgb</code> / <code>depth</code> / <code>normal</code> / <code>seg</code> / <code>flow</code></td>
+<td>VisionSensor</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/sensors/vision_sensor.py"><code>vision_sensor.py</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>scan</code> / <code>scan_rear</code></td>
+<td>ScanSensor</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/sensors/scan_sensor.py"><code>scan_sensor.py</code></a></td>
+</tr>
+<tr class="even">
+<td><code>occupancy_grid</code></td>
+<td>ScanSensor</td>
+<td>同上</td>
+</tr>
+<tr class="odd">
+<td><code>bump</code></td>
+<td>BumpSensor</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/sensors/bump_sensor.py"><code>bump_sensor.py</code></a></td>
+</tr>
+<tr class="even">
+<td><code>proprioception</code></td>
+<td>Robot.get_proprioception</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>常用相机 / LiDAR 参数（摘自 <a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/configs/turtlebot_nav.yaml#L69-L88"><code>turtlebot_nav.yaml</code> L69–88</a>）：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="fu">output:</span><span class="at"> </span><span class="kw">[</span>task_obs<span class="kw">,</span> rgb<span class="kw">,</span> depth<span class="kw">,</span> scan<span class="kw">]</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="fu">image_width:</span><span class="at"> 640</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="fu">image_height:</span><span class="at"> 480</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="fu">vertical_fov:</span><span class="at"> 45</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="fu">depth_low:</span><span class="at"> 0.8</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="fu">depth_high:</span><span class="at"> 3.5</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="fu">n_horizontal_rays:</span><span class="at"> 228</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="fu">n_vertical_beams:</span><span class="at"> 1</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="fu">laser_linear_range:</span><span class="at"> 5.6</span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="fu">laser_angular_range:</span><span class="at"> 240.0</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="fu">depth_noise_rate:</span><span class="at"> 0.0</span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="fu">scan_noise_rate:</span><span class="at"> 0.0</span></a></code></pre></div>
+<hr />
+<h2 id="8.-">8. 机器人与控制器</h2>
+<h3 id="8.1-">8.1 完整支持列表</h3>
+<table>
+<thead>
+<tr class="header">
+<th>机器人</th>
+<th>基类</th>
+<th>DOF</th>
+<th>控制器</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fetch</td>
+<td>Loco + Manip + Camera</td>
+<td>10</td>
+<td>Base DD / Arm IK / Gripper</td>
+</tr>
+<tr class="even">
+<td>Turtlebot</td>
+<td>TwoWheeled</td>
+<td>2</td>
+<td>DifferentialDrive</td>
+</tr>
+<tr class="odd">
+<td>Locobot / Freight</td>
+<td>TwoWheeled</td>
+<td>2</td>
+<td>DD</td>
+</tr>
+<tr class="even">
+<td>JackRabbot</td>
+<td>Loco + Manip</td>
+<td>2+7</td>
+<td>DD + IK</td>
+</tr>
+<tr class="odd">
+<td>Husky / Mujoco Ant</td>
+<td>Locomotion</td>
+<td>4–8</td>
+<td>Torque/Vel/Pos</td>
+</tr>
+<tr class="even">
+<td>BehaviorRobot</td>
+<td>VR 化身</td>
+<td>26</td>
+<td>delta pose + grasp</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ex">python</span> -m igibson.examples.robots.all_robots_visualizer</a></code></pre></div>
+<p>机器人注册表：<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/robots/__init__.py"><code>igibson/robots/__init__.py</code></a> 中 <code>REGISTERED_ROBOTS</code>。</p>
+<h3 id="8.2-">8.2 类层次</h3>
+<pre><code>BaseRobot
+├── LocomotionRobot → TwoWheeledRobot
+├── ManipulationRobot
+└── ActiveCameraRobot
+</code></pre>
+<p>Fetch 多重继承：<code>TwoWheeledRobot</code> + <code>ManipulationRobot</code> + <code>ActiveCameraRobot</code>。</p>
+<h3 id="8.3-">8.3 控制器</h3>
+<p>源码：<a href="https://github.com/StanfordVL/iGibson/tree/master/igibson/controllers"><code>igibson/controllers/</code></a></p>
+<table>
+<thead>
+<tr class="header">
+<th>控制器</th>
+<th>用途</th>
+<th>GitHub</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>JointController</td>
+<td>关节 pos/vel/torque</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/controllers/joint_controller.py">joint_controller.py</a></td>
+</tr>
+<tr class="even">
+<td>DifferentialDriveController</td>
+<td>差速底盘</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/controllers/dd_controller.py">dd_controller.py</a></td>
+</tr>
+<tr class="odd">
+<td>InverseKinematicsController</td>
+<td>臂末端 Cartesian</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/controllers/ik_controller.py">ik_controller.py</a></td>
+</tr>
+<tr class="even">
+<td>MultiFingerGripperController</td>
+<td>夹爪</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/controllers/multi_finger_gripper_controller.py">multi_finger_gripper_controller.py</a></td>
+</tr>
+<tr class="odd">
+<td>NullGripperController</td>
+<td>简化 grasp</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/controllers/null_gripper_controller.py">null_gripper_controller.py</a></td>
+</tr>
+</tbody>
+</table>
+<p>config 示例（<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/configs/turtlebot_nav.yaml#L22-L28"><code>turtlebot_nav.yaml</code> L22–28</a>）：</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="fu">robot:</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="fu">name:</span><span class="at"> Turtlebot</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="fu">action_type:</span><span class="at"> continuous</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">  <span class="fu">action_normalize:</span><span class="at"> true</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">  <span class="fu">controller_config:</span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">    <span class="fu">base:</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">      <span class="fu">name:</span><span class="at"> DifferentialDriveController</span></a></code></pre></div>
+<p>Fetch 多控制器示例：<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/configs/fetch_nav.yaml">fetch_nav.yaml</a>。</p>
+<p><strong>OmniGibson 对照</strong>：<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/controllers/dd_controller.py"><code>DifferentialDriveController</code></a> 将 <code>(lin_vel, ang_vel)</code> 转为左右轮速（L9–12、L64–68），接口与 iGibson 一致。</p>
+<h3 id="8.4-behaviorrobotvr-/-behavior">8.4 BehaviorRobot（VR / BEHAVIOR）</h3>
+<ul>
+<li>双手 + torso + head；<strong>26 DoF</strong> action（delta pose + grasp fraction）</li>
+<li>配置：<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/configs/behavior_robot.yaml">behavior_robot.yaml</a></li>
+<li>用于 BEHAVIOR 挑战与人类 demo</li>
+</ul>
+<hr />
+<h2 id="9.-yaml-config-">9. YAML Config 字段速查</h2>
+<p>完整导航配置见 <a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/configs/turtlebot_nav.yaml"><code>turtlebot_nav.yaml</code></a>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>scene</code></td>
+<td><code>igibson</code></td>
+<td>empty / stadium / gibson / igibson</td>
+</tr>
+<tr class="even">
+<td><code>scene_id</code></td>
+<td><code>Rs_int</code></td>
+<td>场景名</td>
+</tr>
+<tr class="odd">
+<td><code>build_graph</code></td>
+<td>true</td>
+<td>traversability graph</td>
+</tr>
+<tr class="even">
+<td><code>trav_map_resolution</code></td>
+<td>0.1</td>
+<td>m/pixel</td>
+</tr>
+<tr class="odd">
+<td><code>trav_map_erosion</code></td>
+<td>2</td>
+<td>腐蚀半径≈机器人半径</td>
+</tr>
+<tr class="even">
+<td><code>should_open_all_doors</code></td>
+<td>true</td>
+<td>reset 时开门</td>
+</tr>
+<tr class="odd">
+<td><code>texture_randomization_freq</code></td>
+<td>null / 10</td>
+<td>材质 DR 周期</td>
+</tr>
+<tr class="even">
+<td><code>object_randomization_freq</code></td>
+<td>null</td>
+<td>物体 DR</td>
+</tr>
+<tr class="odd">
+<td><code>task</code></td>
+<td><code>point_nav_random</code></td>
+<td>Task 类型</td>
+</tr>
+<tr class="even">
+<td><code>target_dist_min/max</code></td>
+<td>1.0 / 10.0</td>
+<td>Nav goal 距离范围</td>
+</tr>
+<tr class="odd">
+<td><code>goal_format</code></td>
+<td>polar</td>
+<td>polar / cartesian</td>
+</tr>
+<tr class="even">
+<td><code>visible_target</code></td>
+<td>true</td>
+<td>可视化 goal marker</td>
+</tr>
+<tr class="odd">
+<td><code>collision_ignore_link_a_ids</code></td>
+<td>[1,2,3,4]</td>
+<td>轮子碰撞不计</td>
+</tr>
+<tr class="even">
+<td><code>output</code></td>
+<td>[task_obs, rgb, depth, scan]</td>
+<td>观测模态</td>
+</tr>
+</tbody>
+</table>
+<p>示例文件目录：<a href="https://github.com/StanfordVL/iGibson/tree/master/igibson/configs">igibson/configs/</a></p>
+<hr />
+<h2 id="10.-">10. 物体导入</h2>
+<table>
+<thead>
+<tr class="header">
+<th>类</th>
+<th>来源</th>
+<th>GitHub</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>URDFObject</code></td>
+<td>iG / BEHAVIOR dataset</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/objects/articulated_object.py">articulated_object.py</a></td>
+</tr>
+<tr class="even">
+<td><code>YCBObject</code></td>
+<td>YCB</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/objects/ycb_object.py">ycb_object.py</a></td>
+</tr>
+<tr class="odd">
+<td><code>ShapeNetObject</code></td>
+<td>ShapeNet</td>
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/objects/shapenet_object.py">shapenet_object.py</a></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="im">from</span> igibson.objects.ycb_object <span class="im">import</span> YCBObject</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">obj <span class="op">=</span> YCBObject(<span class="st">&quot;003_cracker_box&quot;</span>)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">simulator.import_object(obj)</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">obj.set_position_orientation(pos, orn)</a></code></pre></div>
+<p>示例：<code>python -m igibson.examples.objects.load_objects</code></p>
+<p><code>Simulator.import_object()</code> 要求先 <code>import_scene()</code>（<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/simulator.py#L268-L271">simulator.py L268–271</a>）。</p>
+<hr />
+<h2 id="11.-igibson-2.0-">11. iGibson 2.0 物体状态</h2>
+<p>源码：<a href="https://github.com/StanfordVL/iGibson/tree/master/igibson/object_states"><code>igibson/object_states/</code></a></p>
+<table>
+<thead>
+<tr class="header">
+<th>状态</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Temperature</td>
+<td>烹饪/加热任务</td>
+</tr>
+<tr class="even">
+<td>WetnessLevel</td>
+<td>浸水、清洁</td>
+</tr>
+<tr class="odd">
+<td>CleanlinessLevel</td>
+<td>污渍</td>
+</tr>
+<tr class="even">
+<td>ToggledOn</td>
+<td>开关电器</td>
+</tr>
+<tr class="odd">
+<td>Sliced</td>
+<td>切分物体</td>
+</tr>
+</tbody>
+</table>
+<p><code>Simulator._non_physics_step()</code> 按依赖拓扑序更新所有 states（<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/simulator.py#L318-L327">simulator.py L318–327</a>）：</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="cf">for</span> state_type <span class="kw">in</span> <span class="va">self</span>.object_state_types:</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">    <span class="cf">for</span> obj <span class="kw">in</span> <span class="va">self</span>.scene.get_objects_with_state(state_type):</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">        obj.states[state_type].update()</a></code></pre></div>
+<p>谓词示例：Cooked、Soaked → 对接 BEHAVIOR 逻辑。OmniGibson 扩展为完整 BDDL + 流体/布料（见 <a href="../behavior_1k/OmniGibson技术参考.html">OmniGibson 技术参考</a> §6）。</p>
+<hr />
+<h2 id="12.-">12. 示例脚本索引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>路径</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/examples/environments/env_nonint_example.py">env_nonint_example.py</a></td>
+<td>Gibson 静态 + Turtlebot</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/examples/environments/env_int_example.py">env_int_example.py</a></td>
+<td>Rs_int 交互</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/examples/scenes/scene_texture_rand_example.py">scene_texture_rand_example.py</a></td>
+<td>材质 DR</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/examples/scenes/scene_partial_loading_example.py">scene_partial_loading_example.py</a></td>
+<td>部分加载</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/examples/robots/ik_example.py">ik_example.py</a></td>
+<td>Fetch IK 交互</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/examples/robots/motion_planning_example.py">motion_planning_example.py</a></td>
+<td>集成规划器</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/examples/scenes/trav_map_vis_example.py">trav_map_vis_example.py</a></td>
+<td>traversability 可视化</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="13.-env-step-">13. Env step 流程（源码级）</h2>
+<p><a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/envs/igibson_env.py#L318-L343"><code>iGibsonEnv.step()</code></a> 执行顺序：</p>
+<ol>
+<li><code>robots[0].apply_action(action)</code></li>
+<li><code>run_simulation()</code> → PyBullet 步进 + 碰撞检测</li>
+<li><code>get_state()</code> → 聚合 sensors</li>
+<li><code>task.get_reward()</code> / <code>task.get_termination()</code></li>
+<li><code>task.step(self)</code></li>
+<li>若 <code>automatic_reset</code> 且 done → <code>reset()</code></li>
+</ol>
+<p>reset 时调用 <code>randomize_domain()</code>（texture / object DR），再 <code>task.reset()</code>（<a href="https://github.com/StanfordVL/iGibson/blob/master/igibson/envs/igibson_env.py#L410-L422">igibson_env.py L410–422</a>）。</p>
+<hr />
+<h2 id="14.--omnigibson-">14. 与 OmniGibson 迁移对照</h2>
+<table>
+<thead>
+<tr class="header">
+<th>iGibson</th>
+<th>OmniGibson（本地源码）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>iGibsonEnv</code> + YAML</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/envs/env_base.py"><code>Environment(cfg)</code></a></td>
+</tr>
+<tr class="even">
+<td><code>scene_id: Rs_int</code></td>
+<td><code>scene_model: Rs_int</code>（<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/configs/turtlebot_nav.yaml#L16"><code>turtlebot_nav.yaml</code> L16</a>）</td>
+</tr>
+<tr class="odd">
+<td><code>InteractiveIndoorScene</code></td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/scenes/interactive_traversable_scene.py"><code>InteractiveTraversableScene</code></a></td>
+</tr>
+<tr class="even">
+<td>Bullet + pybullet-svl</td>
+<td>Isaac Sim + PhysX</td>
+</tr>
+<tr class="odd">
+<td><code>BehaviorTask</code>（早期 bddl）</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/tasks/behavior_task.py"><code>BehaviorTask</code></a> + BDDL3</td>
+</tr>
+<tr class="even">
+<td>BEHAVIOR objects（加密 URDF）</td>
+<td>BEHAVIOR dataset（加密 USD）</td>
+</tr>
+<tr class="odd">
+<td><code>PointGoalReward</code></td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/reward_functions/point_goal_reward.py"><code>point_goal_reward.py</code></a></td>
+</tr>
+<tr class="even">
+<td><code>DifferentialDriveController</code></td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/controllers/dd_controller.py"><code>dd_controller.py</code></a></td>
+</tr>
+</tbody>
+</table>
+<p>新家务 benchmark 建议直接读 <a href="../behavior_1k/介绍.html">BEHAVIOR-1K 文档</a>；iGibson 仍适合 <strong>Bullet + 真实扫描 + 经典 PointNav</strong> 研究。</p>
+<hr />
+<h2 id="15.-">15. 延伸阅读</h2>
+<table>
+<thead>
+<tr class="header">
+<th>主题</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>安装与下载</td>
+<td><a href="基本使用流程.html">基本使用流程.md</a></td>
+</tr>
+<tr class="even">
+<td>平台介绍</td>
+<td><a href="介绍.html">介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>Gibson 论文</td>
+<td><a href="http://gibsonenv.stanford.edu/">Gibson Env</a></td>
+</tr>
+<tr class="even">
+<td>Config 示例</td>
+<td><a href="https://github.com/StanfordVL/iGibson/tree/master/igibson/configs">https://github.com/StanfordVL/iGibson/tree/master/igibson/configs</a></td>
+</tr>
+<tr class="odd">
+<td>OmniGibson 详解</td>
+<td><a href="../behavior_1k/OmniGibson技术参考.html">../behavior_1k/OmniGibson技术参考.md</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>基于 StanfordVL/iGibson 官方仓库编写；OmniGibson 对照引用本地 BEHAVIOR-1K 快照。</em></p></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-scene-classes">1. 场景类型（Scene Classes）</a></li><li><a class="level-3" href="#1.1-staticindoorscene-">1.1 StaticIndoorScene 能力</a></li><li><a class="level-3" href="#1.2-interactiveindoorscene-">1.2 InteractiveIndoorScene 能力</a></li><li><a class="" href="#2.--igibson-">2. 十五套 iGibson 交互场景</a></li><li><a class="" href="#3.-igsdf-">3. iGSDF 与场景格式</a></li><li><a class="" href="#4.-">4. 外部场景导入</a></li><li><a class="" href="#5.--task-">5. 内置 Task 一览</a></li><li><a class="" href="#6.-reward--termination">6. Reward 与 Termination</a></li><li><a class="level-3" href="#6.1-reward-functions">6.1 Reward Functions</a></li><li><a class="level-3" href="#6.2-termination-conditions">6.2 Termination Conditions</a></li><li><a class="" href="#7.--observation">7. 传感器与 observation</a></li><li><a class="" href="#8.-">8. 机器人与控制器</a></li><li><a class="level-3" href="#8.1-">8.1 完整支持列表</a></li><li><a class="level-3" href="#8.2-">8.2 类层次</a></li><li><a class="level-3" href="#8.3-">8.3 控制器</a></li><li><a class="level-3" href="#8.4-behaviorrobotvr-/-behavior">8.4 BehaviorRobot（VR / BEHAVIOR）</a></li><li><a class="" href="#9.-yaml-config-">9. YAML Config 字段速查</a></li><li><a class="" href="#10.-">10. 物体导入</a></li><li><a class="" href="#11.-igibson-2.0-">11. iGibson 2.0 物体状态</a></li><li><a class="" href="#12.-">12. 示例脚本索引</a></li><li><a class="" href="#13.-env-step-">13. Env step 流程（源码级）</a></li><li><a class="" href="#14.--omnigibson-">14. 与 OmniGibson 迁移对照</a></li><li><a class="" href="#15.-">15. 延伸阅读</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+</body>
+</html>

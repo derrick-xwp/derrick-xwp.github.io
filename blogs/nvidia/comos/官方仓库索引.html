@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>官方仓库索引 · NVIDIA 具身平台调研</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <div class="site-topbar-nav">
+      <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+      <span class="site-topbar-sep" aria-hidden="true">·</span>
+      <a class="site-back" id="site-back-home" href="../../../">← 返回主页</a>
+    </div>
+    <span class="site-topbar-label">Blog · 技术调研</span>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>NVIDIA 具身平台调研</h1>
+        <p>Isaac Sim · Isaac Lab · Cosmos</p>
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">总体</div>
+<a class="nav-link" href="../总体介绍.html"><span class="nav-link-title">总体介绍</span><span class="nav-link-desc">三者定位、协作关系与许可说明（Sim 5.1 · Lab 2.3.2）</span></a>
+</div>
+<div class="nav-section"><div class="nav-section-title">Isaac Sim</div>
+<a class="nav-link" href="../issac_sim/介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">架构、传感器、域随机化、ROS 2</span></a>
+<a class="nav-link" href="../issac_sim/基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">安装、启动与常用操作</span></a>
+<a class="nav-link" href="../issac_sim/不同格式3d文件的介绍.html"><span class="nav-link-title">3D 资产格式</span><span class="nav-link-desc">URDF、MJCF、CAD、OBJ/FBX/STL</span></a>
+</div>
+<div class="nav-section"><div class="nav-section-title">Isaac Lab</div>
+<a class="nav-link" href="../issac_lab/介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">包结构、Manager-Based / Direct</span></a>
+<a class="nav-link" href="../issac_lab/基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">环境、训练、Mimic 数据管线</span></a>
+<a class="nav-link" href="../issac_lab/训练流程.html"><span class="nav-link-title">训练流程</span><span class="nav-link-desc">RSL-RL 训练与 checkpoint</span></a>
+<a class="nav-link" href="../issac_lab/任务基本介绍.html"><span class="nav-link-title">任务基本介绍</span><span class="nav-link-desc">14 个任务与奖励配置索引</span></a>
+</div>
+<div class="nav-section"><div class="nav-section-title">Cosmos</div>
+<a class="nav-link" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Cosmos 3 omni 模型、Predict/Transfer/Reason 演进</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">Cookbook、推理 CLI、HF、NIM 与 Isaac 组合</span></a>
+<a class="nav-link active" href="官方仓库索引.html"><span class="nav-link-title">官方仓库索引</span><span class="nav-link-desc">GitHub / Hugging Face / NIM 链接</span></a>
+<a class="nav-link" href="在线资源与Cookbook.html"><span class="nav-link-title">Cookbook 索引</span><span class="nav-link-desc">Cosmos Cookbook 配方与 case study 摘要</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>NVIDIA 具身平台调研</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><a href="../总体介绍.html">NVIDIA 具身平台调研</a> <span> / </span> <span>Cosmos</span> <span> / </span> <span>官方仓库索引</span></div>
+          <article class="article"><h1 id="cosmos-">Cosmos 官方仓库索引</h1>
+<blockquote>
+<p>最后核对：2026-06 · <strong>Cosmos 3 发布后主入口为 <a href="https://github.com/nvidia/cosmos">github.com/nvidia/cosmos</a></strong><br />
+本地克隆目标目录：<code>comos/repos/</code> · 一键脚本：<a href="repos/fetch_repos.sh" class="uri">repos/fetch_repos.sh</a></p>
+</blockquote>
+<h2 id="cosmos-3">主线（Cosmos 3）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>仓库</th>
+<th>说明</th>
+<th>克隆路径</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/nvidia/cosmos">nvidia/cosmos</a></td>
+<td><strong>主仓库</strong>：Cosmos 3 文档、示例、模型入口、迁移公告</td>
+<td><code>repos/cosmos/</code></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/NVIDIA/cosmos-framework">NVIDIA/cosmos-framework</a></td>
+<td>训练与服务框架；<code>cosmos_framework</code> Python 包；推理 CLI</td>
+<td><code>repos/cosmos-framework/</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-hugging-face-">主要 Hugging Face 模型</h3>
+<table>
+<thead>
+<tr class="header">
+<th>模型 ID</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://huggingface.co/nvidia/Cosmos3-Nano">nvidia/Cosmos3-Nano</a></td>
+<td>16B omni 模型，工作站推理</td>
+</tr>
+<tr class="even">
+<td><a href="https://huggingface.co/nvidia/Cosmos3-Super">nvidia/Cosmos3-Super</a></td>
+<td>64B omni 模型，大规模 SDG</td>
+</tr>
+<tr class="odd">
+<td><a href="https://huggingface.co/collections/nvidia/physical-ai">NVIDIA Physical AI Collection</a></td>
+<td>机器人 / AV / 仓库等 curated 数据集</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ngc-/-nim">NGC / NIM</h3>
+<table>
+<thead>
+<tr class="header">
+<th>资源</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cosmos 3 Reasoner NIM</td>
+<td><code>nvcr.io/nim/nvidia/cosmos3-reasoner</code>（见 NGC 文档）</td>
+</tr>
+<tr class="even">
+<td>Cosmos 产品页</td>
+<td><a href="https://developer.nvidia.com/cosmos">https://developer.nvidia.com/cosmos</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="nvidia-cosmos-">上一代独立仓库（nvidia-cosmos 组织）</h2>
+<p>仍可用于 2.x checkpoint 与遗留管线；README 含指向 Cosmos 3 的迁移说明。</p>
+<table>
+<thead>
+<tr class="header">
+<th>仓库</th>
+<th>版本</th>
+<th>能力摘要</th>
+<th>克隆路径</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/nvidia-cosmos/cosmos-predict2.5">cosmos-predict2.5</a></td>
+<td>2.5</td>
+<td>扩散 Transformer；T2I、Video-to-World；robotics / multiview ckpt</td>
+<td><code>repos/cosmos-predict2.5/</code></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/nvidia-cosmos/cosmos-transfer2.5">cosmos-transfer2.5</a></td>
+<td>2.5</td>
+<td>MultiControlNet；depth/seg/edge/vis；4K upscale</td>
+<td><code>repos/cosmos-transfer2.5/</code></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/nvidia-cosmos/cosmos-reason2">cosmos-reason2</a></td>
+<td>2.x</td>
+<td>2B / 8B / 32B VLM；Apache-2.0</td>
+<td><code>repos/cosmos-reason2/</code></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/nvidia-cosmos/cosmos-reason1">cosmos-reason1</a></td>
+<td>1.x</td>
+<td>7B 物理推理；质检与 AV 理解</td>
+<td><code>repos/cosmos-reason1/</code></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/nvidia-cosmos/cosmos-predict2">cosmos-predict2</a></td>
+<td>2.0</td>
+<td>Predict 上一代</td>
+<td><code>repos/cosmos-predict2/</code></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/nvidia-cosmos/cosmos-transfer1">cosmos-transfer1</a></td>
+<td>1.x</td>
+<td>Transfer 上一代</td>
+<td><code>repos/cosmos-transfer1/</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="reason-2--checkpoint">Reason 2 常用 Checkpoint</h3>
+<ul>
+<li><a href="https://huggingface.co/nvidia/Cosmos-Reason2-2B">Cosmos-Reason2-2B</a></li>
+<li><a href="https://huggingface.co/nvidia/Cosmos-Reason2-8B">Cosmos-Reason2-8B</a></li>
+<li><a href="https://huggingface.co/nvidia/Cosmos-Reason2-32B">Cosmos-Reason2-32B</a></li>
+</ul>
+<hr />
+<h2 id="-git-">文档与社区（非 Git 克隆）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>资源</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Cosmos Cookbook</strong></td>
+<td><a href="https://nvidia-cosmos.github.io/cosmos-cookbook/">https://nvidia-cosmos.github.io/cosmos-cookbook/</a></td>
+</tr>
+<tr class="even">
+<td><strong>Cosmos 3 技术报告</strong></td>
+<td><a href="https://research.nvidia.com/labs/cosmos-lab/cosmos3/technical-report.pdf">https://research.nvidia.com/labs/cosmos-lab/cosmos3/technical-report.pdf</a></td>
+</tr>
+<tr class="odd">
+<td><strong>Cosmos 3 博客（NVIDIA）</strong></td>
+<td><a href="https://developer.nvidia.com/blog/develop-physical-ai-reasoning-world-and-action-models-with-nvidia-cosmos-3/">https://developer.nvidia.com/blog/develop-physical-ai-reasoning-world-and-action-models-with-nvidia-cosmos-3/</a></td>
+</tr>
+<tr class="even">
+<td><strong>Cosmos 3 博客（HF）</strong></td>
+<td><a href="https://huggingface.co/blog/nvidia/cosmos-3-for-physical-ai">https://huggingface.co/blog/nvidia/cosmos-3-for-physical-ai</a></td>
+</tr>
+<tr class="odd">
+<td><strong>Discord / Issues</strong></td>
+<td>见 <a href="https://github.com/nvidia/cosmos">nvidia/cosmos</a> README</td>
+</tr>
+</tbody>
+</table>
+<p>Cookbook 内容摘要见 <a href="在线资源与Cookbook.html">在线资源与Cookbook.md</a>。</p>
+<hr />
+<h2 id="本地目录结构-克隆完成后-7">本地目录结构（克隆完成后）</h2>
+<pre><code>comos/
+├── 介绍.md
+├── 基本使用流程.md
+├── 官方仓库索引.md
+├── 在线资源与Cookbook.md
+└── repos/
+    ├── README.md
+    ├── fetch_repos.sh
+    ├── cosmos/                 # Cosmos 3 主仓库
+    ├── cosmos-framework/       # 训练 / 推理框架
+    ├── cosmos-predict2.5/      # 可选：遗留
+    ├── cosmos-transfer2.5/
+    ├── cosmos-reason2/
+    └── ...
+</code></pre>
+<blockquote>
+<p><strong>注意</strong>：<code>repos/</code> 下为上游开源代码，体积较大；站点发布时建议像 Isaac Sim/Lab 一样排除官方源码，仅保留 Markdown 调研文档。</p>
+</blockquote></article>
+          <p class="footer-note">
+            源码链接指向
+            <a href="https://github.com/isaac-sim/IsaacSim" target="_blank" rel="noopener">Isaac Sim</a>、
+            <a href="https://github.com/isaac-sim/IsaacLab" target="_blank" rel="noopener">Isaac Lab</a>
+            与
+            <a href="https://github.com/nvidia/cosmos" target="_blank" rel="noopener">NVIDIA Cosmos</a>
+            官方 GitHub 仓库。
+          </p>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#cosmos-3">主线（Cosmos 3）</a></li><li><a class="level-3" href="#-hugging-face-">主要 Hugging Face 模型</a></li><li><a class="level-3" href="#ngc-/-nim">NGC / NIM</a></li><li><a class="" href="#nvidia-cosmos-">上一代独立仓库（nvidia-cosmos 组织）</a></li><li><a class="level-3" href="#reason-2--checkpoint">Reason 2 常用 Checkpoint</a></li><li><a class="" href="#-git-">文档与社区（非 Git 克隆）</a></li><li><a class="" href="#本地目录结构-克隆完成后-7">本地目录结构（克隆完成后）</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+</body>
+</html>

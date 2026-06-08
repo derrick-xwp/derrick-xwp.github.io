@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManiSkill 任务与 API 参考 · SAPIEN / ManiSkill</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>SAPIEN / ManiSkill</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">SAPIEN / ManiSkill</div>
+<a class="nav-link" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">SAPIEN 3 ECS、PhysX GPU、ManiSkill3 特性与 benchmark</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">pip、Vulkan、GPU num_envs、RL baseline</span></a>
+<a class="nav-link active" href="ManiSkill任务与API参考.html"><span class="nav-link-title">ManiSkill 任务与 API 参考</span><span class="nav-link-desc">obs/control 模式、任务表、Agents、自定义任务</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>SAPIEN / ManiSkill</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>SAPIEN / ManiSkill</span> <span> / </span> <span>ManiSkill 任务与 API 参考</span></div>
+          <article class="article"><h1 id="maniskill--api-">ManiSkill 任务与 API 参考</h1>
+<blockquote>
+<p>基于 <a href="https://maniskill.readthedocs.io/en/latest/api/mani_skill/envs/index.html">mani_skill.envs API</a> · <a href="https://maniskill.readthedocs.io/en/latest/user_guide/concepts/observation.html">Observation</a> · <a href="https://maniskill.readthedocs.io/en/latest/user_guide/concepts/controllers.html">Controllers</a><br />
+本地源码：<code>https://github.com/haosulab/ManiSkill/blob/main/</code> · SAPIEN 引擎：<code>https://github.com/haosulab/SAPIEN/blob/main/</code><br />
+平台介绍：<a href="介绍.html">介绍.md</a></p>
+</blockquote>
+<h2 id="1.--id-">1. 环境 ID 约定</h2>
+<p>Gymnasium 注册 id 通常为 <strong><code>{TaskName}-v1</code></strong>，对应类 <code>PickCubeEnv</code> → <strong><code>PickCube-v1</code></strong>。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="im">import</span> gymnasium <span class="im">as</span> gym</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="im">import</span> mani_skill.envs</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">env <span class="op">=</span> gym.make(<span class="st">&quot;PickCube-v1&quot;</span>, ...)</a></code></pre></div>
+<p>列出已注册环境：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="im">from</span> mani_skill.utils.registration <span class="im">import</span> REGISTERED_ENVS</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="bu">print</span>(<span class="bu">sorted</span>(REGISTERED_ENVS.keys()))</a></code></pre></div>
+<p>注册机制：<code>@register_env(uid, max_episode_steps=...)</code> 装饰器将类写入 <code>REGISTERED_ENVS</code> 并同步 Gymnasium registry（<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/registration.py">registration.py L93–117、L192–228</a>）。</p>
+<hr />
+<h2 id="2.-baseenv-/-sapien_env-">2. BaseEnv / sapien_env 构造参数</h2>
+<p><code>mani_skill.envs.sapien_env.BaseEnv</code>（各任务子类）常用参数，定义见 <a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/sapien_env.py">sapien_env.py L45–118</a>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>参数</th>
+<th>说明</th>
+<th>源码行</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>num_envs</code></td>
+<td>并行环境数；<strong>&gt;1 → GPU sim</strong></td>
+<td>L49–51</td>
+</tr>
+<tr class="even">
+<td><code>obs_mode</code></td>
+<td>见第 3 节；受 <code>SUPPORTED_OBS_MODES</code> 约束</td>
+<td>L53–55、L124</td>
+</tr>
+<tr class="odd">
+<td><code>control_mode</code></td>
+<td>见第 4 节；<code>&quot;*&quot;</code> = 全部控制器</td>
+<td>L59–60</td>
+</tr>
+<tr class="even">
+<td><code>robot_uids</code></td>
+<td><code>&quot;panda&quot;</code> / <code>&quot;fetch&quot;</code> / <code>(&quot;panda_wristcam&quot;, &quot;panda_wristcam&quot;)</code> 等</td>
+<td>L83</td>
+</tr>
+<tr class="odd">
+<td><code>sim_backend</code></td>
+<td><code>physx_cuda:0</code>、<code>physx_cpu</code>、<code>auto</code></td>
+<td>L95–99</td>
+</tr>
+<tr class="even">
+<td><code>render_backend</code></td>
+<td><code>sapien_cuda</code>、<code>sapien_cpu</code>、<code>none</code></td>
+<td>L102–109</td>
+</tr>
+<tr class="odd">
+<td><code>render_mode</code></td>
+<td><code>human</code> / <code>rgb_array</code> / <code>sensors</code> / <code>None</code></td>
+<td>L62、L129</td>
+</tr>
+<tr class="even">
+<td><code>reconfiguration_freq</code></td>
+<td>每 N 次 reset 重建场景（换物体 mesh）</td>
+<td>L91–93</td>
+</tr>
+<tr class="odd">
+<td><code>sim_config</code></td>
+<td>覆盖 PhysX solver iterations 等</td>
+<td>L85–89</td>
+</tr>
+<tr class="even">
+<td><code>reward_mode</code></td>
+<td><code>dense</code> / <code>normalized_dense</code> / <code>sparse</code> / <code>none</code></td>
+<td>L57、L128</td>
+</tr>
+<tr class="odd">
+<td><code>shader_dir</code></td>
+<td>相机 shader（<code>minimal</code> 最快；<code>rt</code> 光追）</td>
+<td>L64–70</td>
+</tr>
+<tr class="even">
+<td><code>parallel_in_single_scene</code></td>
+<td>多 env 合并到单视图（仅视频用）</td>
+<td>L111–113</td>
+</tr>
+</tbody>
+</table>
+<p><code>enhanced_determinism</code>：更强确定性（一般 <code>reset(seed=...)</code> 即可）（L115–117）。</p>
+<p><strong>GPU 场景封装</strong>：<code>ManiSkillScene</code> 管理 sub_scene 列表与 <code>PhysxGpuSystem</code> 状态（<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/scene.py">scene.py L40–69</a>）。</p>
+<hr />
+<h2 id="3.-">3. 观测模式详解</h2>
+<h3 id="3.1-state-/-state_dict">3.1 state / state_dict</h3>
+<p><strong>state_dict</strong> 结构：</p>
+<table>
+<thead>
+<tr class="header">
+<th>键</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>agent.qpos</code></td>
+<td>[nq] 关节角</td>
+</tr>
+<tr class="even">
+<td><code>agent.qvel</code></td>
+<td>[nq] 关节速度</td>
+</tr>
+<tr class="odd">
+<td><code>agent.controller</code></td>
+<td>控制器内部状态</td>
+</tr>
+<tr class="even">
+<td><code>extra</code></td>
+<td>任务相关（goal 位姿、cube 位置等）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>state</strong>：上述 flatten 为 <code>Box</code>。任务通过 <code>_get_obs_extra()</code> 填充 <code>extra</code>（例：<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/tabletop/pick_cube.py">pick_cube.py</a>）。</p>
+<h3 id="3.2-sensor_data-/-">3.2 sensor_data / 视觉组合</h3>
+<p><strong>sensor_data</strong>（<code>minimal</code> shader）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>键</th>
+<th>shape</th>
+<th>dtype</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Color</code></td>
+<td>H×W×4</td>
+<td>uint8 RGBA</td>
+</tr>
+<tr class="even">
+<td><code>PositionSegmentation</code></td>
+<td>H×W×4</td>
+<td>int16；xyz mm + seg id</td>
+</tr>
+</tbody>
+</table>
+<p><strong>rgb+depth+segmentation</strong> 后处理：</p>
+<table>
+<thead>
+<tr class="header">
+<th>键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>rgb</code></td>
+<td>H×W×3 uint8</td>
+</tr>
+<tr class="even">
+<td><code>depth</code></td>
+<td>H×W×1 mm；0=invalid</td>
+</tr>
+<tr class="odd">
+<td><code>segmentation</code></td>
+<td>实例/链接 ID</td>
+</tr>
+</tbody>
+</table>
+<p><strong>pointcloud</strong>：<code>xyzw</code> [N,4] + <code>rgb</code> + <code>segmentation</code>（多相机融合）。解析逻辑见 <a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/utils/observations/__init__.py">observations.py</a>。</p>
+<p>训练前需 <strong>自行归一化</strong>（官方不缩放到 [0,1] 以省显存）。</p>
+<p>相机配置示例（<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/tabletop/pick_cube.py">pick_cube.py L67–71</a>）：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="at">@property</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">def</span> _default_sensor_configs(<span class="va">self</span>):</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">    pose <span class="op">=</span> sapien_utils.look_at(eye<span class="op">=</span><span class="va">self</span>.sensor_cam_eye_pos, target<span class="op">=</span><span class="va">self</span>.sensor_cam_target_pos)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="cf">return</span> [CameraConfig(<span class="st">&quot;base_camera&quot;</span>, pose, <span class="dv">128</span>, <span class="dv">128</span>, np.pi <span class="op">/</span> <span class="dv">2</span>, <span class="fl">0.01</span>, <span class="dv">100</span>)]</a></code></pre></div>
+<h3 id="3.3-segmentation-id">3.3 Segmentation ID</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb4-1" data-line-number="1">env <span class="op">=</span> gym.make(<span class="st">&quot;PushCube-v1&quot;</span>, obs_mode<span class="op">=</span><span class="st">&quot;rgbd&quot;</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="cf">for</span> obj_id, obj <span class="kw">in</span> <span class="bu">sorted</span>(env.unwrapped.segmentation_id_map.items()):</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">    <span class="bu">print</span>(obj_id, obj.name)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co"># ID 0 = 远背景</span></a></code></pre></div>
+<hr />
+<h2 id="4.-">4. 控制模式详解</h2>
+<p>所有 <strong>pd_</strong> 控制器：action ∈ <strong>[-1, 1]</strong>（<code>pd_joint_pos</code> 等除外）。控制器实现在 <a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/agents/controllers/">mani_skill/agents/controllers/</a>。</p>
+<h3 id="4.1-">4.1 关节空间</h3>
+<table>
+<thead>
+<tr class="header">
+<th>control_mode</th>
+<th>维数</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pd_joint_pos</code></td>
+<td>7</td>
+<td>绝对关节目标</td>
+</tr>
+<tr class="even">
+<td><code>pd_joint_delta_pos</code></td>
+<td>7</td>
+<td>Δq</td>
+</tr>
+<tr class="odd">
+<td><code>pd_joint_target_delta_pos</code></td>
+<td>7</td>
+<td>目标累加 Δ</td>
+</tr>
+</tbody>
+</table>
+<h3 id="4.2-">4.2 末端空间</h3>
+<table>
+<thead>
+<tr class="header">
+<th>control_mode</th>
+<th>维数</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pd_ee_delta_pos</code></td>
+<td>3</td>
+<td>仅位置 delta</td>
+</tr>
+<tr class="even">
+<td><code>pd_ee_delta_pose</code></td>
+<td>6</td>
+<td>位置 + 轴角旋转 delta</td>
+</tr>
+<tr class="odd">
+<td><code>pd_ee_target_delta_pose</code></td>
+<td>6</td>
+<td>目标位姿复合</td>
+</tr>
+</tbody>
+</table>
+<p>内部：<strong>IK → 关节 PD</strong>。</p>
+<h3 id="4.3-">4.3 多控制器</h3>
+<p>移动操作（Fetch）常见组合：<code>base</code> + <code>arm</code> + <code>gripper</code>；在 agent 配置中定义，通过 <code>control_mode</code> 字符串选择子集。Fetch 定义见 <a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/agents/robots/fetch/fetch.py">fetch/fetch.py</a>。</p>
+<hr />
+<h2 id="5.-">5. 任务分类表</h2>
+<p>任务源码根目录：<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/">mani_skill/envs/tasks/</a></p>
+<h3 id="5.1-tabletop">5.1 桌面操作（tabletop）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Env 类</th>
+<th>gym id（典型）</th>
+<th>机器人</th>
+<th>技能</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PickCubeEnv</td>
+<td>PickCube-v1</td>
+<td>Panda, Fetch, XArm, SO100</td>
+<td>抓取</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/tabletop/pick_cube.py">pick_cube.py</a></td>
+</tr>
+<tr class="even">
+<td>PushCubeEnv</td>
+<td>PushCube-v1</td>
+<td>Panda, Fetch</td>
+<td>推</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/tabletop/push_cube.py">push_cube.py</a></td>
+</tr>
+<tr class="odd">
+<td>PullCubeEnv</td>
+<td>PullCube-v1</td>
+<td>Panda, Fetch</td>
+<td>拉</td>
+<td>tabletop/</td>
+</tr>
+<tr class="even">
+<td>PokeCubeEnv</td>
+<td>PokeCube-v1</td>
+<td>Panda, Fetch</td>
+<td>戳</td>
+<td>tabletop/</td>
+</tr>
+<tr class="odd">
+<td>StackCubeEnv</td>
+<td>StackCube-v1</td>
+<td>Panda, Fetch</td>
+<td>堆叠</td>
+<td>tabletop/</td>
+</tr>
+<tr class="even">
+<td>PegInsertionSideEnv</td>
+<td>PegInsertionSide-v1</td>
+<td>PandaWristCam</td>
+<td>插 peg</td>
+<td>tabletop/</td>
+</tr>
+<tr class="odd">
+<td>PlugChargerEnv</td>
+<td>PlugCharger-v1</td>
+<td>PandaWristCam</td>
+<td>插拔</td>
+<td>tabletop/</td>
+</tr>
+<tr class="even">
+<td>TurnFaucetEnv</td>
+<td>TurnFaucet-v1</td>
+<td>Panda, Fetch</td>
+<td>水龙头</td>
+<td>tabletop/</td>
+</tr>
+<tr class="odd">
+<td>PickSingleYCBEnv</td>
+<td>PickSingleYCB-v1</td>
+<td>Panda, Fetch</td>
+<td>单 YCB 物体</td>
+<td>tabletop/</td>
+</tr>
+<tr class="even">
+<td>PickClutterYCBEnv</td>
+<td>PickClutterYCB-v1</td>
+<td>Panda</td>
+<td>clutter 抓取</td>
+<td>tabletop/</td>
+</tr>
+<tr class="odd">
+<td>AssemblingKitsEnv</td>
+<td>AssemblingKits-v1</td>
+<td>PandaWristCam</td>
+<td>套件</td>
+<td>tabletop/</td>
+</tr>
+<tr class="even">
+<td>PlaceSphereEnv</td>
+<td>PlaceSphere-v1</td>
+<td>Panda, Fetch</td>
+<td>放置</td>
+<td>tabletop/</td>
+</tr>
+<tr class="odd">
+<td>RollBallEnv</td>
+<td>RollBall-v1</td>
+<td>Panda</td>
+<td>滚球</td>
+<td>tabletop/</td>
+</tr>
+<tr class="even">
+<td>PushTEnv</td>
+<td>PushT-v1</td>
+<td>PandaStick</td>
+<td>T 形推</td>
+<td>tabletop/</td>
+</tr>
+<tr class="odd">
+<td>LiftPegUprightEnv</td>
+<td>LiftPegUpright-v1</td>
+<td>Panda, Fetch</td>
+<td>扶直 peg</td>
+<td>tabletop/</td>
+</tr>
+<tr class="even">
+<td>StackPyramidEnv</td>
+<td>StackPyramid-v1</td>
+<td>PandaWristCam</td>
+<td>金字塔堆叠</td>
+<td>tabletop/</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5.2-mobile_manipulation">5.2 移动操作（mobile_manipulation）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Env 类</th>
+<th>说明</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>OpenCabinetDoorEnv</td>
+<td>Fetch 开 <strong>revolute</strong> 柜门</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/mobile_manipulation/">mobile_manipulation/</a></td>
+</tr>
+<tr class="even">
+<td>OpenCabinetDrawerEnv</td>
+<td>Fetch 开 <strong>prismatic</strong> 抽屉</td>
+<td>同上</td>
+</tr>
+<tr class="odd">
+<td>RoboCasaKitchenEnv</td>
+<td>RoboCasa 厨房；layout/style 随机</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5.3-real2sim-digital_twin">5.3 Real2Sim 场景任务（digital_twin）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Env 类</th>
+<th>场景</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PutCarrotOnPlateInScene</td>
+<td>flat_table</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/digital_twin/">digital_twin/</a></td>
+</tr>
+<tr class="even">
+<td>PutSpoonOnTableClothInScene</td>
+<td>flat_table</td>
+<td>同上</td>
+</tr>
+<tr class="odd">
+<td>PutEggplantInBasketScene</td>
+<td>sink</td>
+<td>同上</td>
+</tr>
+<tr class="even">
+<td>StackGreenCubeOnYellowCubeBakedTexInScene</td>
+<td>烘焙纹理</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5.4--/-">5.4 灵巧手 / 多指</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Env 类</th>
+<th>说明</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RotateSingleObjectInHand</td>
+<td>AllegroHand</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/dextrous/">dextrous/</a></td>
+</tr>
+<tr class="even">
+<td>RotateValveEnv</td>
+<td>DClaw 旋转阀</td>
+<td>同上</td>
+</tr>
+<tr class="odd">
+<td>InsertFlowerEnv</td>
+<td>FloatingAbilityHand</td>
+<td>同上</td>
+</tr>
+<tr class="even">
+<td>RotateCubeEnv</td>
+<td>TrifingerPro</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5.5-">5.5 双臂</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Env 类</th>
+<th>说明</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>TwoRobotPickCube</td>
+<td>双 Panda 协作抓</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/multi_agent/">multi_agent/</a></td>
+</tr>
+<tr class="even">
+<td>TwoRobotStackCube</td>
+<td>双 Panda 堆叠</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5.6-scenemanipulation">5.6 场景构建（SceneManipulation）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Env 类</th>
+<th>说明</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SceneManipulationEnv</td>
+<td><code>scene_builder_cls='ReplicaCAD'</code> 等</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/scenes/base_env.py">scenes/base_env.py L19</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="5.7--/-">5.7 运动 / 经典控制</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Env 类</th>
+<th>说明</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CartpoleBalanceEnv / CartpoleSwingUpEnv</td>
+<td>经典控制</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/control/">control/</a></td>
+</tr>
+<tr class="even">
+<td>HopperStandEnv / HopperHopEnv</td>
+<td>Hopper</td>
+<td>同上</td>
+</tr>
+<tr class="odd">
+<td>AntRun / AntWalk</td>
+<td>Ant</td>
+<td>同上</td>
+</tr>
+<tr class="even">
+<td>HumanoidStand / HumanoidRun / HumanoidWalk</td>
+<td>人形</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/humanoid/">humanoid/</a></td>
+</tr>
+<tr class="odd">
+<td>QuadrupedReachEnv / QuadrupedSpinEnv</td>
+<td>ANYmal-C</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/quadruped/">quadruped/</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="5.8--/-">5.8 绘图 / 空环境</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Env 类</th>
+<th>说明</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DrawSVGEnv / DrawTriangleEnv</td>
+<td>PandaStick 画轨迹</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/drawing/">drawing/</a></td>
+</tr>
+<tr class="even">
+<td>TableTopFreeDrawEnv</td>
+<td>桌面自由画</td>
+<td>同上</td>
+</tr>
+<tr class="odd">
+<td>EmptyEnv</td>
+<td>空场景调试</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/empty/">empty/</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6.-reward--success">6. Reward 与 success</h2>
+<p>任务实现 <code>_compute_dense_reward</code> / <code>_evaluate</code>；常见模式：</p>
+<table>
+<thead>
+<tr class="header">
+<th>reward_mode</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dense</code></td>
+<td>shaping + success bonus</td>
+</tr>
+<tr class="even">
+<td><code>normalized_dense</code></td>
+<td>归一化 dense</td>
+</tr>
+<tr class="odd">
+<td><code>none</code></td>
+<td>无 reward（评测用）</td>
+</tr>
+</tbody>
+</table>
+<p>Success 通常由 <strong>几何阈值</strong> 判定。以 PickCube 为例（<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/tabletop/pick_cube.py">pick_cube.py L18–29</a>）：</p>
+<ul>
+<li>cube 与 goal 欧氏距离 &lt; <code>goal_thresh</code>（默认 0.025 m）</li>
+<li>机器人静止（q 速度 &lt; 0.2）</li>
+</ul>
+<hr />
+<h2 id="7.--agents">7. 机器人 Agents</h2>
+<p>代码：<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/agents/robots/">mani_skill/agents/robots/</a> · 注册：<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/agents/__init__.py">agents/<strong>init</strong>.py</a>（<code>REGISTERED_AGENTS</code>）</p>
+<table>
+<thead>
+<tr class="header">
+<th>robot_uids</th>
+<th>类</th>
+<th>源码</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>panda</code></td>
+<td>Panda</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/agents/robots/panda/panda.py">panda/panda.py</a></td>
+<td>7-DOF + gripper</td>
+</tr>
+<tr class="even">
+<td><code>panda_wristcam</code></td>
+<td>PandaWristCam</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/agents/robots/panda/panda_wristcam.py">panda/panda_wristcam.py</a></td>
+<td>腕部相机</td>
+</tr>
+<tr class="odd">
+<td><code>panda_stick</code></td>
+<td>PandaStick</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/agents/robots/panda/panda_stick.py">panda/panda_stick.py</a></td>
+<td>Stick 末端</td>
+</tr>
+<tr class="even">
+<td><code>fetch</code></td>
+<td>Fetch</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/agents/robots/fetch/fetch.py">fetch/fetch.py</a></td>
+<td>移动操作</td>
+</tr>
+<tr class="odd">
+<td><code>xarm6_robotiq</code></td>
+<td>XArm6Robotiq</td>
+<td>xarm6/</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>so100</code></td>
+<td>SO100</td>
+<td>so100/</td>
+<td>低成本臂</td>
+</tr>
+<tr class="odd">
+<td><code>floating_ability_hand_right</code></td>
+<td>FloatingAbilityHand</td>
+<td>floating/</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>allegro_hand_right_touch</code></td>
+<td>AllegroHand</td>
+<td>allegro/</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>dclaw</code></td>
+<td>DClaw</td>
+<td>dclaw/</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>trifingerpro</code></td>
+<td>TrifingerPro</td>
+<td>trifingerpro/</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>humanoid</code></td>
+<td>Humanoid</td>
+<td>humanoid/</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>unitree_h1_simplified</code></td>
+<td>Unitree H1</td>
+<td>unitree/</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>anymal-c</code></td>
+<td>ANYmalC</td>
+<td>anymal_c/</td>
+<td>四足</td>
+</tr>
+</tbody>
+</table>
+<p>URDF / mesh 资产：<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/assets/robots/">mani_skill/assets/robots/</a></p>
+<p>可视化全部机器人：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ex">python</span> -m mani_skill.examples.demo_vis_textures -r all</a></code></pre></div>
+<hr />
+<h2 id="8.-sapien-3-api--maniskill">8. SAPIEN 3 API 摘要（脱离 ManiSkill）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>概念</th>
+<th>SAPIEN 2</th>
+<th>SAPIEN 3</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>基本单元</td>
+<td>Actor</td>
+<td><strong>Entity</strong> + <strong>Components</strong></td>
+<td><a href="https://github.com/haosulab/SAPIEN/blob/main/src/entity.cpp">entity.cpp</a></td>
+</tr>
+<tr class="even">
+<td>渲染器</td>
+<td>VulkanRenderer</td>
+<td><strong>SapienRenderer</strong>（+ RT）</td>
+<td><a href="https://github.com/haosulab/SAPIEN/blob/main/src/sapien_renderer/">sapien_renderer/</a></td>
+</tr>
+<tr class="odd">
+<td>物理</td>
+<td>PhysX CPU</td>
+<td>PhysX <strong>CPU/GPU</strong></td>
+<td><a href="https://github.com/haosulab/SAPIEN/blob/main/include/sapien/physx/physx_system.h">physx_system.h</a></td>
+</tr>
+<tr class="even">
+<td>场景</td>
+<td>Scene</td>
+<td>Scene + System 注册</td>
+<td><a href="https://github.com/haosulab/SAPIEN/blob/main/src/scene.cpp">scene.cpp</a></td>
+</tr>
+<tr class="odd">
+<td>构建</td>
+<td>ActorBuilder</td>
+<td>大体相同；material 统一</td>
+<td><a href="https://github.com/haosulab/SAPIEN/blob/main/readme.md">readme.md Change Log 3.0</a></td>
+</tr>
+</tbody>
+</table>
+<p>文档：<a href="https://sapien-sim.github.io/docs/">https://sapien-sim.github.io/docs/</a></p>
+<p>典型流程：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" data-line-number="1">scene <span class="op">=</span> sapien.Scene()</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">scene.add_ground(altitude<span class="op">=</span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">builder <span class="op">=</span> scene.create_actor_builder()</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">builder.add_box_collision(half_size<span class="op">=</span>[<span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>])</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">builder.add_box_visual(half_size<span class="op">=</span>[<span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>], material<span class="op">=</span>[<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>])</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">box <span class="op">=</span> builder.build(name<span class="op">=</span><span class="st">&quot;box&quot;</span>)</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">scene.step()</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">scene.update_render()</a></code></pre></div>
+<p>ManiSkill 封装层：</p>
+<table>
+<thead>
+<tr class="header">
+<th>模块</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scene 封装</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/scene.py">mani_skill/envs/scene.py</a></td>
+</tr>
+<tr class="even">
+<td>SAPIEN 工具</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/sapien_utils.py">mani_skill/utils/sapien_utils.py</a></td>
+</tr>
+<tr class="odd">
+<td>数据结构</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/structs/">mani_skill/utils/structs/</a>（<code>Actor</code>, <code>Link</code>, <code>Pose</code>）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9.-">9. 自定义任务（概要）</h2>
+<p>官方模板：<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/template.py">envs/template.py</a> · 最小版：<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/minimal_template.py">minimal_template.py</a></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="im">from</span> mani_skill.utils.registration <span class="im">import</span> register_env</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="im">from</span> mani_skill.envs.sapien_env <span class="im">import</span> BaseEnv</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="at">@register_env</span>(<span class="st">&quot;CustomEnv-v1&quot;</span>, max_episode_steps<span class="op">=</span><span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="kw">class</span> CustomEnv(BaseEnv):</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">    SUPPORTED_ROBOTS <span class="op">=</span> [<span class="st">&quot;panda&quot;</span>]</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">    <span class="co"># _load_scene, _initialize_episode, _get_obs_extra, _compute_dense_reward</span></a></code></pre></div>
+<p>步骤：</p>
+<ol>
+<li>继承 <code>BaseEnv</code> 或参考 <a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/tasks/tabletop/pick_cube.py">PickCubeEnv</a></li>
+<li>实现 <code>_load_scene</code>、<code>_initialize_episode</code>、<code>_get_obs_extra</code>、<code>_compute_dense_reward</code></li>
+<li><code>@register_env(&quot;MyTask-v1&quot;, max_episode_steps=...)</code></li>
+<li>配置 <code>_default_sim_config</code>、相机、agent</li>
+</ol>
+<p>设计原则见文档 <strong>ManiSkill Design Principles</strong> · <strong>GPU Simulation Lifecycle</strong>。</p>
+<p>关键：<code>reconfiguration_freq</code> 控制 GPU 上 <strong>场景重建</strong> 频率（换 URDF 成本高）（<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/sapien_env.py">sapien_env.py L91–93</a>）。</p>
+<hr />
+<h2 id="10.-">10. 示例命令索引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>命令</th>
+<th>作用</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>demo_random_action</code></td>
+<td>随机策略 smoke test</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/examples/demo_random_action.py">examples/demo_random_action.py</a></td>
+</tr>
+<tr class="even">
+<td><code>benchmarking/gpu_sim</code></td>
+<td>GPU 吞吐</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/examples/benchmarking/gpu_sim.py">gpu_sim.py</a></td>
+</tr>
+<tr class="odd">
+<td><code>demo_vis_pcd</code></td>
+<td>点云</td>
+<td>examples/</td>
+</tr>
+<tr class="even">
+<td><code>demo_vis_segmentation</code></td>
+<td>分割</td>
+<td>examples/</td>
+</tr>
+<tr class="odd">
+<td><code>demo_vis_textures</code></td>
+<td>纹理/shader</td>
+<td>examples/</td>
+</tr>
+<tr class="even">
+<td><code>demo_reset_distribution</code></td>
+<td>reset 分布可视化</td>
+<td>examples/</td>
+</tr>
+</tbody>
+</table>
+<p>目录：<code>ManiSkill/examples/</code>、<code>examples/tutorials/</code>（Colab <a href="https://colab.research.google.com/github/haosulab/ManiSkill/blob/main/examples/tutorials/1_quickstart.ipynb">1_quickstart.ipynb</a>）。</p>
+<hr />
+<h2 id="11.-maniskill-2-">11. ManiSkill 2 迁移要点</h2>
+<table>
+<thead>
+<tr class="header">
+<th>ManiSkill 2</th>
+<th>ManiSkill 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>gym.make</code> Gym 0.x</td>
+<td><strong>Gymnasium</strong></td>
+</tr>
+<tr class="even">
+<td>主要 CPU 并行</td>
+<td><strong><code>num_envs</code> GPU</strong> · <a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/envs/scene.py">scene.py</a></td>
+</tr>
+<tr class="odd">
+<td>SAPIEN 2</td>
+<td>SAPIEN 3 ECS · <a href="https://github.com/haosulab/SAPIEN/blob/main/src/entity.cpp">entity.cpp</a></td>
+</tr>
+<tr class="even">
+<td>env id 部分重命名</td>
+<td>查 <code>REGISTERED_ENVS</code></td>
+</tr>
+</tbody>
+</table>
+<p>旧版代码：<strong>git checkout v0.5.3</strong>（<a href="https://github.com/haosulab/ManiSkill/blob/main/README.md">README.md L26</a>）。</p>
+<hr />
+<h2 id="12.-">12. 延伸阅读</h2>
+<table>
+<thead>
+<tr class="header">
+<th>主题</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>安装与 Vulkan</td>
+<td><a href="基本使用流程.html">基本使用流程.md</a></td>
+</tr>
+<tr class="even">
+<td>平台架构与源码索引</td>
+<td><a href="介绍.html">介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>Sensors / Shaders</td>
+<td>ManiSkill docs · <a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/sensors/camera.py">sensors/camera.py</a></td>
+</tr>
+<tr class="even">
+<td>Scene Builders</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/scene_builder/">utils/scene_builder/</a></td>
+</tr>
+<tr class="odd">
+<td>SAPIEN 教程</td>
+<td><a href="https://github.com/haosulab/SAPIEN/blob/main/docs/source/tutorial/">SAPIEN docs/tutorial/</a></td>
+</tr>
+</tbody>
+</table></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.--id-">1. 环境 ID 约定</a></li><li><a class="" href="#2.-baseenv-/-sapien_env-">2. BaseEnv / sapien_env 构造参数</a></li><li><a class="" href="#3.-">3. 观测模式详解</a></li><li><a class="level-3" href="#3.1-state-/-state_dict">3.1 state / state_dict</a></li><li><a class="level-3" href="#3.2-sensor_data-/-">3.2 sensor_data / 视觉组合</a></li><li><a class="level-3" href="#3.3-segmentation-id">3.3 Segmentation ID</a></li><li><a class="" href="#4.-">4. 控制模式详解</a></li><li><a class="level-3" href="#4.1-">4.1 关节空间</a></li><li><a class="level-3" href="#4.2-">4.2 末端空间</a></li><li><a class="level-3" href="#4.3-">4.3 多控制器</a></li><li><a class="" href="#5.-">5. 任务分类表</a></li><li><a class="level-3" href="#5.1-tabletop">5.1 桌面操作（tabletop）</a></li><li><a class="level-3" href="#5.2-mobile_manipulation">5.2 移动操作（mobile_manipulation）</a></li><li><a class="level-3" href="#5.3-real2sim-digital_twin">5.3 Real2Sim 场景任务（digital_twin）</a></li><li><a class="level-3" href="#5.4--/-">5.4 灵巧手 / 多指</a></li><li><a class="level-3" href="#5.5-">5.5 双臂</a></li><li><a class="level-3" href="#5.6-scenemanipulation">5.6 场景构建（SceneManipulation）</a></li><li><a class="level-3" href="#5.7--/-">5.7 运动 / 经典控制</a></li><li><a class="level-3" href="#5.8--/-">5.8 绘图 / 空环境</a></li><li><a class="" href="#6.-reward--success">6. Reward 与 success</a></li><li><a class="" href="#7.--agents">7. 机器人 Agents</a></li><li><a class="" href="#8.-sapien-3-api--maniskill">8. SAPIEN 3 API 摘要（脱离 ManiSkill）</a></li><li><a class="" href="#9.-">9. 自定义任务（概要）</a></li><li><a class="" href="#10.-">10. 示例命令索引</a></li><li><a class="" href="#11.-maniskill-2-">11. ManiSkill 2 迁移要点</a></li><li><a class="" href="#12.-">12. 延伸阅读</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+</body>
+</html>

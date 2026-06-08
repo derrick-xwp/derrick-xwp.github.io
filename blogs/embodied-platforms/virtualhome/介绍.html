@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>技术介绍 · VirtualHome</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>VirtualHome</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">VirtualHome</div>
+<a class="nav-link active" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Program+Graph、Unity/Evolving Graph、WAH、v2.3</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">pip、Unity Build、render_script、RL env、FAQ</span></a>
+<a class="nav-link" href="程序图谱与数据集参考.html"><span class="nav-link-title">程序图谱与数据集参考</span><span class="nav-link-desc">脚本语法、Graph schema、动作表、WAH、数据集</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>VirtualHome</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>VirtualHome</span> <span> / </span> <span>技术介绍</span></div>
+          <article class="article"><h1 id="virtualhome-">VirtualHome 技术介绍</h1>
+<blockquote>
+<p><strong>MIT · Stanford HCI · NVIDIA 等</strong> · Unity + 符号环境图 · 家庭活动程序仿真<br />
+官方：<a href="https://github.com/xavierpuigf/virtualhome">xavierpuigf/virtualhome</a> · <a href="http://virtual-home.org">virtual-home.org</a> · 许可：<strong>MIT</strong><br />
+<strong>本地源码</strong>：<code>https://github.com/xavierpuigf/virtualhome/blob/master/</code>（与官方 master 同步；下文链接默认指向 GitHub）</p>
+</blockquote>
+<h2 id="1.-">1. 概述</h2>
+<p><strong>VirtualHome</strong> 用 <strong>程序（Program）</strong> + <strong>环境图（Environment Graph）</strong> 表示家庭活动，在 3D 公寓中模拟 <strong>行走、抓取、开关电器、开容器、放入/取出</strong> 等 long-horizon 交互，并支持 <strong>多智能体并行</strong> 与人类协作 benchmark。</p>
+<p>官方 README 概括三大组件（见 <a href="https://github.com/xavierpuigf/virtualhome/blob/master/README.md"><code>README.md</code></a>）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>组件</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Agents</strong></td>
+<td>NavMesh + FinalIK 人形 avatar，可多 agent 同场景</td>
+</tr>
+<tr class="even">
+<td><strong>Programs</strong></td>
+<td>动作序列：<code>&lt;char0&gt; [Action] &lt;object&gt; (id)</code>，`</td>
+</tr>
+<tr class="odd">
+<td><strong>Environment</strong></td>
+<td>图 JSON：节点属性/状态 + 边关系</td>
+</tr>
+</tbody>
+</table>
+<p>与 <strong>ManiSkill / Isaac</strong> 等低层连续控制不同，VirtualHome 核心是 <strong>活动级符号抽象</strong>：</p>
+<pre><code>&lt;char0&gt; [walk] &lt;microwave&gt; (23)
+&lt;char0&gt; [open] &lt;microwave&gt; (23)
+&lt;char0&gt; [putin] &lt;salmon&gt; (45) &lt;microwave&gt; (23)
+</code></pre>
+<p>Unity 侧渲染动画；<strong>Evolving Graph</strong> 侧在纯 Python 中传播图状态（更快，动作集更全）。</p>
+<table>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th>VirtualHome 特点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Program + Graph</strong></td>
+<td>活动 = 动作序列 + 初始/演化环境 JSON</td>
+</tr>
+<tr class="even">
+<td><strong>双模拟器</strong></td>
+<td>Unity（视频/GT）+ Evolving Graph（图轨迹/规划）</td>
+</tr>
+<tr class="odd">
+<td><strong>多 agent</strong></td>
+<td><code>|</code> 同行并行；VH-Social / WAH</td>
+</tr>
+<tr class="even">
+<td><strong>RL 接口</strong></td>
+<td><code>UnityEnvironment</code>（Gym 风格）；<code>skip_animation</code> 加速</td>
+</tr>
+<tr class="odd">
+<td><strong>v2.3</strong></td>
+<td><strong>50</strong> 场景 + 程序化生成；昼夜、室外、可选 gravity</td>
+</tr>
+</tbody>
+</table>
+<p>论文：<a href="https://arxiv.org/abs/1806.07011">CVPR 2018</a> · <a href="https://arxiv.org/abs/2010.09890">Watch-And-Help</a> · <a href="https://openaccess.thecvf.com/content_CVPR_2019/papers/Liao_Synthesizing_Environment-Aware_Activities_via_Activity_Sketches_CVPR_2019_paper.pdf">Activity Sketches CVPR 2019</a></p>
+<hr />
+<h2 id="2.-python-">2. 仓库结构（Python 侧）</h2>
+<p>本地快照：<code>https://github.com/xavierpuigf/virtualhome/blob/master/</code>（195+ 文件）。核心目录：</p>
+<table>
+<thead>
+<tr class="header">
+<th>路径</th>
+<th>作用</th>
+<th>GitHub</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/unity_simulator/comm_unity.py"><code>simulation/unity_simulator/comm_unity.py</code></a></td>
+<td><strong><code>UnityCommunication</code></strong>：HTTP JSON → Unity 可执行文件</td>
+<td>底层 API</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/unity_simulator/communication.py"><code>simulation/unity_simulator/communication.py</code></a></td>
+<td><code>UnityLauncher</code>：启动 executable、batchmode、X display</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/environment/unity_environment.py"><code>simulation/environment/unity_environment.py</code></a></td>
+<td><strong><code>UnityEnvironment</code></strong>：Gym <code>reset</code>/<code>step</code>、离散 RL 动作</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/environment/utils.py"><code>simulation/environment/utils.py</code></a></td>
+<td><code>convert_action</code>、前置条件检查 <code>can_perform_action</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/xavierpuigf/virtualhome/tree/master/simulation/evolving_graph"><code>simulation/evolving_graph/</code></a></td>
+<td>纯 Python 图模拟：<code>scripts.py</code>、<code>execution.py</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/evolving_graph/scripts.py"><code>simulation/evolving_graph/scripts.py</code></a></td>
+<td><code>Action</code> 枚举、程序解析 <code>read_script</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/evolving_graph/execution.py"><code>simulation/evolving_graph/execution.py</code></a></td>
+<td><code>WalkExecutor</code>、<code>GrabExecutor</code> 等 <strong>40+ Executor</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/xavierpuigf/virtualhome/tree/master/dataset_utils"><code>dataset_utils/</code></a></td>
+<td>数据集对齐、增广、<code>execute_script_utils</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/xavierpuigf/virtualhome/tree/master/resources"><code>resources/</code></a></td>
+<td><code>properties_data*.json</code>、<code>class_name_equivalence.json</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/xavierpuigf/virtualhome/tree/master/demo"><code>demo/</code></a></td>
+<td><code>unity_demo.ipynb</code>、<code>generate_video.py</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/xavierpuigf/virtualhome/tree/master/helper_scripts"><code>helper_scripts/</code></a></td>
+<td><code>download_dataset.sh</code>、<code>startx.py</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Unity 可执行文件不在 git 内，需下载至 <code>simulation/unity_simulator/</code>（见 <a href="基本使用流程.html">基本使用流程.md</a>）。</p>
+<hr />
+<h2 id="3.-">3. 双模拟器架构</h2>
+<div class="mermaid">flowchart TB
+    P[Program 动作序列] --> G[Environment Graph JSON]
+    G --> U[Unity Simulator<br/>comm_unity.UnityCommunication]
+    G --> E[Evolving Graph<br/>ScriptExecutor + Executors]
+    U --> OUT1[MP4 / RGB / Seg / Depth / Flow]
+    E --> OUT2[state_list 逐步图 JSON]</div>
+<table>
+<thead>
+<tr class="header">
+<th>模拟器</th>
+<th>实现</th>
+<th>输出</th>
+<th>源码入口</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Unity</strong></td>
+<td>Unity Build + HTTP API</td>
+<td>视频、分割/深度/光流、姿态</td>
+<td><a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/unity_simulator/comm_unity.py"><code>UnityCommunication</code></a></td>
+</tr>
+<tr class="even">
+<td><strong>Evolving Graph</strong></td>
+<td>纯 Python</td>
+<td>图序列、规划、数据集 <code>state_list</code></td>
+<td><a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/evolving_graph/execution.py"><code>ScriptExecutor</code></a></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>注意</strong>：<code>scripts.Action</code> 枚举含 <strong>Wash / Pour / Cut / Lie / PlugIn</strong> 等（L9–58），部分 <strong>仅在 Evolving Graph 完整实现</strong>；Unity 为子集（见 <a href="程序图谱与数据集参考.html">程序图谱与数据集参考.md</a> §3）。</p>
+</blockquote>
+<p>标准 Unity 流程：</p>
+<ol>
+<li><code>comm.reset(scene_id)</code> — 加载场景</li>
+<li>（可选）<code>comm.expand_scene(graph)</code> — 写回修改后的图</li>
+<li><code>comm.add_character(...)</code> — 添加 agent</li>
+<li><code>comm.render_script(script, skip_animation=..., image_synthesis=...)</code> — 执行程序</li>
+</ol>
+<p><code>UnityCommunication</code> 通过 <code>post_command</code> 向 <code>http://127.0.0.1:8080</code> 发送 JSON（<code>action</code>: <code>reset</code> / <code>render_script</code> / <code>expand_scene</code> 等）。</p>
+<hr />
+<h2 id="4.-">4. 核心概念</h2>
+<h3 id="4.1-program">4.1 Program（程序）</h3>
+<ul>
+<li>API 格式：<code>&lt;char{id}&gt; [action] &lt;object_name&gt; (object_id) [第二个物体...]</code></li>
+<li>数据集 <code>.txt</code>：<code>[WALK] &lt;glass&gt; (1)</code>（无 char 前缀，执行前绑定 char0）</li>
+<li>示例脚本见 <a href="https://github.com/xavierpuigf/virtualhome/blob/master/demo/example_scripts/example_script_1.txt"><code>demo/example_scripts/example_script_1.txt</code></a>：</li>
+</ul>
+<pre class="1:8:https://github.com/xavierpuigf/virtualhome/blob/master/demo/example_scripts/example_script_1.txt"><code>
+[Find] &lt;plate&gt; (1)
+[Grab] &lt;plate&gt; (1)
+[Find] &lt;microwave&gt; (1)
+[Open] &lt;microwave&gt; (1)
+[PutIn] &lt;plate&gt; (1) &lt;microwave&gt; (1)
+[SwitchOn] &lt;microwave&gt; (1)
+</code></pre>
+<p>Evolving Graph 用 <code>read_script()</code> 解析为 <code>ScriptLine</code>，每行绑定 <code>Action</code> 枚举成员（<a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/evolving_graph/scripts.py"><code>scripts.py</code></a>）。</p>
+<h3 id="4.2-environment-graph">4.2 Environment Graph</h3>
+<p>JSON：<code>nodes[]</code>（<code>id</code>, <code>class_name</code>, <code>states</code>, <code>properties</code>, <code>bounding_box</code>…）+ <code>edges[]</code>（<code>ON</code>, <code>INSIDE</code>, <code>CLOSE</code>, <code>HOLDS_RH/LH</code>, <code>SITTING</code>…）。</p>
+<p>读取/写入：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb4-1" data-line-number="1">success, graph <span class="op">=</span> comm.environment_graph()</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">success, msg <span class="op">=</span> comm.expand_scene(modified_graph)</a></code></pre></div>
+<h3 id="4.3-agent--rl">4.3 Agent 与 RL</h3>
+<p><code>UnityEnvironment</code> 默认 <strong>2 agent</strong>，离散动作表（源码 L52–62）：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode 52:62:https://github.com/xavierpuigf/virtualhome/blob/master/simulation/environment/unity_environment.py"><code class="sourceCode python"><a class="sourceLine" id="cb5-1" data-line-number="1">        <span class="va">self</span>.actions_available <span class="op">=</span> [</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">            <span class="st">&#39;turnleft&#39;</span>,</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">            <span class="st">&#39;walkforward&#39;</span>,</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">            <span class="st">&#39;turnright&#39;</span>,</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">            <span class="st">&#39;walktowards&#39;</span>,</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">            <span class="st">&#39;open&#39;</span>,</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">            <span class="st">&#39;close&#39;</span>,</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">            <span class="st">&#39;put&#39;</span>,</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">            <span class="st">&#39;grab&#39;</span>,</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">            <span class="st">&#39;no_action&#39;</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">        ]</a></code></pre></div>
+<p><code>step()</code> 将 <code>action_dict</code> 经 <code>convert_action</code> 转为 script 行，并 <strong><code>skip_animation=True</code></strong> 调用 <code>render_script</code>（RL 训练必开）：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode 123:138:https://github.com/xavierpuigf/virtualhome/blob/master/simulation/environment/unity_environment.py"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" data-line-number="1">    <span class="kw">def</span> step(<span class="va">self</span>, action_dict):</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">        script_list <span class="op">=</span> utils_environment.convert_action(action_dict)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">        <span class="cf">if</span> <span class="bu">len</span>(script_list[<span class="dv">0</span>]) <span class="op">&gt;</span> <span class="dv">0</span>:</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">            <span class="co"># ...</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">                success, message <span class="op">=</span> <span class="va">self</span>.comm.render_script(script_list,</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">                                                           recording<span class="op">=</span><span class="va">False</span>,</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">                                                           gen_vid<span class="op">=</span><span class="va">False</span>,</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">                                                           skip_animation<span class="op">=</span><span class="va">True</span>)</a></code></pre></div>
+<p><code>reward()</code> 默认为占位（返回 0），自定义任务需子类化。</p>
+<hr />
+<h2 id="5.-">5. 能力矩阵</h2>
+<h3 id="5.1-">5.1 动作层级</h3>
+<table>
+<thead>
+<tr class="header">
+<th>层级</th>
+<th>Unity 示例</th>
+<th>Graph 额外</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>导航</td>
+<td>Walk, Run, WalkTowards, TurnLeft/Right</td>
+<td>Find</td>
+</tr>
+<tr class="even">
+<td>操纵</td>
+<td>Grab, Open, Close, PutBack, PutIn, SwitchOn/Off</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>姿态</td>
+<td>Sit, StandUp</td>
+<td>Lie, Sleep, WakeUp</td>
+</tr>
+<tr class="even">
+<td>家务扩展</td>
+<td>Drink, Touch</td>
+<td>Wash, Pour, Cut, Eat, PlugIn, Move, Watch…</td>
+</tr>
+</tbody>
+</table>
+<p>Graph 侧 <code>Action</code> 枚举完整列表见 <a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/evolving_graph/scripts.py"><code>scripts.py</code> L9–59</a>。</p>
+<h3 id="5.2--ground-truth">5.2 感知与 Ground Truth</h3>
+<p><code>camera_image(..., mode=...)</code> 支持：<code>normal</code>, <code>seg_inst</code>, <code>seg_class</code>, <code>depth</code>, <code>flow</code>, <code>albedo</code> 等（<a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/unity_simulator/comm_unity.py"><code>comm_unity.py</code> L320–326</a>）。</p>
+<p><code>render_script</code> 的 <code>image_synthesis</code> 参数可逐步输出多模态帧。</p>
+<h3 id="5.3-v2.3-">5.3 v2.3 环境</h3>
+<ul>
+<li>场景 <strong>0–49</strong> + 程序化生成</li>
+<li><code>set_time</code> / <code>activate_physics</code> / <code>remove_terrain</code>（API 见 <code>comm_unity.py</code>）</li>
+</ul>
+<hr />
+<h2 id="6.--benchmark">6. 数据集与 Benchmark</h2>
+<p>主包：<code>programs_processed_precond_nograb_morepreconds</code> — 一键 <a href="https://github.com/xavierpuigf/virtualhome/blob/master/helper_scripts/download_dataset.sh"><code>helper_scripts/download_dataset.sh</code></a>：</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="fu">wget</span> .../programs_processed_precond_nograb_morepreconds.zip</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co"># 解压至 dataset/</span></a></code></pre></div>
+<p>目录结构见 <a href="https://github.com/xavierpuigf/virtualhome/blob/master/README.md"><code>README.md</code> § Dataset</a> 与 <a href="https://github.com/xavierpuigf/virtualhome/blob/master/dataset/README.md"><code>dataset/README.md</code></a>。</p>
+<p><strong>Watch-And-Help</strong>：Alice 演示 + Bob 协作；250 step；指标 Success / Speedup / Reward R（详见 <a href="程序图谱与数据集参考.html">程序图谱与数据集参考.md</a> §7）。</p>
+<p>增广脚本：<a href="https://github.com/xavierpuigf/virtualhome/blob/master/dataset_utils/augment_dataset_locations.py"><code>dataset_utils/augment_dataset_locations.py</code></a>（KB-RealEnv）、<a href="https://github.com/xavierpuigf/virtualhome/blob/master/dataset_utils/augment_dataset_exceptions.py"><code>augment_dataset_exceptions.py</code></a>（KB-ExceptionHandler）。</p>
+<hr />
+<h2 id="7.-">7. 与同类平台对比</h2>
+<table>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th>VirtualHome</th>
+<th>AI2-THOR</th>
+<th>CHALET</th>
+<th>TDW</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>符号程序层</td>
+<td>✅ 核心</td>
+<td>step(action)</td>
+<td>语言+规划</td>
+<td>JSON 命令</td>
+</tr>
+<tr class="even">
+<td>环境表示</td>
+<td><strong>显式 graph</strong></td>
+<td>Object metadata</td>
+<td>房间图</td>
+<td>FlatBuffers</td>
+</tr>
+<tr class="odd">
+<td>多 agent</td>
+<td>✅ <code>|</code> 语法</td>
+<td>multi-agent</td>
+<td>CHAI</td>
+<td>Replicant</td>
+</tr>
+<tr class="even">
+<td>双后端</td>
+<td>Unity + Python Graph</td>
+<td>Unity only</td>
+<td>Unity</td>
+<td>自研</td>
+</tr>
+</tbody>
+</table>
+<p><strong>选型</strong>：程序/图规划/多 agent 协作 → VirtualHome；机械臂与物体状态 API → AI2-THOR / BEHAVIOR；视听物理 → TDW。</p>
+<hr />
+<h2 id="8.-">8. 版本与生态</h2>
+<table>
+<thead>
+<tr class="header">
+<th>版本</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>v1.0</strong></td>
+<td>CVPR 2018；<code>TrimmedTestScene1–7</code></td>
+</tr>
+<tr class="even">
+<td><strong>VH-Social / v2.x</strong></td>
+<td>多 agent、<code>UnityEnvironment</code>、<code>skip_animation</code></td>
+</tr>
+<tr class="odd">
+<td><strong>v2.3</strong></td>
+<td>50 场景、proc-gen、昼夜、物理</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Unity 源码修改：<a href="https://github.com/xavierpuigf/virtualhome_unity">virtualhome_unity</a></li>
+<li>Colab：<a href="https://colab.research.google.com/github/xavierpuigf/virtualhome/blob/master/demo/unity_demo.ipynb">unity_demo.ipynb</a></li>
+</ul>
+<hr />
+<h2 id="9.-">9. 文档导航（本站）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>文档</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="基本使用流程.html">基本使用流程.md</a></td>
+<td>pip/Build、<code>UnityCommunication</code>、<code>render_script</code>、Docker、RL env</td>
+</tr>
+<tr class="even">
+<td><a href="程序图谱与数据集参考.html">程序图谱与数据集参考.md</a></td>
+<td>语法、Graph schema、Executor、数据集、WAH、resources</td>
+</tr>
+</tbody>
+</table>
+<p><strong>官方文档</strong>：<a href="http://virtual-home.org/documentation/master/kb/actions.html">Actions KB</a> · <a href="https://github.com/xavierpuigf/virtualhome/blob/master/simulation/README.md">simulation/README.md</a></p></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 概述</a></li><li><a class="" href="#2.-python-">2. 仓库结构（Python 侧）</a></li><li><a class="" href="#3.-">3. 双模拟器架构</a></li><li><a class="" href="#4.-">4. 核心概念</a></li><li><a class="level-3" href="#4.1-program">4.1 Program（程序）</a></li><li><a class="level-3" href="#4.2-environment-graph">4.2 Environment Graph</a></li><li><a class="level-3" href="#4.3-agent--rl">4.3 Agent 与 RL</a></li><li><a class="" href="#5.-">5. 能力矩阵</a></li><li><a class="level-3" href="#5.1-">5.1 动作层级</a></li><li><a class="level-3" href="#5.2--ground-truth">5.2 感知与 Ground Truth</a></li><li><a class="level-3" href="#5.3-v2.3-">5.3 v2.3 环境</a></li><li><a class="" href="#6.--benchmark">6. 数据集与 Benchmark</a></li><li><a class="" href="#7.-">7. 与同类平台对比</a></li><li><a class="" href="#8.-">8. 版本与生态</a></li><li><a class="" href="#9.-">9. 文档导航（本站）</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+  <script src="../vendor/mermaid.min.js"></script>
+  <script src="../mermaid-init.js"></script>
+</body>
+</html>

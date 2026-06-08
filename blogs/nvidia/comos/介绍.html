@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>技术介绍 · NVIDIA 具身平台调研</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <div class="site-topbar-nav">
+      <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+      <span class="site-topbar-sep" aria-hidden="true">·</span>
+      <a class="site-back" id="site-back-home" href="../../../">← 返回主页</a>
+    </div>
+    <span class="site-topbar-label">Blog · 技术调研</span>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>NVIDIA 具身平台调研</h1>
+        <p>Isaac Sim · Isaac Lab · Cosmos</p>
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">总体</div>
+<a class="nav-link" href="../总体介绍.html"><span class="nav-link-title">总体介绍</span><span class="nav-link-desc">三者定位、协作关系与许可说明（Sim 5.1 · Lab 2.3.2）</span></a>
+</div>
+<div class="nav-section"><div class="nav-section-title">Isaac Sim</div>
+<a class="nav-link" href="../issac_sim/介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">架构、传感器、域随机化、ROS 2</span></a>
+<a class="nav-link" href="../issac_sim/基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">安装、启动与常用操作</span></a>
+<a class="nav-link" href="../issac_sim/不同格式3d文件的介绍.html"><span class="nav-link-title">3D 资产格式</span><span class="nav-link-desc">URDF、MJCF、CAD、OBJ/FBX/STL</span></a>
+</div>
+<div class="nav-section"><div class="nav-section-title">Isaac Lab</div>
+<a class="nav-link" href="../issac_lab/介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">包结构、Manager-Based / Direct</span></a>
+<a class="nav-link" href="../issac_lab/基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">环境、训练、Mimic 数据管线</span></a>
+<a class="nav-link" href="../issac_lab/训练流程.html"><span class="nav-link-title">训练流程</span><span class="nav-link-desc">RSL-RL 训练与 checkpoint</span></a>
+<a class="nav-link" href="../issac_lab/任务基本介绍.html"><span class="nav-link-title">任务基本介绍</span><span class="nav-link-desc">14 个任务与奖励配置索引</span></a>
+</div>
+<div class="nav-section"><div class="nav-section-title">Cosmos</div>
+<a class="nav-link active" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Cosmos 3 omni 模型、Predict/Transfer/Reason 演进</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">Cookbook、推理 CLI、HF、NIM 与 Isaac 组合</span></a>
+<a class="nav-link" href="官方仓库索引.html"><span class="nav-link-title">官方仓库索引</span><span class="nav-link-desc">GitHub / Hugging Face / NIM 链接</span></a>
+<a class="nav-link" href="在线资源与Cookbook.html"><span class="nav-link-title">Cookbook 索引</span><span class="nav-link-desc">Cosmos Cookbook 配方与 case study 摘要</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>NVIDIA 具身平台调研</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><a href="../总体介绍.html">NVIDIA 具身平台调研</a> <span> / </span> <span>Cosmos</span> <span> / </span> <span>技术介绍</span></div>
+          <article class="article"><h1 id="nvidia-cosmos-">NVIDIA Cosmos 技术介绍</h1>
+<blockquote>
+<p><strong>Cosmos 3（2026）</strong> 为当前主线：统一 Reasoner + Generator 的 omnimodal 世界基础模型。<br />
+官方入口：<a href="https://github.com/nvidia/cosmos">github.com/nvidia/cosmos</a> · <a href="https://research.nvidia.com/labs/cosmos-lab/cosmos3/technical-report.pdf">Cosmos 3 技术报告</a> · <a href="https://developer.nvidia.com/cosmos">Developer 页面</a><br />
+与 Isaac 集成说明见 <a href="../总体介绍.html">../总体介绍.md</a> §3；Cookbook 见 <a href="在线资源与Cookbook.html">在线资源与Cookbook.md</a>。</p>
+</blockquote>
+<h2 id="1.-">1. 概述</h2>
+<p><strong>NVIDIA Cosmos</strong> 是面向 <strong>Physical AI</strong>（机器人、自动驾驶、智能空间等）的**世界基础模型（World Foundation Model, WFM）**平台，覆盖：</p>
+<ul>
+<li><strong>世界生成</strong>：文本 / 图像 / 视频 → 逼真、物理 plausible 的视频世界</li>
+<li><strong>物理推理</strong>：空间、时序、因果与常识推理（VLM）</li>
+<li><strong>动作建模</strong>：基于观测与指令预测未来动作序列（world-action model）</li>
+<li><strong>数据管线</strong>：视频清洗、标注、去重、质量过滤（Curator）</li>
+<li><strong>域适配</strong>：Sim2Real、天气/光照增强、多视角 AV 等 post-training</li>
+</ul>
+<p><strong>Cosmos 3</strong>（2026 年 6 月发布）将此前分散的 <strong>Predict / Transfer / Reason / Policy</strong> 能力整合为单一 <strong>Mixture-of-Transformers（MoT）</strong> 架构，可在一次前向中处理语言、图像、视频、音频与动作。旧版独立仓库（Predict 2.5、Transfer 2.5、Reason 1/2 等）仍可用于遗留工作流，但新功能以 <strong>Cosmos 3 + cosmos-framework</strong> 为准。</p>
+<table>
+<thead>
+<tr class="header">
+<th>模型</th>
+<th>参数量</th>
+<th>定位</th>
+<th>Hugging Face</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Cosmos 3 Nano</strong></td>
+<td>16B（8B Reasoner + 8B Generator）</td>
+<td>工作站级推理（如 RTX PRO 6000）</td>
+<td><a href="https://huggingface.co/nvidia/Cosmos3-Nano">nvidia/Cosmos3-Nano</a></td>
+</tr>
+<tr class="even">
+<td><strong>Cosmos 3 Super</strong></td>
+<td>64B（32B + 32B）</td>
+<td>大规模 SDG 与研究（Hopper / Blackwell）</td>
+<td><a href="https://huggingface.co/nvidia/Cosmos3-Super">nvidia/Cosmos3-Super</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2.-">2. 产品线演进</h2>
+<h3 id="2.1-cosmos-3">2.1 Cosmos 3（当前主线）</h3>
+<ul>
+<li><strong>仓库</strong>：<a href="https://github.com/nvidia/cosmos">nvidia/cosmos</a>（主入口）+ <a href="https://github.com/NVIDIA/cosmos-framework">NVIDIA/cosmos-framework</a>（训练与服务框架）</li>
+<li><strong>架构</strong>：Reasoner + Generator 双塔 MoT；支持灵活 I/O 组合（T2V、V2W、动作条件生成等）</li>
+<li><strong>部署</strong>：
+<ul>
+<li>源码推理 / post-training：<code>cosmos-framework</code> CLI</li>
+<li>生产推理：<strong>Cosmos NIM</strong> 微服务（Reasoner NIM 已发布；Generator NIM 陆续推出）</li>
+<li>快速体验：<strong>Hugging Face Diffusers</strong> <code>Cosmos3OmniPipeline</code></li>
+</ul></li>
+</ul>
+<h3 id="2.2-">2.2 上一代独立模型（仍维护，逐步迁移）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>系列</th>
+<th>仓库</th>
+<th>能力</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Predict 2.5</strong></td>
+<td><a href="https://github.com/nvidia-cosmos/cosmos-predict2.5">nvidia-cosmos/cosmos-predict2.5</a></td>
+<td>扩散 Transformer；T2I、Video-to-World；机器人/仿真专用 checkpoint</td>
+</tr>
+<tr class="even">
+<td><strong>Transfer 2.5</strong></td>
+<td><a href="https://github.com/nvidia-cosmos/cosmos-transfer2.5">nvidia-cosmos/cosmos-transfer2.5</a></td>
+<td>MultiControlNet（depth / seg / edge / vis 等）；Sim2Real、4K upscale</td>
+</tr>
+<tr class="odd">
+<td><strong>Reason 1</strong></td>
+<td><a href="https://github.com/nvidia-cosmos/cosmos-reason1">nvidia-cosmos/cosmos-reason1</a></td>
+<td>7B VLM；物理 plausible 质检、AV caption/VQA</td>
+</tr>
+<tr class="even">
+<td><strong>Reason 2</strong></td>
+<td><a href="https://github.com/nvidia-cosmos/cosmos-reason2">nvidia-cosmos/cosmos-reason2</a></td>
+<td>2B / 8B / 32B；边缘 Jetson Thor、仓库安全、社交推理</td>
+</tr>
+<tr class="odd">
+<td><strong>Curator</strong></td>
+<td>Cookbook 文档</td>
+<td>Ray 加速视频 curation 管线</td>
+</tr>
+<tr class="even">
+<td><strong>Cosmos RL</strong></td>
+<td>Cookbook / 框架文档</td>
+<td>分布式 SFT / RL；FP8/FP4；大模型 rollout</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>2026-06 起官方将 GitHub 组织迁移至 <a href="https://github.com/nvidia/cosmos">github.com/nvidia/cosmos</a>，旧仓库 README 会指向新入口。</p>
+</blockquote>
+<hr />
+<h2 id="3.-cosmos-3">3. 核心架构（Cosmos 3）</h2>
+<div class="mermaid">flowchart LR
+    subgraph Input["多模态输入"]
+        T[文本指令]
+        I[图像 / 视频]
+        A[动作序列]
+        Au[音频]
+    end
+
+    subgraph Cosmos3["Cosmos 3 MoT"]
+        R[Reasoner<br/>物理推理 · 规划]
+        G[Generator<br/>世界生成 · 动作预测]
+        R <--> G
+    end
+
+    subgraph Output["输出"]
+        V[视频世界]
+        Act[动作序列]
+        Lang[语言推理]
+    end
+
+    Input --> Cosmos3 --> Output</div>
+<table>
+<thead>
+<tr class="header">
+<th>组件</th>
+<th>作用</th>
+<th>典型任务</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Reasoner</strong></td>
+<td>空间/时序/因果理解；chain-of-thought</td>
+<td>场景 caption、安全合规、物理 plausible 评分、3D grounding</td>
+</tr>
+<tr class="even">
+<td><strong>Generator</strong></td>
+<td>扩散式世界生成</td>
+<td>T2V、I2V、动作条件未来帧、Sim2Real 风格迁移（统一于 omni 模型）</td>
+</tr>
+<tr class="odd">
+<td><strong>Post-training</strong></td>
+<td>领域 LoRA / SFT / RL</td>
+<td>手术仿真、农业车队、AV 多视角、人形机器人轨迹</td>
+</tr>
+</tbody>
+</table>
+<p><strong>与旧版对比</strong>：此前需分别部署 Predict + Transfer + Reason 管道；Cosmos 3 在单一 checkpoint 内切换模式（推理 preset / JSON 输入配置）。</p>
+<hr />
+<h2 id="4.--isaac-sim-/-isaac-lab-">4. 与 Isaac Sim / Isaac Lab 的关系</h2>
+<p>Cosmos <strong>不提供</strong>仿真环境或 RL 训练循环，处理 <strong>Sim/Lab 输出的视觉数据</strong>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>环节</th>
+<th>Isaac 侧</th>
+<th>Cosmos 侧</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>仿真</td>
+<td>Sim 渲染 RGB/深度/分割</td>
+<td>Transfer 多控制增强 realism</td>
+</tr>
+<tr class="even">
+<td>训练数据</td>
+<td>Lab Mimic / SDG 管线</td>
+<td>Predict 生成合成轨迹；Reason 作 video critic 拒绝采样</td>
+</tr>
+<tr class="odd">
+<td>感知闭环</td>
+<td>Lab 相机观测</td>
+<td>Cosmos 增强域随机化后的图像分布</td>
+</tr>
+</tbody>
+</table>
+<p>Isaac Lab 文档中有 <strong>Cosmos Transfer</strong> 与 Mimic/Stack 等集成示例（如 <code>augmented_imitation.rst</code>）。</p>
+<p>典型链路：</p>
+<pre><code>Isaac Sim 场景 → Isaac Lab 采集/训练 →（可选）Cosmos 视觉增强 → 真机部署
+</code></pre>
+<hr />
+<h2 id="5.-">5. 主要应用场景</h2>
+<table>
+<thead>
+<tr class="header">
+<th>领域</th>
+<th>Cosmos 能力</th>
+<th>Cookbook 示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>机器人</strong></td>
+<td>Sim2Real、合成操作轨迹、egocentric 推理</td>
+<td>GR00T-Dreams、GR00T-Mimic、X-Mobility</td>
+</tr>
+<tr class="even">
+<td><strong>自动驾驶</strong></td>
+<td>多视角生成、天气/异常场景、AV VQA</td>
+<td>Multiview AV、Traffic Anomaly、CARLA Sim2Real</td>
+</tr>
+<tr class="odd">
+<td><strong>智能交通 / 仓库</strong></td>
+<td>场景理解、工人安全检测</td>
+<td>Intelligent Transportation、Worker Safety</td>
+</tr>
+<tr class="even">
+<td><strong>医疗 / 农业</strong></td>
+<td>手术仿真 post-train、农业 photorealistic SDG</td>
+<td>Surgical Robotics、Agriculture Sim2Real</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6.-">6. 许可与资源</h2>
+<ul>
+<li><strong>代码</strong>：各仓库许可不同（如 Reason 2 为 Apache-2.0；framework 见仓库 LICENSE）</li>
+<li><strong>模型权重</strong>：Hugging Face 下载通常需接受 NVIDIA 模型许可并配置 token</li>
+<li><strong>在线文档</strong>：
+<ul>
+<li><a href="https://nvidia-cosmos.github.io/cosmos-cookbook/">Cosmos Cookbook</a></li>
+<li><a href="https://developer.nvidia.com/blog/develop-physical-ai-reasoning-world-and-action-models-with-nvidia-cosmos-3/">Cosmos 3 Technical Blog</a></li>
+<li><a href="https://huggingface.co/collections/nvidia/physical-ai">Physical AI Datasets（HF Collection）</a></li>
+</ul></li>
+</ul>
+<p>官方代码与 Cookbook 见 <a href="https://github.com/nvidia/cosmos">github.com/nvidia/cosmos</a> 与 <a href="官方仓库索引.html">官方仓库索引.md</a>。</p></article>
+          <p class="footer-note">
+            源码链接指向
+            <a href="https://github.com/isaac-sim/IsaacSim" target="_blank" rel="noopener">Isaac Sim</a>、
+            <a href="https://github.com/isaac-sim/IsaacLab" target="_blank" rel="noopener">Isaac Lab</a>
+            与
+            <a href="https://github.com/nvidia/cosmos" target="_blank" rel="noopener">NVIDIA Cosmos</a>
+            官方 GitHub 仓库。
+          </p>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 概述</a></li><li><a class="" href="#2.-">2. 产品线演进</a></li><li><a class="level-3" href="#2.1-cosmos-3">2.1 Cosmos 3（当前主线）</a></li><li><a class="level-3" href="#2.2-">2.2 上一代独立模型（仍维护，逐步迁移）</a></li><li><a class="" href="#3.-cosmos-3">3. 核心架构（Cosmos 3）</a></li><li><a class="" href="#4.--isaac-sim-/-isaac-lab-">4. 与 Isaac Sim / Isaac Lab 的关系</a></li><li><a class="" href="#5.-">5. 主要应用场景</a></li><li><a class="" href="#6.-">6. 许可与资源</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+  <script src="../vendor/mermaid.min.js"></script>
+  <script src="../mermaid-init.js"></script>
+</body>
+</html>

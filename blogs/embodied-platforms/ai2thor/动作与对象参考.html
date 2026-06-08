@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>动作与对象参考 · AI2-THOR</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>AI2-THOR</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">AI2-THOR</div>
+<a class="nav-link" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Unity 交互、物体状态、ManipulaTHOR/RoboTHOR/ProcTHOR</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">安装、Controller、Cloud Rendering、各子环境</span></a>
+<a class="nav-link active" href="动作与对象参考.html"><span class="nav-link-title">动作与对象参考</span><span class="nav-link-desc">Action API、Object Metadata、ManipulaTHOR 臂控</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>AI2-THOR</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>AI2-THOR</span> <span> / </span> <span>动作与对象参考</span></div>
+          <article class="article"><h1 id="ai2-thor-">AI2-THOR 动作与对象参考</h1>
+<blockquote>
+<p>权威来源：<a href="https://ai2thor.allenai.org/ithor/documentation/agent-actions">Agent Actions</a> · <a href="https://ai2thor.allenai.org/ithor/documentation/environment-state/">Environment State / Object Metadata</a> · <a href="https://ai2thor.allenai.org/manipulathor/documentation/">ManipulaTHOR API</a><br />
+源码对照：<a href="https://github.com/allenai/ai2thor/blob/master/ai2thor/controller.py">controller.py</a> · <a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/scene_builder/ai2thor/constants.py">constants.py</a><br />
+延伸阅读：<a href="介绍.html">介绍.md</a> · <a href="基本使用流程.html">基本使用流程.md</a></p>
+</blockquote>
+<p>本文档汇总 <strong>iTHOR default agent</strong> 与 <strong>ManipulaTHOR arm agent</strong> 常用动作及 <strong>object metadata</strong> 字段，并补充 <strong>源码中的容器相容表与可移动物体列表</strong>，便于离线查阅。</p>
+<hr />
+<h2 id="1.-">1. 调用约定</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1">event <span class="op">=</span> controller.step(action<span class="op">=</span><span class="st">&quot;ActionName&quot;</span>, param1<span class="op">=</span>value1, ...)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co"># 或</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">event <span class="op">=</span> controller.step(<span class="st">&quot;MoveAhead&quot;</span>)</a></code></pre></div>
+<p>实现见 <a href="https://github.com/allenai/ai2thor/blob/master/ai2thor/controller.py#L1011-L1054">controller.py L1011–1054</a>：<code>step</code> 将 action dict 经 <code>self.server.send(action)</code> 发往 Unity。</p>
+<ul>
+<li>成功：<code>event.metadata[&quot;lastActionSuccess&quot;] == True</code></li>
+<li>查询类动作：结果在 <code>event.metadata[&quot;actionReturn&quot;]</code></li>
+<li>失败：阅读 <code>event.metadata[&quot;errorMessage&quot;]</code></li>
+</ul>
+<p><strong>查询动作</strong>（GetReachablePositions 等）<strong>不改变</strong> 环境状态，可复用上一帧图像，通常更快。</p>
+<hr />
+<h2 id="2.-receptacle_objects">2. 容器相容性（RECEPTACLE_OBJECTS）</h2>
+<p><code>controller.py</code> 在模块顶层定义 <strong><code>RECEPTACLE_OBJECTS</code></strong>（<a href="https://github.com/allenai/ai2thor/blob/master/ai2thor/controller.py#L48">L48+</a>），映射 <strong>容器 objectType → 可放入的物体 objectType 集合</strong>。<code>PutObject</code> 失败时，可对照此表检查类别是否兼容。</p>
+<table>
+<thead>
+<tr class="header">
+<th>容器</th>
+<th>可放入物体（节选）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Box</strong></td>
+<td>Candle, CellPhone, Cloth, CreditCard, KeyChain, Newspaper, SoapBar, …</td>
+</tr>
+<tr class="even">
+<td><strong>Cabinet</strong></td>
+<td>Bowl, Mug, Plate, Laptop, Toaster, Pan, Pot, Bread, Knife, …</td>
+</tr>
+<tr class="odd">
+<td><strong>CoffeeMachine</strong></td>
+<td>Mug, MugFilled</td>
+</tr>
+<tr class="even">
+<td><strong>CounterTop</strong></td>
+<td>Apple, Bread, CoffeeMachine, Egg, Fork, Knife, Mug, Plate, …</td>
+</tr>
+<tr class="odd">
+<td><strong>DiningTable</strong></td>
+<td>与 CounterTop 类似，含 Laptop, Vase, Statue 等</td>
+</tr>
+<tr class="even">
+<td><strong>Drawer</strong></td>
+<td>CellPhone, CreditCard, KeyChain, Knife, Mug, RemoteControl, …</td>
+</tr>
+<tr class="odd">
+<td><strong>Fridge</strong></td>
+<td>Apple, Bowl, Egg, Lettuce, Potato, Tomato, WineBottle, …</td>
+</tr>
+<tr class="even">
+<td><strong>Microwave</strong></td>
+<td>Apple, Bowl, Mug, Potato, Tomato, Egg, …</td>
+</tr>
+<tr class="odd">
+<td><strong>Sink</strong></td>
+<td>Bowl, Cup, Mug, Plate, Potato, Tomato, …</td>
+</tr>
+<tr class="even">
+<td><strong>SinkBasin</strong></td>
+<td>Apple, Bowl, Cup, Egg, Mug, Potato, …</td>
+</tr>
+</tbody>
+</table>
+<p>完整集合见官方源码；该表与 Unity 侧 <code>receptacle</code> 逻辑一致，也用于 Python 侧 <strong>最近枢轴点</strong> 计算（<code>Controller.receptacle_nearest_pivot_points</code>，<a href="https://github.com/allenai/ai2thor/blob/master/ai2thor/controller.py#L402">L402</a>）。</p>
+<hr />
+<h2 id="3.-default-/-locobot">3. 导航与视角（default / locobot）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>动作</th>
+<th>主要参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>MoveAhead</strong></td>
+<td><code>moveMagnitude=0.25</code></td>
+<td>沿朝向前进</td>
+</tr>
+<tr class="even">
+<td><strong>MoveBack</strong></td>
+<td><code>moveMagnitude</code></td>
+<td>后退</td>
+</tr>
+<tr class="odd">
+<td><strong>MoveLeft</strong> / <strong>MoveRight</strong></td>
+<td><code>moveMagnitude</code></td>
+<td>侧移</td>
+</tr>
+<tr class="even">
+<td><strong>RotateRight</strong> / <strong>RotateLeft</strong></td>
+<td><code>degrees=90</code></td>
+<td>水平旋转</td>
+</tr>
+<tr class="odd">
+<td><strong>LookUp</strong> / <strong>LookDown</strong></td>
+<td><code>degrees=30</code></td>
+<td>俯仰 camera horizon</td>
+</tr>
+<tr class="even">
+<td><strong>Teleport</strong></td>
+<td><code>x,y,z</code> 或 <code>position</code></td>
+<td>瞬移到点</td>
+</tr>
+<tr class="odd">
+<td><strong>TeleportFull</strong></td>
+<td><code>position, rotation, horizon, standing</code></td>
+<td>完整姿态</td>
+</tr>
+<tr class="even">
+<td><strong>Crouch</strong> / <strong>Stand</strong></td>
+<td>—</td>
+<td>蹲/站</td>
+</tr>
+<tr class="odd">
+<td><strong>Done</strong></td>
+<td>—</td>
+<td>episode 结束信号（RL）</td>
+</tr>
+</tbody>
+</table>
+<p>网格步长由 Controller 的 <strong><code>gridSize</code></strong>（默认 0.25m）约束；碰撞时动作失败。</p>
+<hr />
+<h2 id="4.-default-agent">4. 物体交互（default agent）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>动作</th>
+<th>主要参数</th>
+<th>前置条件（object metadata）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>PickupObject</strong></td>
+<td><code>objectId</code>, <code>forceAction=False</code></td>
+<td><code>pickupable=True</code>, 通常需 <code>visible</code></td>
+</tr>
+<tr class="even">
+<td><strong>PutObject</strong></td>
+<td><code>objectId</code>（容器）</td>
+<td>手持物体；目标为 <code>receptacle</code>；类别需符合 §2</td>
+</tr>
+<tr class="odd">
+<td><strong>DropHandObject</strong></td>
+<td>—</td>
+<td>手中有物体</td>
+</tr>
+<tr class="even">
+<td><strong>OpenObject</strong></td>
+<td><code>objectId</code></td>
+<td><code>openable=True</code>, <code>isOpen=False</code></td>
+</tr>
+<tr class="odd">
+<td><strong>CloseObject</strong></td>
+<td><code>objectId</code></td>
+<td><code>openable=True</code>, <code>isOpen=True</code></td>
+</tr>
+<tr class="even">
+<td><strong>ToggleObjectOn</strong> / <strong>ToggleObjectOff</strong></td>
+<td><code>objectId</code></td>
+<td><code>toggleable=True</code></td>
+</tr>
+<tr class="odd">
+<td><strong>SliceObject</strong></td>
+<td><code>objectId</code></td>
+<td><code>sliceable=True</code></td>
+</tr>
+<tr class="even">
+<td><strong>BreakObject</strong></td>
+<td><code>objectId</code></td>
+<td><code>breakable=True</code></td>
+</tr>
+<tr class="odd">
+<td><strong>CookObject</strong></td>
+<td><code>objectId</code></td>
+<td><code>cookable=True</code>（常在 stove/microwave 上下文）</td>
+</tr>
+<tr class="even">
+<td><strong>DirtyObject</strong> / <strong>CleanObject</strong></td>
+<td><code>objectId</code></td>
+<td><code>dirtyable</code></td>
+</tr>
+<tr class="odd">
+<td><strong>FillObjectWithLiquid</strong></td>
+<td><code>objectId</code>, <code>fillLiquid</code></td>
+<td><code>fillable</code> / 液体源</td>
+</tr>
+<tr class="even">
+<td><strong>EmptyLiquidFromObject</strong></td>
+<td><code>objectId</code></td>
+<td>容器有液体</td>
+</tr>
+<tr class="odd">
+<td><strong>UseUpObject</strong></td>
+<td><code>objectId</code></td>
+<td><code>canBeUsedUp</code>（如纸巾）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="物理推动-5">物理推动</h3>
+<table>
+<thead>
+<tr class="header">
+<th>动作</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>PushObject</strong></td>
+<td>沿方向推 <code>moveable</code> 物体</td>
+</tr>
+<tr class="even">
+<td><strong>PullObject</strong></td>
+<td>拉</td>
+</tr>
+<tr class="odd">
+<td><strong>DirectionalPush</strong></td>
+<td>指定方向推力</td>
+</tr>
+<tr class="even">
+<td><strong>ThrowObject</strong></td>
+<td>投掷手中物体</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5.-">5. 环境查询</h2>
+<table>
+<thead>
+<tr class="header">
+<th>动作</th>
+<th>参数</th>
+<th>actionReturn</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>GetReachablePositions</strong></td>
+<td>—</td>
+<td><code>[{x,y,z}, ...]</code> 可导航点</td>
+</tr>
+<tr class="even">
+<td><strong>GetObjectInFrame</strong></td>
+<td><code>x, y</code> ∈ [0,1] 归一化坐标</td>
+<td><code>objectId</code> 或 None</td>
+</tr>
+<tr class="odd">
+<td><strong>GetCoordinateFromRaycast</strong></td>
+<td><code>x, y</code></td>
+<td>射线命中点</td>
+</tr>
+<tr class="even">
+<td><strong>GetInteractablePoses</strong></td>
+<td><code>objectId</code></td>
+<td>可交互位姿列表</td>
+</tr>
+<tr class="odd">
+<td><strong>GetVisibleObjects</strong></td>
+<td>—</td>
+<td>可见 objectId 列表</td>
+</tr>
+</tbody>
+</table>
+<p>典型模式：先用 <strong>GetObjectInFrame</strong> 或遍历 <code>metadata[&quot;objects&quot;]</code> 获取 <code>objectId</code>，再调用交互动作。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1">query <span class="op">=</span> controller.step(action<span class="op">=</span><span class="st">&quot;GetObjectInFrame&quot;</span>, x<span class="op">=</span><span class="fl">0.64</span>, y<span class="op">=</span><span class="fl">0.40</span>, checkVisible<span class="op">=</span><span class="va">False</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">oid <span class="op">=</span> query.metadata[<span class="st">&quot;actionReturn&quot;</span>]</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="cf">if</span> oid:</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    controller.step(action<span class="op">=</span><span class="st">&quot;OpenObject&quot;</span>, objectId<span class="op">=</span>oid)</a></code></pre></div>
+<hr />
+<h2 id="6.-">6. 场景与渲染控制</h2>
+<table>
+<thead>
+<tr class="header">
+<th>动作</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>CreateHouse</strong></td>
+<td>ProcTHOR：载入 <code>house</code> JSON</td>
+</tr>
+<tr class="even">
+<td><strong>RandomizeLighting</strong></td>
+<td>光照随机化（域随机化）</td>
+</tr>
+<tr class="odd">
+<td><strong>AddThirdPartyCamera</strong></td>
+<td>添加固定外部相机</td>
+</tr>
+<tr class="even">
+<td><strong>UpdateThirdPartyCamera</strong></td>
+<td>更新外部相机</td>
+</tr>
+<tr class="odd">
+<td><strong>PausePhysicsAutoSim</strong> / <strong>AdvancePhysicsStep</strong></td>
+<td>手动步进物理</td>
+</tr>
+<tr class="even">
+<td><strong>InitializeObject</strong></td>
+<td>重置/初始化物体状态</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7.-manipulathor-agentmode=&quot;arm&quot;">7. ManipulaTHOR 专用动作（agentMode=&quot;arm&quot;）</h2>
+<h3 id="7.1-">7.1 底座与身体</h3>
+<table>
+<thead>
+<tr class="header">
+<th>动作</th>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>MoveAgent</strong></td>
+<td><code>ahead</code>, <code>right</code>, <code>returnToStart</code>, <code>speed</code></td>
+<td>可 <strong>对角线</strong> 移动（不同于 MoveAhead）</td>
+</tr>
+<tr class="even">
+<td><strong>RotateAgent</strong></td>
+<td><code>degrees</code>, <code>returnToStart</code>, <code>speed</code></td>
+<td>旋转身体</td>
+</tr>
+</tbody>
+</table>
+<h3 id="7.2-">7.2 机械臂</h3>
+<table>
+<thead>
+<tr class="header">
+<th>动作</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>MoveArm</strong></td>
+<td>多自由度臂运动（position/rotation 等，见官方文档）</td>
+</tr>
+<tr class="even">
+<td><strong>MoveArmBase</strong></td>
+<td>臂基座平移</td>
+</tr>
+<tr class="odd">
+<td><strong>PickupObject</strong></td>
+<td>臂端抓取</td>
+</tr>
+<tr class="even">
+<td><strong>ReleaseObject</strong></td>
+<td>释放</td>
+</tr>
+<tr class="odd">
+<td><strong>SetHandSphereRadius</strong></td>
+<td>调整抓取碰撞球半径</td>
+</tr>
+</tbody>
+</table>
+<h3 id="7.3-">7.3 相机</h3>
+<table>
+<thead>
+<tr class="header">
+<th>动作</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>RotateHand</strong> / <strong>RotateHandRelative</strong></td>
+<td>腕部相机旋转</td>
+</tr>
+<tr class="even">
+<td><strong>Teleport</strong> / <strong>TeleportFull</strong></td>
+<td>整体瞬移</td>
+</tr>
+</tbody>
+</table>
+<p>臂 metadata 含 <strong>joint</strong> 角度、<strong>hand</strong> 位姿等，见 <a href="https://ai2thor.allenai.org/manipulathor/documentation/">ManipulaTHOR Metadata</a> 的 Arm/Joint Metadata 节。</p>
+<hr />
+<h2 id="8.-object-metadata-">8. Object Metadata 字段详解</h2>
+<p>每个 <code>metadata[&quot;objects&quot;][i]</code> 为 dict，常用字段：</p>
+<h3 id="8.1-">8.1 标识</h3>
+<table>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>objectId</code></td>
+<td>str</td>
+<td><code>Type|x|y|z</code> 唯一 ID</td>
+</tr>
+<tr class="even">
+<td><code>objectType</code></td>
+<td>str</td>
+<td>语义类（Apple, Fridge, …）</td>
+</tr>
+<tr class="odd">
+<td><code>name</code></td>
+<td>str</td>
+<td>Unity 场景内唯一名</td>
+</tr>
+</tbody>
+</table>
+<h3 id="8.2-">8.2 位姿与可见性</h3>
+<table>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>position</code></td>
+<td><code>{x,y,z}</code> 世界坐标（y 向上）</td>
+</tr>
+<tr class="even">
+<td><code>rotation</code></td>
+<td><code>{x:pitch, y:yaw, z:roll}</code></td>
+</tr>
+<tr class="odd">
+<td><code>distance</code></td>
+<td>物体中心到 agent 相机距离</td>
+</tr>
+<tr class="even">
+<td><code>visible</code></td>
+<td>在 <code>visibilityDistance</code> 内且满足可见性规则</td>
+</tr>
+</tbody>
+</table>
+<h3 id="8.3-">8.3 几何</h3>
+<table>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>axisAlignedBoundingBox</code></td>
+<td>世界轴对齐包围盒（随旋转变）</td>
+</tr>
+<tr class="even">
+<td><code>objectOrientedBoundingBox</code></td>
+<td>物体自身坐标系 OBB（pickupable）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="8.4-">8.4 物理</h3>
+<table>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>mass</code></td>
+<td>千克（pickupable/moveable）</td>
+</tr>
+<tr class="even">
+<td><code>salientMaterials</code></td>
+<td>材质标签列表</td>
+</tr>
+</tbody>
+</table>
+<h3 id="8.5-">8.5 容器关系</h3>
+<table>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>parentReceptacles</code></td>
+<td>父容器 objectId 列表</td>
+</tr>
+<tr class="even">
+<td><code>receptacle</code></td>
+<td>是否为容器</td>
+</tr>
+<tr class="odd">
+<td><code>receptacleObjectIds</code></td>
+<td>内容物 id 列表</td>
+</tr>
+</tbody>
+</table>
+<h3 id="8.6--flags">8.6 状态 flags（节选）</h3>
+<table>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>isOpen</code></td>
+<td>门/抽屉/电器门开</td>
+</tr>
+<tr class="even">
+<td><code>isToggled</code></td>
+<td>开关打开</td>
+</tr>
+<tr class="odd">
+<td><code>isBroken</code></td>
+<td>已打碎</td>
+</tr>
+<tr class="even">
+<td><code>isSliced</code></td>
+<td>已切片</td>
+</tr>
+<tr class="odd">
+<td><code>isCooked</code></td>
+<td>已烹饪</td>
+</tr>
+<tr class="even">
+<td><code>isDirty</code></td>
+<td>脏</td>
+</tr>
+<tr class="odd">
+<td><code>isFilledWithLiquid</code></td>
+<td>含液体</td>
+</tr>
+<tr class="even">
+<td><code>isPickedUp</code></td>
+<td>被 agent 持有</td>
+</tr>
+<tr class="odd">
+<td><code>isMoving</code></td>
+<td>物理运动中</td>
+</tr>
+</tbody>
+</table>
+<h3 id="8.7-">8.7 温度</h3>
+<table>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ObjectTemperature</code></td>
+<td><code>Hot</code> / <code>Cold</code> / <code>RoomTemp</code></td>
+</tr>
+<tr class="even">
+<td><code>canChangeTempToHot</code></td>
+<td>可作为热源</td>
+</tr>
+<tr class="odd">
+<td><code>canChangeTempToCold</code></td>
+<td>可作为冷源</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9.-maniskill-">9. 可移动物体列表（ManiSkill 对照）</h2>
+<p>在 ManiSkill 的 HSSD 集成中，<code>load_ai2thor_metadata()</code> 读取 <code>object_semantic_id_mapping.json</code>，并定义 <strong><code>MOVEABLE_OBJECT_IDS</code></strong>（<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/scene_builder/ai2thor/constants.py#L34-L140">constants.py L34–140</a>）。<code>AI2THORBaseSceneBuilder._should_be_static()</code> 用此列表决定物体建为 <strong>static</strong> 还是 <strong>dynamic</strong> actor（<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/scene_builder/ai2thor/scene_builder.py#L98-L108">scene_builder.py L98–108</a>）。</p>
+<p>与 Unity metadata 中 <code>moveable</code> / <code>pickupable</code> 大体对应，节选如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th>类别</th>
+<th>objectType 示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>食物</td>
+<td>Apple, Tomato, Bread, Potato, Lettuce, Egg, Sandwich</td>
+</tr>
+<tr class="even">
+<td>餐具</td>
+<td>Bowl, Mug, Plate, Cup, Fork, Knife, Spoon</td>
+</tr>
+<tr class="odd">
+<td>电器小件</td>
+<td>Toaster, CoffeeMachine, DeskLamp, VacuumCleaner</td>
+</tr>
+<tr class="even">
+<td>日用品</td>
+<td>CellPhone, Laptop, Book, KeyChain, CreditCard, TissueBox</td>
+</tr>
+<tr class="odd">
+<td>清洁</td>
+<td>SoapBottle, DishSponge, ScrubBrush, SprayBottle</td>
+</tr>
+<tr class="even">
+<td>运动/装饰</td>
+<td>BaseballBat, BasketBall, TennisRacket, TeddyBear, Vase</td>
+</tr>
+<tr class="odd">
+<td>家具（可推）</td>
+<td>Chair, Stool, Footstool, Cart</td>
+</tr>
+</tbody>
+</table>
+<p>完整列表见源码。另有一组 <strong><code>WORKING_OBJS</code></strong>（<a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/scene_builder/ai2thor/scene_builder.py#L43-L52">scene_builder.py L43–52</a>：<code>apple</code>, <code>potato</code>, <code>tomato</code>, <code>lettuce</code>, <code>soap</code>, <code>sponge</code>, <code>plate</code>, <code>book</code>），在 ManiSkill 中 <strong>强制</strong> 建为 dynamic actor 以便操作实验。</p>
+<blockquote>
+<p><strong>注意</strong>：ManiSkill 路径 <strong>不实现</strong> Unity 侧的 Open/Cook/Slice 等语义状态；仅提供刚体碰撞与抓取物理。</p>
+</blockquote>
+<hr />
+<h2 id="10.-agent-metadata">10. Agent Metadata（节选）</h2>
+<p><code>metadata[&quot;agent&quot;]</code> 常见字段：</p>
+<table>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>position</code> / <code>rotation</code></td>
+<td>agent 身体位姿</td>
+</tr>
+<tr class="even">
+<td><code>cameraHorizon</code></td>
+<td>相机俯仰</td>
+</tr>
+<tr class="odd">
+<td><code>isStanding</code> / <code>isCrouching</code></td>
+<td>姿态</td>
+</tr>
+<tr class="even">
+<td><code>heldObjects</code></td>
+<td>持有物体信息</td>
+</tr>
+</tbody>
+</table>
+<p>ManipulaTHOR 另有 <strong>arm</strong>、<strong>joint</strong> 子结构。</p>
+<hr />
+<h2 id="11.-objecttype-">11. objectType 类别</h2>
+<p>AI2-THOR 定义数百种 <code>objectType</code>（厨房电器、食物、家具等），完整列表见官方 <strong>Object Types</strong> 文档：</p>
+<p><a href="https://ai2thor.allenai.org/ithor/documentation/objects">https://ai2thor.allenai.org/ithor/documentation/objects</a></p>
+<p>常见类别示例：</p>
+<ul>
+<li><strong>可开容器</strong>：Drawer, Cabinet, Fridge, Microwave, Safe</li>
+<li><strong>可切换</strong>：LightSwitch, DeskLamp, StoveKnob, Faucet</li>
+<li><strong>可拾取</strong>：Apple, Bread, Mug, CellPhone, Key</li>
+<li><strong>大型固定</strong>：CounterTop, DiningTable, Sofa, Bed</li>
+</ul>
+<p>RoboTHOR <strong>14 类导航目标</strong> 包括 AlarmClock, BaseballBat, BasketBall, Box, CellPhone, Chair, Cup, Laptop, Mug, SprayBottle, TennisRacket, ToiletPaper, ToyBear, Vase 等（见 <a href="https://arxiv.org/pdf/2004.06799">RoboTHOR 论文</a> Fig.2）。其中多数亦在 <code>MOVEABLE_OBJECT_IDS</code> 中。</p>
+<hr />
+<h2 id="12.-">12. 性能提示</h2>
+<ol>
+<li>仅在需要时开启 <code>renderDepthImage</code> / <code>renderInstanceSegmentation</code></li>
+<li>用 <strong>查询动作</strong> 代替重复 step 获取可达点</li>
+<li>集群使用 <strong>CloudRendering</strong></li>
+<li>批量实验考虑 <strong>多进程</strong> Controller（见 legacy multi-threaded example）</li>
+<li>v2.7.0+ 对渲染管线有显著提速（见 <a href="https://ai2thor.allenai.org/">官网 News</a>）</li>
+<li>ManiSkill 大规模采集：提高 <code>num_envs</code>，使用 <code>render_mode=&quot;rgb_array&quot;</code>（见 <a href="../sapien/介绍.html">../sapien/介绍.md</a>）</li>
+</ol>
+<hr />
+<h2 id="13.-">13. 相关链接与源码索引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>用途</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>动作实现入口</td>
+<td><a href="https://github.com/allenai/ai2thor/blob/master/ai2thor/controller.py#L1011">controller.py step()</a></td>
+</tr>
+<tr class="even">
+<td>容器相容表</td>
+<td><a href="https://github.com/allenai/ai2thor/blob/master/ai2thor/controller.py#L48">controller.py RECEPTACLE_OBJECTS</a></td>
+</tr>
+<tr class="odd">
+<td>可移动物体（ManiSkill）</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/scene_builder/ai2thor/constants.py#L34-L140">constants.py MOVEABLE_OBJECT_IDS</a></td>
+</tr>
+<tr class="even">
+<td>静态/动态判定</td>
+<td><a href="https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/scene_builder/ai2thor/scene_builder.py#L98-L108">scene_builder.py _should_be_static</a></td>
+</tr>
+<tr class="odd">
+<td>Scenes 列表</td>
+<td><a href="https://ai2thor.allenai.org/ithor/documentation/scenes">https://ai2thor.allenai.org/ithor/documentation/scenes</a></td>
+</tr>
+<tr class="even">
+<td>Objects 文档</td>
+<td><a href="https://ai2thor.allenai.org/ithor/documentation/objects">https://ai2thor.allenai.org/ithor/documentation/objects</a></td>
+</tr>
+<tr class="odd">
+<td>技术介绍</td>
+<td><a href="介绍.html">介绍.md</a></td>
+</tr>
+<tr class="even">
+<td>使用流程</td>
+<td><a href="基本使用流程.html">基本使用流程.md</a></td>
+</tr>
+</tbody>
+</table></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 调用约定</a></li><li><a class="" href="#2.-receptacle_objects">2. 容器相容性（RECEPTACLE_OBJECTS）</a></li><li><a class="" href="#3.-default-/-locobot">3. 导航与视角（default / locobot）</a></li><li><a class="" href="#4.-default-agent">4. 物体交互（default agent）</a></li><li><a class="level-3" href="#物理推动-5">物理推动</a></li><li><a class="" href="#5.-">5. 环境查询</a></li><li><a class="" href="#6.-">6. 场景与渲染控制</a></li><li><a class="" href="#7.-manipulathor-agentmode=&amp;quot;arm&amp;quot;">7. ManipulaTHOR 专用动作（agentMode=&amp;quot;arm&amp;quot;）</a></li><li><a class="level-3" href="#7.1-">7.1 底座与身体</a></li><li><a class="level-3" href="#7.2-">7.2 机械臂</a></li><li><a class="level-3" href="#7.3-">7.3 相机</a></li><li><a class="" href="#8.-object-metadata-">8. Object Metadata 字段详解</a></li><li><a class="level-3" href="#8.1-">8.1 标识</a></li><li><a class="level-3" href="#8.2-">8.2 位姿与可见性</a></li><li><a class="level-3" href="#8.3-">8.3 几何</a></li><li><a class="level-3" href="#8.4-">8.4 物理</a></li><li><a class="level-3" href="#8.5-">8.5 容器关系</a></li><li><a class="level-3" href="#8.6--flags">8.6 状态 flags（节选）</a></li><li><a class="level-3" href="#8.7-">8.7 温度</a></li><li><a class="" href="#9.-maniskill-">9. 可移动物体列表（ManiSkill 对照）</a></li><li><a class="" href="#10.-agent-metadata">10. Agent Metadata（节选）</a></li><li><a class="" href="#11.-objecttype-">11. objectType 类别</a></li><li><a class="" href="#12.-">12. 性能提示</a></li><li><a class="" href="#13.-">13. 相关链接与源码索引</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>基本使用流程 · DeepMind Lab</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>DeepMind Lab</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">DeepMind Lab</div>
+<a class="nav-link" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Quake/ioquake3、动作/观测、DMLab-30、Psychlab</span></a>
+<a class="nav-link active" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">Bazel、PIP、headless、dm_env、level cache</span></a>
+<a class="nav-link" href="关卡与任务参考.html"><span class="nav-link-title">关卡与任务参考</span><span class="nav-link-desc">nav_maze、DMLab-30 全表、Psychlab memory suite</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>DeepMind Lab</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>DeepMind Lab</span> <span> / </span> <span>基本使用流程</span></div>
+          <article class="article"><h1 id="deepmind-lab-">DeepMind Lab 基本使用流程</h1>
+<blockquote>
+<p>基于 <a href="https://github.com/google-deepmind/lab/blob/master/docs/users/build.md">build.md</a> · <a href="https://github.com/google-deepmind/lab/tree/master/python/pip_package">pip_package README</a> · <a href="https://github.com/google-deepmind/lab/blob/master/docs/users/python_api.md">python_api.md</a><br />
+<strong>本地源码</strong>：<code>https://github.com/google-deepmind/lab/blob/main/</code>（下文 Bazel 目标与示例均可在本地对照）</p>
+</blockquote>
+<h2 id="1.-">1. 环境要求</h2>
+<table>
+<thead>
+<tr class="header">
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>OS</strong></td>
+<td><strong>Linux</strong> 为主（Debian 9+ / Ubuntu 16.04+ 文档验证）；macOS/Windows 非官方重点</td>
+</tr>
+<tr class="even">
+<td><strong>编译器</strong></td>
+<td>支持 <strong>C++17</strong> 的 GCC/Clang</td>
+</tr>
+<tr class="odd">
+<td><strong>构建</strong></td>
+<td><a href="https://docs.bazel.build/versions/master/install.html">Bazel</a></td>
+</tr>
+<tr class="even">
+<td><strong>Python</strong></td>
+<td>2 或 3（默认 <strong>PY3</strong>）；需系统已装 <strong>NumPy</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>图形</strong></td>
+<td>Headless：<strong>OSMesa</strong> 或 <strong>EGL</strong>；可视化：SDL/GLX</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2.-ubuntu/debian-">2. 安装系统依赖（Ubuntu/Debian 示例）</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="fu">sudo</span> apt-get install libffi-dev gettext freeglut3-dev libsdl2-dev \</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">  zip libosmesa6-dev python3-dev python3-numpy python3-pil \</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">  python3-setuptools python3-wheel python3-pip python3-virtualenv</a></code></pre></div>
+<p>打 PIP 包或跑测试时按需加：<code>python3-virtualenv</code>。</p>
+<p>RHEL / SUSE 包列表见 <a href="https://github.com/google-deepmind/lab/blob/master/docs/users/build.md">build.md</a>。</p>
+<hr />
+<h2 id="3.--abazel-">3. 流程 A：Bazel 开发构建（推荐入门）</h2>
+<p><a href="https://github.com/google-deepmind/lab/blob/master/BUILD"><code>BUILD</code></a> 中主要目标：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Bazel 目标</th>
+<th>产物 / 用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>//:deepmind_lab.so</code></td>
+<td>Python C 扩展（<a href="https://github.com/google-deepmind/lab/blob/master/python/dmlab_module.c"><code>python/dmlab_module.c</code></a>）</td>
+</tr>
+<tr class="even">
+<td><code>//:python_random_agent</code></td>
+<td>入口 <a href="https://github.com/google-deepmind/lab/blob/master/python/random_agent.py"><code>python/random_agent.py</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>:game</code></td>
+<td>C 可执行体，人类试玩 / 观测调试</td>
+</tr>
+<tr class="even">
+<td><code>//python/tests:*</code></td>
+<td>39 个 Python 集成测试</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="fu">git</span> clone https://github.com/google-deepmind/lab.git</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="bu">cd</span> lab</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># 构建 Python 扩展</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="ex">bazel</span> build -c opt //:deepmind_lab.so</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># 运行单元测试</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="ex">bazel</span> test -c opt //python/tests:python_module_test</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co"># 随机 agent 示例</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="ex">bazel</span> run -c opt //:python_random_agent -- --help</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="ex">bazel</span> run -c opt //:python_random_agent -- \</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">  --level_name=nav_maze_random_goal_01 \</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">  --width=84 --height=84</a></code></pre></div>
+<p><code>random_agent.py</code> 的 CLI 与 <code>Lab</code> 构造（<a href="https://github.com/google-deepmind/lab/blob/master/python/random_agent.py"><code>random_agent.py</code> L140–172</a>）：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode 140:172:https://github.com/google-deepmind/lab/blob/main/python/random_agent.py"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">def</span> run(length, width, height, fps, level, record, demo, demofiles, video):</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">  <span class="co">&quot;&quot;&quot;Spins up an environment and runs the random agent.&quot;&quot;&quot;</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">  config <span class="op">=</span> {</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">      <span class="st">&#39;fps&#39;</span>: <span class="bu">str</span>(fps),</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">      <span class="st">&#39;width&#39;</span>: <span class="bu">str</span>(width),</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">      <span class="st">&#39;height&#39;</span>: <span class="bu">str</span>(height)</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">  }</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">  ...</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">  env <span class="op">=</span> deepmind_lab.Lab(level, [<span class="st">&#39;RGB_INTERLEAVED&#39;</span>], config<span class="op">=</span>config)</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">  env.reset()</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">  agent <span class="op">=</span> SpringAgent(env.action_spec())</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">  ...</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">  <span class="cf">for</span> _ <span class="kw">in</span> six.moves.<span class="bu">range</span>(length):</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">    <span class="cf">if</span> <span class="kw">not</span> env.is_running():</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">      env.reset()</a>
+<a class="sourceLine" id="cb3-17" data-line-number="17">      agent.reset()</a>
+<a class="sourceLine" id="cb3-18" data-line-number="18">    obs <span class="op">=</span> env.observations()</a>
+<a class="sourceLine" id="cb3-19" data-line-number="19">    action <span class="op">=</span> agent.step(reward, obs[<span class="st">&#39;RGB_INTERLEAVED&#39;</span>])</a>
+<a class="sourceLine" id="cb3-20" data-line-number="20">    reward <span class="op">=</span> env.step(action, num_steps<span class="op">=</span><span class="dv">1</span>)</a></code></pre></div>
+<h3 id="3.1-osmesa-/-egl">3.1 无头训练（OSMesa / EGL）</h3>
+<p>构建时指定 graphics backend：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># 常见：software renderer → OSMesa</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="ex">bazel</span> build -c opt --define graphics=osmesa_or_egl //:deepmind_lab.so</a></code></pre></div>
+<p>Python 侧：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb5-1" data-line-number="1">env <span class="op">=</span> deepmind_lab.Lab(level, [<span class="st">&#39;RGB_INTERLEAVED&#39;</span>], renderer<span class="op">=</span><span class="st">&#39;software&#39;</span>)</a></code></pre></div>
+<p><code>renderer='hardware'</code> 使用 EGL（需 GPU/驱动）。</p>
+<h3 id="3.2-">3.2 本地窗口可视化</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ex">bazel</span> build -c opt --define graphics=sdl //:deepmind_lab.so</a></code></pre></div>
+<p>观测列表须包含以 <code>RGB</code> 开头的项，否则 viewport 可能异常。</p>
+<h3 id="3.3--c++-">3.3 直接跑 C++ 游戏进程（调试观测）</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="ex">bazel</span> run -c opt :game -- --level_script=lt_chasm \</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">  --observation VEL.TRANS --observation VEL.ROT</a></code></pre></div>
+<hr />
+<h2 id="4.--bpip-">4. 流程 B：PIP 自包含包</h2>
+<p>适合 <strong>不在 Bazel 项目内</strong> 的开发（Jupyter、独立训练脚本）。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="fu">git</span> clone https://github.com/google-deepmind/lab.git <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> lab</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co"># Python 3</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="ex">bazel</span> build -c opt --python_version=PY3 //python/pip_package:build_pip_package</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="ex">./bazel-bin/python/pip_package/build_pip_package</span> /tmp/dmlab_pkg</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="ex">python3</span> -m venv agentenv <span class="kw">&amp;&amp;</span> <span class="bu">source</span> agentenv/bin/activate</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="ex">pip</span> install numpy</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="ex">pip</span> install /tmp/dmlab_pkg/deepmind_lab-1.0-py3-none-any.whl --force-reinstall</a></code></pre></div>
+<p>修改关卡/Lua/资源后需 <strong>重新 build_pip_package</strong> 并 <code>--force-reinstall</code>。</p>
+<h3 id="4.1-dm_env-">4.1 dm_env 额外依赖</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="ex">pip</span> install /tmp/dmlab_pkg/deepmind_lab-*.whl[dmenv_module]</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="im">from</span> deepmind_lab <span class="im">import</span> dmenv_module</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">env <span class="op">=</span> dmenv_module.load(level<span class="op">=</span><span class="st">&#39;nav_maze_static_01&#39;</span>, observations<span class="op">=</span>[<span class="st">&#39;RGB_INTERLEAVED&#39;</span>])</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">time_step <span class="op">=</span> env.reset()</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="cf">while</span> time_step.step_type <span class="op">!=</span> dm_env.StepType.LAST:</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">    action <span class="op">=</span> ...  <span class="co"># 符合 env.action_spec()</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">    time_step <span class="op">=</span> env.step(action)</a></code></pre></div>
+<hr />
+<h2 id="5.--python-">5. 最小 Python 训练循环</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="im">import</span> deepmind_lab</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="im">import</span> numpy <span class="im">as</span> np</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">LEVEL <span class="op">=</span> <span class="st">&#39;demos/extra_entities&#39;</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">OBS <span class="op">=</span> [<span class="st">&#39;RGB_INTERLEAVED&#39;</span>]</a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7">lab <span class="op">=</span> deepmind_lab.Lab(</a>
+<a class="sourceLine" id="cb11-8" data-line-number="8">    LEVEL, OBS,</a>
+<a class="sourceLine" id="cb11-9" data-line-number="9">    config<span class="op">=</span>{<span class="st">&#39;fps&#39;</span>: <span class="st">&#39;30&#39;</span>, <span class="st">&#39;width&#39;</span>: <span class="st">&#39;84&#39;</span>, <span class="st">&#39;height&#39;</span>: <span class="st">&#39;84&#39;</span>},</a>
+<a class="sourceLine" id="cb11-10" data-line-number="10">    renderer<span class="op">=</span><span class="st">&#39;software&#39;</span>,</a>
+<a class="sourceLine" id="cb11-11" data-line-number="11">)</a>
+<a class="sourceLine" id="cb11-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb11-13" data-line-number="13"><span class="kw">def</span> random_action(spec):</a>
+<a class="sourceLine" id="cb11-14" data-line-number="14">    a <span class="op">=</span> np.zeros(<span class="bu">len</span>(spec), dtype<span class="op">=</span>np.intc)</a>
+<a class="sourceLine" id="cb11-15" data-line-number="15">    <span class="cf">for</span> i, dim <span class="kw">in</span> <span class="bu">enumerate</span>(spec):</a>
+<a class="sourceLine" id="cb11-16" data-line-number="16">        a[i] <span class="op">=</span> np.random.randint(dim[<span class="st">&#39;min&#39;</span>], dim[<span class="st">&#39;max&#39;</span>] <span class="op">+</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb11-17" data-line-number="17">    <span class="cf">return</span> a</a>
+<a class="sourceLine" id="cb11-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb11-19" data-line-number="19">total_reward <span class="op">=</span> <span class="fl">0.0</span></a>
+<a class="sourceLine" id="cb11-20" data-line-number="20">lab.reset(seed<span class="op">=</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb11-21" data-line-number="21">spec <span class="op">=</span> lab.action_spec()</a>
+<a class="sourceLine" id="cb11-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb11-23" data-line-number="23"><span class="cf">while</span> lab.is_running():</a>
+<a class="sourceLine" id="cb11-24" data-line-number="24">    total_reward <span class="op">+=</span> lab.step(random_action(spec))</a>
+<a class="sourceLine" id="cb11-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb11-26" data-line-number="26"><span class="bu">print</span>(<span class="st">&#39;episode reward:&#39;</span>, total_reward)</a>
+<a class="sourceLine" id="cb11-27" data-line-number="27">lab.close()</a></code></pre></div>
+<p>PIP README 中 <code>demos/extra_entities</code> 前方 4 个 apple，随机前进约 <strong>100 步 reward ≈ 4.0</strong>。</p>
+<hr />
+<h2 id="6.-level-cache">6. Level Cache（程序化关卡加速）</h2>
+<p>C API 定义 cache 回调（<a href="https://github.com/google-deepmind/lab/blob/master/public/level_cache_types.h"><code>level_cache_types.h</code></a>）；Python 侧传入带 <strong><code>fetch</code> / <code>write</code></strong> 方法的对象。官方测试用例：</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode 42:50:https://github.com/google-deepmind/lab/blob/main/python/tests/level_cache_test.py"><code class="sourceCode python"><a class="sourceLine" id="cb12-1" data-line-number="1">  <span class="kw">def</span> _create_environment(<span class="va">self</span>, level_cache):</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">    <span class="cf">return</span> deepmind_lab.Lab(</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">        level<span class="op">=</span><span class="st">&#39;contributed/dmlab30/explore_goal_locations_small&#39;</span>,</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">        observations<span class="op">=</span>[<span class="st">&#39;RGB_INTERLEAVED&#39;</span>],</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">        config<span class="op">=</span>{</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">            <span class="st">&#39;width&#39;</span>: <span class="st">&#39;96&#39;</span>,</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">            <span class="st">&#39;height&#39;</span>: <span class="st">&#39;72&#39;</span>,</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">        },</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">        level_cache<span class="op">=</span>level_cache)</a></code></pre></div>
+<p>对 <code>contributed/dmlab30/explore_goal_locations_small</code> 等 <strong>每 episode 生成新 BSP</strong> 的关卡，推荐实现：</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="im">import</span> os, shutil</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="kw">class</span> LevelCache(<span class="bu">object</span>):</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, cache_dir):</a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">        <span class="va">self</span>._cache_dir <span class="op">=</span> cache_dir</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">        os.makedirs(cache_dir, exist_ok<span class="op">=</span><span class="va">True</span>)</a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">    <span class="kw">def</span> fetch(<span class="va">self</span>, key, pk3_path):</a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">        path <span class="op">=</span> os.path.join(<span class="va">self</span>._cache_dir, key)</a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">        <span class="cf">if</span> os.path.isfile(path):</a>
+<a class="sourceLine" id="cb13-11" data-line-number="11">            shutil.copyfile(path, pk3_path)</a>
+<a class="sourceLine" id="cb13-12" data-line-number="12">            <span class="cf">return</span> <span class="va">True</span></a>
+<a class="sourceLine" id="cb13-13" data-line-number="13">        <span class="cf">return</span> <span class="va">False</span></a>
+<a class="sourceLine" id="cb13-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb13-15" data-line-number="15">    <span class="kw">def</span> write(<span class="va">self</span>, key, pk3_path):</a>
+<a class="sourceLine" id="cb13-16" data-line-number="16">        path <span class="op">=</span> os.path.join(<span class="va">self</span>._cache_dir, key)</a>
+<a class="sourceLine" id="cb13-17" data-line-number="17">        <span class="cf">if</span> <span class="kw">not</span> os.path.isfile(path):</a>
+<a class="sourceLine" id="cb13-18" data-line-number="18">            shutil.copyfile(pk3_path, path)</a>
+<a class="sourceLine" id="cb13-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb13-20" data-line-number="20">env <span class="op">=</span> deepmind_lab.Lab(</a>
+<a class="sourceLine" id="cb13-21" data-line-number="21">    <span class="st">&#39;contributed/dmlab30/explore_goal_locations_small&#39;</span>,</a>
+<a class="sourceLine" id="cb13-22" data-line-number="22">    [<span class="st">&#39;RGBD&#39;</span>],</a>
+<a class="sourceLine" id="cb13-23" data-line-number="23">    level_cache<span class="op">=</span>LevelCache(<span class="st">&#39;/tmp/dmlab_level_cache&#39;</span>),</a>
+<a class="sourceLine" id="cb13-24" data-line-number="24">)</a></code></pre></div>
+<hr />
+<h2 id="7.-episode-">7. Episode 与随机种子</h2>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb14-1" data-line-number="1">env.reset(episode<span class="op">=</span><span class="dv">0</span>, seed<span class="op">=</span><span class="dv">123</span>)   <span class="co"># 指定 episode 索引</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">env.reset(seed<span class="op">=</span><span class="dv">456</span>)              <span class="co"># episode&lt;0 时按序加载</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4"><span class="co"># config 中 mixerSeed 与 seed 组合，划分不重叠 RNG 序列</span></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">env <span class="op">=</span> deepmind_lab.Lab(level, obs, config<span class="op">=</span>{<span class="st">&#39;mixerSeed&#39;</span>: <span class="st">&#39;42&#39;</span>})</a></code></pre></div>
+<p>DMLab-30 hold-out：<code>allowHoldOutLevels=true</code> + 关卡名带 <code>test</code> regime。</p>
+<hr />
+<h2 id="8.--config-">8. 常用 config 键</h2>
+<table>
+<thead>
+<tr class="header">
+<th>键</th>
+<th>默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>width</code> / <code>height</code></td>
+<td>320 / 240</td>
+<td>观测分辨率</td>
+</tr>
+<tr class="even">
+<td><code>fps</code></td>
+<td>60</td>
+<td>仿真帧率</td>
+</tr>
+<tr class="odd">
+<td><code>levelDirectory</code></td>
+<td>''</td>
+<td>自定义关卡根目录</td>
+</tr>
+<tr class="even">
+<td><code>appendCommand</code></td>
+<td>''</td>
+<td>Quake 控制台命令</td>
+</tr>
+<tr class="odd">
+<td><code>mixerSeed</code></td>
+<td>0</td>
+<td>与 reset(seed) 混合</td>
+</tr>
+</tbody>
+</table>
+<p>关卡专属示例：<code>lt_chasm</code> → <code>config={'botCount': '2'}</code>。</p>
+<hr />
+<h2 id="9.-runfiles--bazel-">9. runfiles 路径（非 Bazel 运行时）</h2>
+<p>若 <code>.so</code> 找不到 bundled 资源：</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="im">import</span> deepmind_lab</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">deepmind_lab.set_runfiles_path(<span class="st">&#39;/path/to/lab/bazel-bin/...&#39;</span>)</a></code></pre></div>
+<p>PIP 安装通常自动处理；裸拷贝 <code>.so</code> 时需手动设置。</p>
+<hr />
+<h2 id="10.-">10. 常见问题</h2>
+<table>
+<thead>
+<tr class="header">
+<th>现象</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bazel 找不到 Python/NumPy</td>
+<td>安装 <code>python3-dev python3-numpy</code>；或设置 <code>PYTHON_BIN_PATH</code></td>
+</tr>
+<tr class="even">
+<td>无 DISPLAY 崩溃</td>
+<td><code>renderer='software'</code> + OSMesa 构建</td>
+</tr>
+<tr class="odd">
+<td>EGL 失败</td>
+<td>检查 NVIDIA 驱动；或改 OSMesa</td>
+</tr>
+<tr class="even">
+<td><code>import deepmind_lab</code> 失败</td>
+<td>确认 <code>deepmind_lab.so</code> 在 <code>PYTHONPATH</code> 或已 pip install</td>
+</tr>
+<tr class="odd">
+<td>NumPy ABI 不匹配</td>
+<td>PIP 包与 runtime NumPy 版本一致；重建 wheel</td>
+</tr>
+<tr class="even">
+<td>macOS 构建失败</td>
+<td>官方主要支持 Linux；考虑 Docker</td>
+</tr>
+<tr class="odd">
+<td>改 Lua 不生效</td>
+<td>重新 <code>bazel build</code> 或 rebuild pip package</td>
+</tr>
+<tr class="even">
+<td>C++17 错误</td>
+<td>升级 GCC（2022 起 Lab 要求 C++17）</td>
+</tr>
+</tbody>
+</table>
+<p>Issue：<a href="https://github.com/google-deepmind/lab/issues">github.com/google-deepmind/lab/issues</a></p>
+<hr />
+<h2 id="11.-docker-/-">11. Docker / 复现建议</h2>
+<p>社区常用 <strong>Ubuntu 容器</strong> 固定 Bazel + 依赖版本；克隆仓库时 pin <strong>commit/tag</strong> 与论文一致。</p>
+<p>多进程 rollout：每 worker <strong>独立 <code>Lab</code> 实例</strong>（Quake 进程不共享）。</p>
+<hr />
+<h2 id="12.-">12. 下一步</h2>
+<table>
+<thead>
+<tr class="header">
+<th>目标</th>
+<th>文档</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>选关卡、DMLab-30 全列表</td>
+<td><a href="关卡与任务参考.html">关卡与任务参考.md</a></td>
+</tr>
+<tr class="even">
+<td>平台总览</td>
+<td><a href="介绍.html">介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>写新关卡</td>
+<td><a href="https://github.com/google-deepmind/lab/blob/master/docs/developers/reference/lua_api.md">Lua API</a></td>
+</tr>
+</tbody>
+</table></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 环境要求</a></li><li><a class="" href="#2.-ubuntu/debian-">2. 安装系统依赖（Ubuntu/Debian 示例）</a></li><li><a class="" href="#3.--abazel-">3. 流程 A：Bazel 开发构建（推荐入门）</a></li><li><a class="level-3" href="#3.1-osmesa-/-egl">3.1 无头训练（OSMesa / EGL）</a></li><li><a class="level-3" href="#3.2-">3.2 本地窗口可视化</a></li><li><a class="level-3" href="#3.3--c++-">3.3 直接跑 C++ 游戏进程（调试观测）</a></li><li><a class="" href="#4.--bpip-">4. 流程 B：PIP 自包含包</a></li><li><a class="level-3" href="#4.1-dm_env-">4.1 dm_env 额外依赖</a></li><li><a class="" href="#5.--python-">5. 最小 Python 训练循环</a></li><li><a class="" href="#6.-level-cache">6. Level Cache（程序化关卡加速）</a></li><li><a class="" href="#7.-episode-">7. Episode 与随机种子</a></li><li><a class="" href="#8.--config-">8. 常用 config 键</a></li><li><a class="" href="#9.-runfiles--bazel-">9. runfiles 路径（非 Bazel 运行时）</a></li><li><a class="" href="#10.-">10. 常见问题</a></li><li><a class="" href="#11.-docker-/-">11. Docker / 复现建议</a></li><li><a class="" href="#12.-">12. 下一步</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+</body>
+</html>

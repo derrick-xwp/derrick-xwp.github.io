@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>多模态感知与数据集参考 · ThreeDWorld</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>ThreeDWorld</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">ThreeDWorld</div>
+<a class="nav-link" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Build+Controller、Clatter/Flex、Agent、LTS 状态</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">pip、图像采集、Floorplan、远程 Build、FAQ</span></a>
+<a class="nav-link active" href="多模态感知与数据集参考.html"><span class="nav-link-title">多模态感知与数据集参考</span><span class="nav-link-desc">Command/Output、Replicant、TDW-Image/Physics</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>ThreeDWorld</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>ThreeDWorld</span> <span> / </span> <span>多模态感知与数据集参考</span></div>
+          <article class="article"><h1 id="tdw-">TDW 多模态感知与数据集参考</h1>
+<blockquote>
+<p><a href="https://github.com/threedworld-mit/tdw/blob/master/Documentation/api/command_api.md">Command API</a> · <a href="https://github.com/threedworld-mit/tdw/blob/master/Documentation/api/output_data.md">Output Data API</a><br />
+<strong>本地源码</strong>：<code>https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/</code> · 外部：<a href="https://github.com/alters-mit/tdw_physics">tdw_physics</a></p>
+</blockquote>
+<h2 id="1.-command--output-data-">1. Command 与 Output Data 模型</h2>
+<h3 id="1.1-">1.1 发送命令</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="im">from</span> tdw.controller <span class="im">import</span> Controller</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">c <span class="op">=</span> Controller()</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">c.communicate({<span class="st">&quot;$type&quot;</span>: <span class="st">&quot;set_screen_size&quot;</span>, <span class="st">&quot;width&quot;</span>: <span class="dv">1024</span>, <span class="st">&quot;height&quot;</span>: <span class="dv">1024</span>})</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">c.communicate([</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    {<span class="st">&quot;$type&quot;</span>: <span class="st">&quot;set_screen_size&quot;</span>, <span class="st">&quot;width&quot;</span>: <span class="dv">1024</span>, <span class="st">&quot;height&quot;</span>: <span class="dv">1024</span>},</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">    {<span class="st">&quot;$type&quot;</span>: <span class="st">&quot;simulate_physics&quot;</span>, <span class="st">&quot;value&quot;</span>: <span class="va">False</span>},</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">])</a></code></pre></div>
+<p><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/controller.py"><code>communicate</code></a> 将单条 dict 转为 list，合并 add-on 命令后 <code>json.dumps</code> → ZMQ multipart 发送。</p>
+<p>常见错误：坐标须 <code>{&quot;x&quot;:0,&quot;y&quot;:0,&quot;z&quot;:0}</code>，不可用 <code>[0,0,0]</code>。</p>
+<h3 id="1.2--output-data">1.2 接收 Output Data</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1">resp <span class="op">=</span> c.communicate(commands)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">frame <span class="op">=</span> c.get_frame(resp[<span class="op">-</span><span class="dv">1</span>])</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th>命令</th>
+<th>Output ID</th>
+<th>类</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>send_images</code></td>
+<td><code>imag</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/output_data/images.py"><code>Images</code></a></td>
+</tr>
+<tr class="even">
+<td><code>send_transforms</code></td>
+<td><code>tran</code></td>
+<td><code>Transforms</code></td>
+</tr>
+<tr class="odd">
+<td><code>send_rigidbodies</code></td>
+<td><code>rigi</code></td>
+<td><code>Rigidbodies</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>frequency</code>：<code>&quot;once&quot;</code> | <code>&quot;always&quot;</code> | <code>&quot;never&quot;</code>。</p>
+<p>Build 偶发 <code>ftre</code>（FailedToReceive）时 Controller <strong>自动重发</strong>同一命令包（最多 1000 次，见 <code>controller.py</code> L138–156）。</p>
+<h3 id="1.3-add-on-">1.3 Add-on 机制</h3>
+<p><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/add_on.py"><code>AddOn</code></a> 抽象：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode 5:15:https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/add_on.py"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">class</span> AddOn(ABC):</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="co">&quot;&quot;&quot;</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">    Add-ons work by reading the response from the build and building a list of commands</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">    to be sent on the next `Controller.communicate(commands)` call.</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">    &quot;&quot;&quot;</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">        <span class="va">self</span>.commands: List[<span class="bu">dict</span>] <span class="op">=</span> <span class="bu">list</span>()</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">        <span class="va">self</span>.initialized: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span></a></code></pre></div>
+<p>生命周期：<code>get_initialization_commands()</code> → 每帧 <code>on_send(resp)</code> 填充 <code>self.commands</code> → 下一帧 <code>communicate</code> 注入。</p>
+<p><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/object_manager.py"><code>ObjectManager</code></a> 自动订阅 transforms/rigidbodies，以 <code>dict[id → data]</code> 组织。</p>
+<hr />
+<h2 id="2.--pass">2. 图像 Pass</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Pass</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>_img</code></td>
+<td>RGB</td>
+</tr>
+<tr class="even">
+<td><code>_id</code> / <code>_category</code></td>
+<td>实例 / 语义分割</td>
+</tr>
+<tr class="odd">
+<td><code>_depth</code> / <code>_depth_simple</code></td>
+<td>深度</td>
+</tr>
+<tr class="even">
+<td><code>_flow</code></td>
+<td>光流</td>
+</tr>
+<tr class="odd">
+<td><code>_normals</code> / <code>_albedo</code> / <code>_mask</code></td>
+<td>法线 / 反照率 / 遮罩</td>
+</tr>
+</tbody>
+</table>
+<p>多 pass 采集（Command 方式）：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb4-1" data-line-number="1">commands.extend([</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">    {<span class="st">&quot;$type&quot;</span>: <span class="st">&quot;set_pass_masks&quot;</span>, <span class="st">&quot;pass_masks&quot;</span>: [<span class="st">&quot;_img&quot;</span>, <span class="st">&quot;_id&quot;</span>], <span class="st">&quot;avatar_id&quot;</span>: <span class="st">&quot;a&quot;</span>},</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">    {<span class="st">&quot;$type&quot;</span>: <span class="st">&quot;send_images&quot;</span>, <span class="st">&quot;frequency&quot;</span>: <span class="st">&quot;always&quot;</span>, <span class="st">&quot;ids&quot;</span>: [<span class="st">&quot;a&quot;</span>]},</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">])</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">resp <span class="op">=</span> c.communicate(commands)</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(resp) <span class="op">-</span> <span class="dv">1</span>):</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">    <span class="cf">if</span> OutputData.get_data_type_id(resp[i]) <span class="op">==</span> <span class="st">&quot;imag&quot;</span>:</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">        images <span class="op">=</span> Images(resp[i])</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">        TDWUtils.save_images(images<span class="op">=</span>images, filename<span class="op">=</span><span class="st">&quot;0&quot;</span>, output_directory<span class="op">=</span><span class="st">&quot;./out&quot;</span>)</a></code></pre></div>
+<p><strong>ImageCapture add-on</strong> 等价封装；tdw_image_dataset 还用 <strong>Occlusion</strong> output 拒采差构图。</p>
+<hr />
+<h2 id="3.-clatter">3. 音频：Clatter</h2>
+<h3 id="3.1-">3.1 初始化</h3>
+<ol>
+<li>场景中有 <strong>physics 物体</strong></li>
+<li><code>AudioInitializer(avatar_id=...)</code></li>
+<li><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/clatter.py"><code>Clatter()</code></a></li>
+<li>（可选）<code>resonance_audio=True</code> 空间化</li>
+</ol>
+<p>Clatter 构造参数（源码 L21–31 节选）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>参数</th>
+<th>默认</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>simulation_amp</code></td>
+<td>0.5</td>
+<td>全局音量缩放</td>
+</tr>
+<tr class="even">
+<td><code>min_collision_speed</code></td>
+<td>1e-5</td>
+<td>低于此速度忽略碰撞</td>
+</tr>
+<tr class="odd">
+<td><code>scrape_angle</code></td>
+<td>80°</td>
+<td>判定 scrape vs impact</td>
+</tr>
+<tr class="even">
+<td><code>resonance_audio</code></td>
+<td>False</td>
+<td>Resonance Audio 空间化</td>
+</tr>
+<tr class="odd">
+<td><code>max_num_events</code></td>
+<td>200</td>
+<td>单帧最大 impact/scrape 事件数</td>
+</tr>
+</tbody>
+</table>
+<p>底层命令：<code>initialize_clatter</code>、<code>clatterize_object</code>（见 Clatter <code>get_initialization_commands</code> / <code>on_send</code>）。</p>
+<h3 id="3.2-">3.2 录制</h3>
+<ul>
+<li><strong><code>PhysicsAudioRecorder</code></strong> add-on → <code>.wav</code></li>
+<li>离线 CLI：<a href="https://github.com/threedworld-mit/tdw/blob/master/Documentation/lessons/clatter/cli.md">clatter CLI 文档</a></li>
+</ul>
+<h3 id="3.3-tdw-sound">3.3 TDW-Sound（论文）</h3>
+<p>5 材质 × 多物体 × drop 2–75 cm；VGG-16 AudioSet 预训练 → 真实测试 <strong>66%</strong> acc。</p>
+<hr />
+<h2 id="4.-replicant--api">4. Replicant 动作 API</h2>
+<p>入口：<a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/replicant.py"><code>Replicant</code></a>（非 avatar）。</p>
+<table>
+<thead>
+<tr class="header">
+<th>方法</th>
+<th>Action 类</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>turn_by</code> / <code>turn_to</code></td>
+<td><code>TurnBy</code> / <code>TurnTo</code></td>
+</tr>
+<tr class="even">
+<td><code>move_by</code> / <code>move_to</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/replicant/actions/move_by.py"><code>MoveBy</code></a> / <code>MoveTo</code></td>
+</tr>
+<tr class="odd">
+<td><code>reach_for</code></td>
+<td><code>ReachFor</code> / <code>ReachForWithPlan</code></td>
+</tr>
+<tr class="even">
+<td><code>grasp</code> / <code>drop</code></td>
+<td><code>Grasp</code> / <code>Drop</code></td>
+</tr>
+<tr class="odd">
+<td><code>look_at</code> / <code>rotate_head</code></td>
+<td><code>LookAt</code> / <code>RotateHead</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="4.1-action-">4.1 Action 生命周期</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="im">from</span> tdw.replicant.action_status <span class="im">import</span> ActionStatus</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">replicant.move_by(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="cf">while</span> replicant.action.status <span class="op">==</span> ActionStatus.ongoing:</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">    c.communicate([])</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">c.communicate([])</a></code></pre></div>
+<p><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/replicant/actions/move_by.py"><code>MoveBy</code></a> 成功/失败条件（docstring L22–31）：</p>
+<ul>
+<li>走满 <code>distance</code> → <strong>success</strong></li>
+<li>撞墙/物体且 <code>collision_detection.objects/walls</code> → <strong>collision</strong> / <strong>failure</strong></li>
+<li><code>avoid_obstacles</code> 检测到障碍 → <strong>detected_obstacle</strong></li>
+<li>连续同向 <code>move_by</code> 且上次失败 → 立即失败</li>
+</ul>
+<p>完整 <code>ActionStatus</code> 枚举见 <a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/replicant/action_status.py"><code>action_status.py</code></a>（含 <code>cannot_grasp</code>、<code>still_dropping</code> 等）。</p>
+<h3 id="4.2-">4.2 初始化命令（源码）</h3>
+<p>Replicant spawn 时注入（<a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/replicant.py"><code>replicant.py</code> L33–44</a>）：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" data-line-number="1">{<span class="st">&quot;$type&quot;</span>: <span class="st">&quot;add_replicant_rigidbody&quot;</span>, <span class="st">&quot;id&quot;</span>: replicant_id}</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">{<span class="st">&quot;$type&quot;</span>: <span class="st">&quot;set_rigidbody_constraints&quot;</span>, ... <span class="st">&quot;freeze_position_axes&quot;</span>: {<span class="st">&quot;x&quot;</span>: <span class="dv">0</span>, <span class="st">&quot;y&quot;</span>: <span class="dv">1</span>, <span class="st">&quot;z&quot;</span>: <span class="dv">0</span>}}</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">{<span class="st">&quot;$type&quot;</span>: <span class="st">&quot;attach_empty_object&quot;</span>, <span class="st">&quot;empty_object_id&quot;</span>: Arm.left<span class="op">/</span>right, ...}</a></code></pre></div>
+<hr />
+<h2 id="5.-robot-apiphysx">5. Robot API（PhysX）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>组件</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/robot.py"><code>Robot</code></a></td>
+<td>整机关节目标</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/robot_arm.py"><code>RobotArm</code></a></td>
+<td>机械臂子集</td>
+</tr>
+<tr class="odd">
+<td><code>robot_data/</code></td>
+<td><code>JointStatic</code>、<code>Drive</code> 等数据结构</td>
+</tr>
+</tbody>
+</table>
+<p>机器人 <strong>非 avatar</strong>；可 <code>add_camera</code> 挂载传感器。Magnebot：<a href="https://github.com/alters-mit/magnebot">alters-mit/magnebot</a>。</p>
+<hr />
+<h2 id="6.-tdw_physics-/-physion">6. tdw_physics / Physion</h2>
+<p>抽象类（外部仓库 <a href="https://github.com/alters-mit/tdw_physics">tdw_physics</a>）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>类</th>
+<th>每帧 Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>RigidbodiesDataset</code></td>
+<td>Transforms, Images, CameraMatrices, Rigidbodies, Collision</td>
+</tr>
+<tr class="even">
+<td><code>FlexDataset</code></td>
+<td>+ FlexParticles</td>
+</tr>
+</tbody>
+</table>
+<p>须覆写：<code>get_scene_initialization_commands</code>、<code>get_trial_initialization_commands</code>、<code>get_per_frame_commands</code>。</p>
+<p>添加物体用 <strong><code>get_add_physics_object()</code></strong>（勿裸 <code>add_object</code>，否则 HDF5 元数据不一致）。</p>
+<p>Physion 场景族：Object Permanence、Shadows、Collisions、Draping &amp; Folding、Fluid-Solid 等（论文 Fig. 3）。</p>
+<hr />
+<h2 id="7.-tdw-image">7. TDW-Image</h2>
+<p>仓库：<a href="https://github.com/alters-mit/tdw_image_dataset">alters-mit/tdw_image_dataset</a></p>
+<table>
+<thead>
+<tr class="header">
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>默认规模</td>
+<td>1,300,000 train + 50,000 val</td>
+</tr>
+<tr class="even">
+<td>分辨率</td>
+<td>256×256</td>
+</tr>
+<tr class="odd">
+<td>每图物体</td>
+<td><strong>1</strong>（单物体标注假设）</td>
+</tr>
+<tr class="even">
+<td>流程</td>
+<td>Positional loop（Occlusion 拒采）→ Image loop（全画质写盘）</td>
+</tr>
+</tbody>
+</table>
+<p>限制：不含 falling 物理（物体须在 positional loop 静止）。</p>
+<hr />
+<h2 id="8.--add-on-">8. 常用 Add-on 索引（源码路径）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Add-on</th>
+<th>文件</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ThirdPersonCamera</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/third_person_camera.py"><code>third_person_camera.py</code></a></td>
+</tr>
+<tr class="even">
+<td><code>ImageCapture</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/image_capture.py"><code>image_capture.py</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>Floorplan</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/floorplan.py"><code>floorplan.py</code></a></td>
+</tr>
+<tr class="even">
+<td><code>ProcGenKitchen</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/proc_gen_kitchen.py"><code>proc_gen_kitchen.py</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>Replicant</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/replicant.py"><code>replicant.py</code></a></td>
+</tr>
+<tr class="even">
+<td><code>Clatter</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/clatter.py"><code>clatter.py</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>ContainerManager</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/container_manager.py"><code>container_manager.py</code></a></td>
+</tr>
+<tr class="even">
+<td><code>NavMesh</code> / <code>OccupancyMap</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/nav_mesh.py"><code>nav_mesh.py</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>Logger</code> / <code>LogPlayback</code></td>
+<td>命令日志与回放</td>
+</tr>
+<tr class="even">
+<td><code>Obi</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/obi.py"><code>obi.py</code></a></td>
+</tr>
+</tbody>
+</table>
+<p>完整列表见 <a href="https://github.com/threedworld-mit/tdw/blob/master/README.md">README Python API 节</a>。</p>
+<hr />
+<h2 id="9.-flex-">9. Flex 快速参考</h2>
+<ol>
+<li><code>add_scene(..., convexify=True)</code></li>
+<li><code>create_flex_container</code></li>
+<li><code>add_object</code> + <code>set_flex_solid_actor</code> / <code>set_flex_fluid_actor</code></li>
+</ol>
+<p>销毁：<code>destroy_flex_object</code>（减轻 Flex 内存泄漏）。Linux 流体可能异常；优先评估 <strong>Obi</strong> add-on。</p>
+<hr />
+<h2 id="10.-">10. 语义状态（自建）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>机制</th>
+<th>源码 / 教程</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Raycast</code></td>
+<td>output_data</td>
+</tr>
+<tr class="even">
+<td><code>Overlap</code></td>
+<td>region 邻近</td>
+</tr>
+<tr class="odd">
+<td><code>TriggerCollisionManager</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/trigger_collision_manager.py"><code>trigger_collision_manager.py</code></a></td>
+</tr>
+<tr class="even">
+<td><code>ContainerManager</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/container_manager.py"><code>container_manager.py</code></a></td>
+</tr>
+<tr class="odd">
+<td>openness / grasped</td>
+<td><a href="https://github.com/threedworld-mit/tdw/tree/master/Documentation/lessons/semantic_states">Documentation/lessons/semantic_states</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="11.-librarian-">11. Librarian 与资产</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="im">from</span> tdw.librarian <span class="im">import</span> ModelLibrarian, SceneLibrarian, HumanoidLibrarian</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="cf">for</span> record <span class="kw">in</span> ModelLibrarian().records:</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">    <span class="cf">if</span> record.flex <span class="kw">and</span> <span class="kw">not</span> record.do_not_use:</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">        <span class="bu">print</span>(record.name, record.wcategory)</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">SceneLibrarian().get_record(<span class="st">&quot;mm_kitchen_2b&quot;</span>)</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">HumanoidLibrarian(<span class="st">&quot;replicants.json&quot;</span>)</a></code></pre></div>
+<p>JSON 库：<code>models_core.json</code>、<code>models_full.json</code>、<code>models_flex.json</code>（包内 resource 或 <a href="https://github.com/threedworld-mit/tdw/tree/master/Python"><code>Python/</code></a> 目录）。</p>
+<hr />
+<h2 id="12.-">12. 外部资源</h2>
+<table>
+<thead>
+<tr class="header">
+<th>资源</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>示例控制器</td>
+<td><a href="https://github.com/threedworld-mit/tdw/tree/master/Python/example_controllers"><code>example_controllers/</code></a></td>
+</tr>
+<tr class="even">
+<td>Clatter 文档站</td>
+<td><a href="https://alters-mit.github.io/clatter/index.html">alters-mit.github.io/clatter</a></td>
+</tr>
+<tr class="odd">
+<td>CatalyzeX 复现</td>
+<td><a href="https://www.catalyzex.com/paper/threedworld-a-platform-for-interactive-multi/code">论文代码汇总</a></td>
+</tr>
+</tbody>
+</table>
+<p>官方 <strong>未提供</strong> 统一 Gymnasium env（ unlike ManiSkill）；需在 TDW 之上自行封装 <code>reset/step</code>。</p>
+<p><strong>源码索引</strong>：<code>https://github.com/threedworld-mit/tdw/blob/master/</code> · <a href="https://github.com/threedworld-mit/tdw">GitHub threedworld-mit/tdw</a></p></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-command--output-data-">1. Command 与 Output Data 模型</a></li><li><a class="level-3" href="#1.1-">1.1 发送命令</a></li><li><a class="level-3" href="#1.2--output-data">1.2 接收 Output Data</a></li><li><a class="level-3" href="#1.3-add-on-">1.3 Add-on 机制</a></li><li><a class="" href="#2.--pass">2. 图像 Pass</a></li><li><a class="" href="#3.-clatter">3. 音频：Clatter</a></li><li><a class="level-3" href="#3.1-">3.1 初始化</a></li><li><a class="level-3" href="#3.2-">3.2 录制</a></li><li><a class="level-3" href="#3.3-tdw-sound">3.3 TDW-Sound（论文）</a></li><li><a class="" href="#4.-replicant--api">4. Replicant 动作 API</a></li><li><a class="level-3" href="#4.1-action-">4.1 Action 生命周期</a></li><li><a class="level-3" href="#4.2-">4.2 初始化命令（源码）</a></li><li><a class="" href="#5.-robot-apiphysx">5. Robot API（PhysX）</a></li><li><a class="" href="#6.-tdw_physics-/-physion">6. tdw_physics / Physion</a></li><li><a class="" href="#7.-tdw-image">7. TDW-Image</a></li><li><a class="" href="#8.--add-on-">8. 常用 Add-on 索引（源码路径）</a></li><li><a class="" href="#9.-flex-">9. Flex 快速参考</a></li><li><a class="" href="#10.-">10. 语义状态（自建）</a></li><li><a class="" href="#11.-librarian-">11. Librarian 与资产</a></li><li><a class="" href="#12.-">12. 外部资源</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+</body>
+</html>

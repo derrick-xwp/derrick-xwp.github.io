@@ -2,6 +2,7 @@
   'use strict';
 
   var LANGS = window.LANGS || ['zh', 'zhtw', 'en', 'ja', 'ko', 'th'];
+  var COLLAPSE_KEY = 'blog-embodied-open';
   var currentLang = 'zh';
 
   try {
@@ -87,6 +88,230 @@
     }).join('');
   }
 
+  function platformCardHtml(p, readMore, compact) {
+    var href = platformHref(p.link);
+    var tags = (p.tags || []).map(function (t) {
+      return '<span class="blog-tag">' + t + '</span>';
+    }).join('');
+    var updated = p.updatedLabel && !compact
+      ? '<time class="blog-platform-updated">' + p.updatedLabel + '</time>'
+      : '';
+    var cardClass = 'blog-platform-card' + (compact ? ' blog-platform-card--compact' : '');
+    var headingTag = compact ? 'h3' : 'h2';
+    return (
+      '<article class="' + cardClass + '">' +
+        '<div class="blog-platform-head">' +
+          '<span class="blog-platform-vendor">' + p.vendor + '</span>' +
+          updated +
+        '</div>' +
+        '<' + headingTag + '><a href="' + href + '">' + p.title + '</a></' + headingTag + '>' +
+        (tags ? '<div class="blog-tags">' + tags + '</div>' : '') +
+        '<p>' + p.summary + '</p>' +
+        '<a class="blog-read-more" href="' + href + '">' + readMore + '</a>' +
+      '</article>'
+    );
+  }
+
+  function fixEmbodiedOverviewLinks(root) {
+    if (!root) return;
+    root.querySelectorAll('a[href]').forEach(function (a) {
+      var href = a.getAttribute('href');
+      if (!href || /^https?:\/\//.test(href) || href.charAt(0) === '#') return;
+      if (href.indexOf('embodied-platforms/') === 0) return;
+      if (href.indexOf('../nvidia/') === 0) {
+        a.setAttribute('href', href.replace(/^\.\.\//, ''));
+        return;
+      }
+      if (href.indexOf('nvidia/') === 0) return;
+      if (href.indexOf('../') === 0) return;
+      a.setAttribute('href', 'embodied-platforms/' + href.replace(/^\.\//, ''));
+    });
+  }
+
+  function capabilityBadge(text) {
+    var level = text.replace(/\s/g, '');
+    if (level === '高') return '<span class="cap-badge cap-high">高</span>';
+    if (level === '中') return '<span class="cap-badge cap-mid">中</span>';
+    if (level === '低') return '<span class="cap-badge cap-low">低</span>';
+    if (level === '—' || level === '-') return '<span class="cap-badge cap-none">—</span>';
+    return null;
+  }
+
+  function enhanceOverviewArticle(root, series) {
+    if (!root) return;
+
+    var h1 = root.querySelector('h1');
+    if (h1) h1.remove();
+
+    var blockquote = root.querySelector('blockquote');
+    if (blockquote) blockquote.classList.add('blog-overview-callout');
+
+    root.querySelectorAll('hr').forEach(function (hr, i) {
+      if (i === 0) hr.remove();
+    });
+
+    root.querySelectorAll('table').forEach(function (table) {
+      var header = table.querySelector('th');
+      if (!header) return;
+      var headerText = header.textContent.trim();
+      if (headerText === '平台' || headerText === 'Platform') {
+        table.classList.add('capability-matrix');
+        table.querySelectorAll('tbody td').forEach(function (td, index) {
+          if (index % (table.rows[0].cells.length) === 0) return;
+          var badge = capabilityBadge(td.textContent);
+          if (badge) td.innerHTML = badge;
+        });
+      }
+    });
+
+    if (series.overviewLegend) {
+      var legend = document.createElement('div');
+      legend.className = 'cap-legend';
+      legend.innerHTML =
+        '<span class="cap-legend-item"><span class="cap-badge cap-high">高</span> ' + series.legendHigh + '</span>' +
+        '<span class="cap-legend-item"><span class="cap-badge cap-mid">中</span> ' + series.legendMid + '</span>' +
+        '<span class="cap-legend-item"><span class="cap-badge cap-low">低</span> ' + series.legendLow + '</span>' +
+        '<span class="cap-legend-item"><span class="cap-badge cap-none">—</span> ' + series.legendNone + '</span>';
+      var matrix = root.querySelector('.capability-matrix');
+      if (matrix) matrix.parentNode.insertBefore(legend, matrix);
+    }
+
+    Array.from(root.querySelectorAll('h2')).forEach(function (h2) {
+      var section = document.createElement('div');
+      section.className = 'blog-overview-section';
+      var parent = h2.parentNode;
+      parent.insertBefore(section, h2);
+      section.appendChild(h2);
+      var node = section.nextSibling;
+      while (node && node.nodeName !== 'H2') {
+        var next = node.nextSibling;
+        section.appendChild(node);
+        node = next;
+      }
+    });
+  }
+
+  function initOverviewMermaid(scope) {
+    if (!scope) return;
+    var nodes = scope.querySelectorAll('.mermaid');
+    if (!nodes.length) return;
+
+    function runMermaid() {
+      if (!window.mermaid) return;
+      window.mermaid.initialize({
+        startOnLoad: false,
+        theme: 'neutral',
+        securityLevel: 'loose',
+        mindmap: { padding: 18, useMaxWidth: true }
+      });
+      window.mermaid.run({ nodes: nodes }).catch(function (err) {
+        console.error('Mermaid render failed:', err);
+      });
+    }
+
+    if (window.mermaid) {
+      runMermaid();
+      return;
+    }
+
+    var base = platformHref('embodied-platforms/');
+    var script = document.createElement('script');
+    script.src = base + 'vendor/mermaid.min.js';
+    script.onload = runMermaid;
+    document.head.appendChild(script);
+  }
+
+  function loadEmbodiedOverview(series) {
+    var overviewRoot = document.getElementById('blog-embodied-overview');
+    if (!overviewRoot || !series.overviewUrl) return;
+
+    var url = platformHref(series.overviewUrl);
+    overviewRoot.innerHTML = '<p class="blog-embodied-loading">' + (series.loadingLabel || '…') + '</p>';
+
+    fetch(url)
+      .then(function (res) {
+        if (!res.ok) throw new Error('fetch failed');
+        return res.text();
+      })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var article = doc.querySelector('.article');
+        if (!article) throw new Error('no article');
+        overviewRoot.innerHTML = '';
+        var wrap = document.createElement('div');
+        wrap.className = 'article blog-embodied-overview-article';
+        wrap.innerHTML = article.innerHTML;
+        fixEmbodiedOverviewLinks(wrap);
+        enhanceOverviewArticle(wrap, series);
+        overviewRoot.appendChild(wrap);
+        initOverviewMermaid(wrap);
+      })
+      .catch(function () {
+        overviewRoot.innerHTML = '<p class="blog-embodied-error">' + (series.loadErrorLabel || '') + '</p>';
+      });
+  }
+
+  function renderEmbodiedPanel(d) {
+    var root = document.getElementById('blog-hub-series');
+    var series = d.embodiedSeries;
+    if (!root || !series || !series.platforms || !series.platforms.length) {
+      if (root) root.innerHTML = '';
+      return;
+    }
+
+    var readMore = d.blogHubReadMore || '→';
+    var platformCount = series.platformCountLabel || String(series.platforms.length);
+    var defaultOpen = series.defaultOpen !== false;
+    try {
+      var stored = localStorage.getItem(COLLAPSE_KEY);
+      if (stored !== null) defaultOpen = stored === 'true';
+    } catch (e) { /* ignore */ }
+
+    var platformCards = series.platforms.map(function (p) {
+      return platformCardHtml(p, readMore, true);
+    }).join('');
+
+    root.innerHTML =
+      '<details class="blog-collapsible" id="blog-embodied-collapsible"' + (defaultOpen ? ' open' : '') + '>' +
+        '<summary class="blog-collapsible-summary">' +
+          '<div class="blog-collapsible-head">' +
+            '<div class="blog-collapsible-text">' +
+              '<span class="blog-collapsible-badge">' + (series.seriesBadge || 'Embodied AI') + '</span>' +
+              '<span class="blog-collapsible-title">' + (series.title || '') + '</span>' +
+              '<span class="blog-collapsible-desc">' + (series.summary || '') + '</span>' +
+            '</div>' +
+            '<div class="blog-collapsible-meta">' +
+              '<span class="blog-collapsible-count">' + platformCount + '</span>' +
+              '<span class="blog-collapsible-chevron" aria-hidden="true"></span>' +
+            '</div>' +
+          '</div>' +
+        '</summary>' +
+        '<div class="blog-collapsible-body">' +
+          '<div class="blog-overview-panel">' +
+            '<div class="blog-overview-panel-head">' +
+              '<h3 class="blog-embodied-platforms-heading">' + (series.overviewHeading || '') + '</h3>' +
+            '</div>' +
+            '<div class="blog-embodied-overview" id="blog-embodied-overview" aria-live="polite"></div>' +
+          '</div>' +
+          '<div class="blog-platforms-panel">' +
+            '<h3 class="blog-embodied-platforms-heading">' + (series.platformsHeading || '') + '</h3>' +
+            '<div class="blog-embodied-platforms">' + platformCards + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</details>';
+
+    var details = document.getElementById('blog-embodied-collapsible');
+    if (details) {
+      details.addEventListener('toggle', function () {
+        try {
+          localStorage.setItem(COLLAPSE_KEY, String(details.open));
+        } catch (e) { /* ignore */ }
+      });
+    }
+
+    loadEmbodiedOverview(series);
+  }
+
   function setLang(lang) {
     if (!lang || LANGS.indexOf(lang) === -1) lang = 'zh';
     currentLang = lang;
@@ -104,14 +329,17 @@
     var d = window.RESUME && (window.RESUME[lang] || window.RESUME.en);
     if (!d) return;
 
-    var centerName = document.getElementById('nav-center-name');
-    if (centerName) {
-      centerName.textContent = d.centerName || "Xing's Group";
-      centerName.href = homeBase();
-    }
-
     var copyright = document.getElementById('copyright-center-name');
     if (copyright && d.centerName) copyright.textContent = d.centerName;
+
+    var zjuLogo = document.querySelector('.header-zju-logo');
+    if (zjuLogo && d.zjuTitle) zjuLogo.setAttribute('title', d.zjuTitle);
+    var zjuImg = document.querySelector('.header-zju-logo img');
+    if (zjuImg && d.zjuAlt) zjuImg.setAttribute('alt', d.zjuAlt);
+    var ibjLogo = document.querySelector('.header-ibj-logo');
+    if (ibjLogo && d.ibjTitle) ibjLogo.setAttribute('title', d.ibjTitle);
+    var ibjImg = document.querySelector('.header-ibj-logo img');
+    if (ibjImg && d.ibjAlt) ibjImg.setAttribute('alt', d.ibjAlt);
 
     if (d.nav) {
       renderNav(d.nav);
@@ -127,43 +355,9 @@
     var title = document.getElementById('blog-hub-title');
     if (title && d.blogHubTitle) title.textContent = d.blogHubTitle;
 
-    var desc = document.getElementById('blog-hub-desc');
-    if (desc) desc.textContent = d.blogHubDesc || '';
+    document.title = (d.blogHubTitle || 'Blog') + " · " + (d.centerName || "Wenpeng Xing");
 
-    document.title = (d.blogHubTitle || 'Blog') + " · " + (d.centerName || "Xing's Group");
-
-    renderPlatforms(d);
-  }
-
-  function renderPlatforms(d) {
-    var root = document.getElementById('blog-platforms');
-    if (!root || !d.blogPlatforms || !d.blogPlatforms.length) {
-      if (root) root.innerHTML = '';
-      return;
-    }
-
-    var readMore = d.blogHubReadMore || '→';
-    root.innerHTML = d.blogPlatforms.map(function (p) {
-      var href = platformHref(p.link);
-      var tags = (p.tags || []).map(function (t) {
-        return '<span class="blog-tag">' + t + '</span>';
-      }).join('');
-      var updated = p.updatedLabel
-        ? '<time class="blog-platform-updated">' + p.updatedLabel + '</time>'
-        : '';
-      return (
-        '<article class="blog-platform-card">' +
-          '<div class="blog-platform-head">' +
-            '<span class="blog-platform-vendor">' + p.vendor + '</span>' +
-            updated +
-          '</div>' +
-          '<h2><a href="' + href + '">' + p.title + '</a></h2>' +
-          (tags ? '<div class="blog-tags">' + tags + '</div>' : '') +
-          '<p>' + p.summary + '</p>' +
-          '<a class="blog-read-more" href="' + href + '">' + readMore + '</a>' +
-        '</article>'
-      );
-    }).join('');
+    renderEmbodiedPanel(d);
   }
 
   function setupNavToggle() {

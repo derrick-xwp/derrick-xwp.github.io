@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>技术介绍 · BEHAVIOR-1K</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>BEHAVIOR-1K</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">BEHAVIOR-1K</div>
+<a class="nav-link active" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">1000 家务、OmniGibson、BDDL3、2025 Challenge</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">setup.sh、conda、BehaviorTask、eval.py</span></a>
+<a class="nav-link" href="BDDL与任务体系.html"><span class="nav-link-title">BDDL 与任务体系</span><span class="nav-link-desc">Synset、采样、谓词、Transition Rules</span></a>
+<a class="nav-link" href="OmniGibson技术参考.html"><span class="nav-link-title">OmniGibson 技术参考</span><span class="nav-link-desc">Fetch、控制器、Object States、场景</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>BEHAVIOR-1K</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>BEHAVIOR-1K</span> <span> / </span> <span>技术介绍</span></div>
+          <article class="article"><h1 id="behavior-1k-">BEHAVIOR-1K 技术介绍</h1>
+<blockquote>
+<p><strong>Stanford Vision and Learning Lab</strong> 等 · <strong>OmniGibson</strong>（NVIDIA Isaac Sim）· 1000 项人类中心家务 benchmark<br />
+官网：<a href="https://behavior.stanford.edu/">behavior.stanford.edu</a> · 仓库：<a href="https://github.com/StanfordVL/BEHAVIOR-1K">StanfordVL/BEHAVIOR-1K</a> · 最新稳定版：<strong>v3.7.2</strong>（2025-12）<br />
+<strong>本地源码</strong>：<code>https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/</code>（与官方 monorepo 同步；下文链接默认指向 GitHub，本地路径可对照引用）</p>
+</blockquote>
+<h2 id="1.-">1. 概述</h2>
+<p><strong>BEHAVIOR-1K</strong>（Benchmark for Everyday Household Activities in Virtual, Interactive, and Realistic Environments）是首个 <strong>以真实人类需求为 grounding</strong> 的大规模 embodied AI benchmark。团队通过调查「<strong>你希望机器人帮你做什么？</strong>」，从人类时间使用与偏好研究中筛选出 <strong>1000 种</strong> 日常家务活动，并在 <strong>50 个 fully interactive 场景</strong>、<strong>9000+ 物体</strong> 中实例化。</p>
+<p>OmniGibson <a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/README.md">README</a> 概括仿真平台能力：</p>
+<ul>
+<li>照片级渲染与物理 realism</li>
+<li><strong>流体与软体</strong>（cloth、particle fluid）</li>
+<li>大规模场景/物体 + <strong>动态语义 Object States</strong></li>
+<li>移动操作机器人 + 模块化控制器</li>
+<li><strong>Gymnasium</strong> 接口</li>
+</ul>
+<p>与 Habitat（极速导航）、AI2-THOR（Unity 离散状态）不同，BEHAVIOR-1K 强调：</p>
+<ul>
+<li><strong>长 horizon</strong>：单任务常需 <strong>数分钟</strong> 仿真时间、<strong>多房间</strong> 探索、<strong>序列化</strong> 多物体操作</li>
+<li><strong>物理 realism</strong>：<strong>流体、布料、可变形体、透明度、热效应</strong>（OmniGibson + PhysX）</li>
+<li><strong>符号—物理统一</strong>：任务用 <strong>BDDL</strong>（一阶逻辑）定义初始/目标条件，仿真器自动 <strong>采样实例</strong> 与 <strong>谓词评测</strong></li>
+<li><strong>人类中心</strong>：活动类别覆盖 rearrangement、cooking、cleaning、installation、laundry 等</li>
+</ul>
+<p>论文：<a href="https://arxiv.org/abs/2403.09227">BEHAVIOR-1K (arXiv:2403.09227)</a></p>
+<hr />
+<h2 id="2.-monorepo-">2. Monorepo 结构</h2>
+<p>本地快照 <code>https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/</code> 核心目录：</p>
+<table>
+<thead>
+<tr class="header">
+<th>路径</th>
+<th>作用</th>
+<th>GitHub</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/tree/main/OmniGibson/omnigibson"><code>OmniGibson/omnigibson/</code></a></td>
+<td>仿真器：Environment、Scene、Robot、Task</td>
+<td>核心 Python 包</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/envs/env_base.py"><code>OmniGibson/omnigibson/envs/env_base.py</code></a></td>
+<td><strong><code>Environment</code></strong>：Gymnasium 接口</td>
+<td>L38</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/tasks/behavior_task.py"><code>OmniGibson/omnigibson/tasks/behavior_task.py</code></a></td>
+<td><strong><code>BehaviorTask</code></strong>：BDDL 采样与 goal 检查</td>
+<td>L35</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/utils/bddl_utils.py"><code>OmniGibson/omnigibson/utils/bddl_utils.py</code></a></td>
+<td><strong><code>BDDLSampler</code></strong>、活动列表、谓词 backend</td>
+<td>L465</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/transition_rules.py"><code>OmniGibson/omnigibson/transition_rules.py</code></a></td>
+<td>切片、烹饪、洗涤等 <strong>Transition Rules</strong></td>
+<td>L1+</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/learning/eval.py"><code>OmniGibson/omnigibson/learning/eval.py</code></a></td>
+<td><strong>Challenge 评测</strong>（Hydra + policy）</td>
+<td>L66</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/tree/main/bddl3/bddl"><code>bddl3/bddl/</code></a></td>
+<td>BDDL3 解析器、谓词类、知识库</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/bddl3/bddl/predicates.py"><code>bddl3/bddl/predicates.py</code></a></td>
+<td>谓词 AST 叶子节点（<code>OnTop</code>、<code>Cooked</code> 等）</td>
+<td>L31</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/tree/main/bddl3/bddl/activity_definitions"><code>bddl3/bddl/activity_definitions/</code></a></td>
+<td><strong>1016</strong> 个 <code>problem0.bddl</code> 活动定义</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/tree/main/joylo"><code>joylo/</code></a></td>
+<td><strong>JoyLo</strong> 遥操作 + 演示采集</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/setup.sh"><code>setup.sh</code></a></td>
+<td>模块化安装脚本</td>
+<td>L61–86</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/tree/main/docs/getting_started"><code>docs/getting_started/</code></a></td>
+<td>安装、Quickstart、Important Concepts</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/tree/main/asset_pipeline"><code>asset_pipeline/</code></a></td>
+<td>3D 资产管线（DVC、metadata）</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/tree/main/knowledgebase"><code>knowledgebase/</code></a></td>
+<td>Knowledge Base Web ORM</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>统一安装：<code>./setup.sh --new-env --omnigibson --bddl --dataset</code>（<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/setup.sh#L83">setup.sh L83</a>）。</p>
+<hr />
+<h2 id="3.-">3. 生态系统四大组件</h2>
+<p>官方 <a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/docs/getting_started/important_concepts.md">Important Concepts</a> 将 BEHAVIOR 生态拆为：</p>
+<div class="mermaid">flowchart TB
+    subgraph Symbolic["符号层"]
+        BDDL[BDDL3 库<br/>1016+ 活动 · 谓词 · Transition Rules]
+        KB[Knowledge Base<br/>Synset · Category · Task ORM]
+    end
+
+    subgraph Sim["仿真层"]
+        OG[OmniGibson<br/>Python · Isaac Sim 之上]
+    end
+
+    subgraph Assets["资产层"]
+        OGA[OmniGibson Assets<br/>机器人 · 传感器 · 未加密]
+        BD[BEHAVIOR Dataset<br/>场景/物体 USD · 加密]
+    end
+
+    BDDL --> OG
+    OGA --> OG
+    BD --> OG
+    KB --> BDDL</div>
+<table>
+<thead>
+<tr class="header">
+<th>组件</th>
+<th>路径</th>
+<th>作用</th>
+<th>官方依据</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>BDDL3</strong></td>
+<td><code>bddl3/</code></td>
+<td>任务定义、谓词、采样器、知识库</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/docs/getting_started/important_concepts.md#L42-L51">important_concepts.md L42–51</a></td>
+</tr>
+<tr class="even">
+<td><strong>OmniGibson</strong></td>
+<td><code>OmniGibson/</code></td>
+<td>仿真器；<strong>iGibson 继任者</strong></td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/docs/getting_started/important_concepts.md#L55-L57">L55–57</a></td>
+</tr>
+<tr class="odd">
+<td><strong>JoyLo</strong></td>
+<td><code>joylo/</code></td>
+<td>Challenge 遥操作数据采集</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/joylo/README.md">joylo/README.md</a></td>
+</tr>
+<tr class="even">
+<td><strong>Eval / Learning</strong></td>
+<td><code>omnigibson/learning/</code></td>
+<td>Challenge 评测、baseline 对接</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/learning/eval.py">eval.py</a></td>
+</tr>
+<tr class="odd">
+<td><strong>BEHAVIOR 数据集</strong></td>
+<td>下载 bundle</td>
+<td>50 场景 + 9000+ 物体 USD（<strong>加密</strong>）</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/docs/getting_started/important_concepts.md#L63-L69">L63–69</a></td>
+</tr>
+</tbody>
+</table>
+<p>OmniGibson <strong>完全封装</strong> Isaac Sim，提供 familiar scene/object/robot/task 接口（<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/docs/getting_started/important_concepts.md#L100">important_concepts.md L100</a>），并实现 BDDL 采样器与谓词 checker。</p>
+<hr />
+<h2 id="4.-behavior-">4. 核心概念（BEHAVIOR 数据模型）</h2>
+<h3 id="4.1-tasks--task-instances">4.1 Tasks 与 Task Instances</h3>
+<table>
+<thead>
+<tr class="header">
+<th>概念</th>
+<th>说明</th>
+<th>源码</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Task</strong></td>
+<td>BDDL 文件：object scope + <code>:init</code> + <code>:goal</code></td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/bddl3/bddl/activity_definitions/assembling_gift_baskets/problem0.bddl"><code>activity_definitions/*/problem0.bddl</code></a></td>
+</tr>
+<tr class="even">
+<td><strong>Task instance</strong></td>
+<td>符号任务 ground 到具体场景/物体布局</td>
+<td><code>BehaviorTask.activity_instance_id</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Activity</strong></td>
+<td>人类可读活动名（snake_case）</td>
+<td><code>get_behavior_activities()</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>get_behavior_activities()</code> 从 Knowledge Base 读取全部活动名（<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/utils/bddl_utils.py#L276-L277">bddl_utils.py L276–277</a>）。</p>
+<h3 id="4.2-synsets--categories--objects">4.2 Synsets · Categories · Objects</h3>
+<table>
+<thead>
+<tr class="header">
+<th>层级</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Synset</strong></td>
+<td>WordNet 扩展 DAG；BDDL object scope</td>
+<td><code>apple.n.01</code>, <code>faucet.n.01</code></td>
+</tr>
+<tr class="even">
+<td><strong>Category</strong></td>
+<td>连接 synset 与 3D 模型；功能/外形不同不可互换 randomize</td>
+<td><code>wall_mounted_sink</code> vs <code>standing_sink</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Object</strong></td>
+<td>唯一 <strong>6 字符 ID</strong> USD 模型</td>
+<td>水龙头标注出水口</td>
+</tr>
+</tbody>
+</table>
+<p>官方说明（<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/docs/getting_started/important_concepts.md#L17-L23">important_concepts.md L17–23</a>）：Category 是 synset 与 OmniGibson 物体之间的桥梁；Object 含 articulation 与 metadata（如 fluid source 位置）。</p>
+<h3 id="4.3-scenes--substances--transition-rules">4.3 Scenes · Substances · Transition Rules</h3>
+<ul>
+<li><strong>50 base scenes</strong>：JSON state dump + traversability map（<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/docs/getting_started/important_concepts.md#L25-L27">L25–27</a>）</li>
+<li><strong>Substance synsets</strong>：映射为 scene-level <strong>particle system</strong>（水、污渍等）</li>
+<li><strong>Transition Rules</strong>：Omniverse 原生不支持的变换（切片、烹饪、recipe）由 <a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/transition_rules.py"><code>transition_rules.py</code></a> 实现</li>
+</ul>
+<p>详见 <a href="BDDL与任务体系.html">BDDL与任务体系.md</a>。</p>
+<hr />
+<h2 id="5.-omnigibson-">5. OmniGibson 仿真器</h2>
+<h3 id="5.1-">5.1 技术栈</h3>
+<div class="mermaid">flowchart TB
+    User[用户 Python] --> Env[Environment<br/>env_base.py]
+    Env --> OG[OmniGibson]
+    OG --> IS[Isaac Sim]
+    IS --> PX[PhysX]
+    OG --> BDDL[BDDLSampler + PredicateGoal]</div>
+<table>
+<thead>
+<tr class="header">
+<th>层</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Isaac Sim</strong></td>
+<td>Omniverse app；MDP 式逐步 step</td>
+</tr>
+<tr class="even">
+<td><strong>PhysX</strong></td>
+<td>刚体、关节、particle fluid、cloth</td>
+</tr>
+<tr class="odd">
+<td><strong>OmniGibson</strong></td>
+<td>封装 Isaac；BDDL backend；BEHAVIOR 数据集工具</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5.2-environment-api">5.2 Environment API</h3>
+<p><code>Environment</code> 继承 <code>gym.Env</code>，构造时调用 <code>og.launch()</code> 启动 Isaac Sim（<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/envs/env_base.py#L98-L107">env_base.py L98–107</a>），按 config dict 注册 Scene / Robot / Task。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="im">import</span> omnigibson <span class="im">as</span> og</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">cfg <span class="op">=</span> {</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="st">&quot;scene&quot;</span>: {</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">        <span class="st">&quot;type&quot;</span>: <span class="st">&quot;InteractiveTraversableScene&quot;</span>,</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">        <span class="st">&quot;scene_model&quot;</span>: <span class="st">&quot;Rs_int&quot;</span>,</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">    },</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">    <span class="st">&quot;robots&quot;</span>: [{</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">        <span class="st">&quot;type&quot;</span>: <span class="st">&quot;Fetch&quot;</span>,</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">        <span class="st">&quot;obs_modalities&quot;</span>: [<span class="st">&quot;rgb&quot;</span>, <span class="st">&quot;depth&quot;</span>, <span class="st">&quot;scan&quot;</span>],</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">        <span class="st">&quot;action_normalize&quot;</span>: <span class="va">True</span>,</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">    }],</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">    <span class="st">&quot;task&quot;</span>: {</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">        <span class="st">&quot;type&quot;</span>: <span class="st">&quot;BehaviorTask&quot;</span>,</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">        <span class="st">&quot;activity_name&quot;</span>: <span class="st">&quot;assembling_gift_baskets&quot;</span>,</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">        <span class="st">&quot;activity_definition_id&quot;</span>: <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb3-17" data-line-number="17">        <span class="st">&quot;activity_instance_id&quot;</span>: <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb3-18" data-line-number="18">    },</a>
+<a class="sourceLine" id="cb3-19" data-line-number="19">}</a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21">env <span class="op">=</span> og.Environment(cfg)</a>
+<a class="sourceLine" id="cb3-22" data-line-number="22">obs, info <span class="op">=</span> env.reset()</a>
+<a class="sourceLine" id="cb3-23" data-line-number="23">obs, reward, terminated, truncated, info <span class="op">=</span> env.step(env.action_space.sample())</a>
+<a class="sourceLine" id="cb3-24" data-line-number="24">env.close()</a>
+<a class="sourceLine" id="cb3-25" data-line-number="25">og.shutdown()</a></code></pre></div>
+<p>官方 Quickstart 逐步构建 scene / objects / robots / task，见 <a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/docs/getting_started/quickstart.md">docs/getting_started/quickstart.md</a>。</p>
+<h3 id="5.3-behaviortask-">5.3 BehaviorTask 要点</h3>
+<p><code>BehaviorTask</code> 构造时 <strong>必须</strong> <code>gm.ENABLE_OBJECT_STATES=True</code>（<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/tasks/behavior_task.py#L85-L86">behavior_task.py L85–86</a>），终止条件为 <strong><code>Timeout</code> + <code>PredicateGoal</code></strong>（<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/termination_conditions/predicate_goal.py#L4-L15">predicate_goal.py L4–15</a>）。</p>
+<table>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>activity_name</code></td>
+<td>BDDL 活动名（须在 <code>get_behavior_activities()</code> 中）</td>
+</tr>
+<tr class="even">
+<td><code>activity_definition_id</code></td>
+<td>同一活动的不同 BDDL 变体</td>
+</tr>
+<tr class="odd">
+<td><code>activity_instance_id</code></td>
+<td>预采样场景/物体布局 ID</td>
+</tr>
+<tr class="even">
+<td><code>online_object_sampling</code></td>
+<td>运行时在线采样（与 presampled robot pose 互斥）</td>
+</tr>
+</tbody>
+</table>
+<p>深度 API 见 <a href="OmniGibson技术参考.html">OmniGibson技术参考.md</a>。</p>
+<hr />
+<h2 id="6.-bddl-">6. BDDL 任务示例（源码）</h2>
+<p>本地 <a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/bddl3/bddl/activity_definitions/assembling_gift_baskets/problem0.bddl"><code>assembling_gift_baskets/problem0.bddl</code></a> 片段：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><a class="sourceLine" id="cb4-1" data-line-number="1">(:init</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">    (ontop candle.n<span class="fl">.01</span>_<span class="dv">1</span> table.n<span class="fl">.02</span>_<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">    (inroom table.n<span class="fl">.02</span>_<span class="dv">1</span> living_room)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">    (ontop agent.n<span class="fl">.01</span>_<span class="dv">1</span> <span class="kw">floor</span>.n<span class="fl">.01</span>_<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">)</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">(:goal</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">    (<span class="kw">and</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">        (forpairs (?wicker_basket.n<span class="fl">.01</span> <span class="op">-</span> wicker_basket.n<span class="fl">.01</span>)</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">                  (?candle.n<span class="fl">.01</span> <span class="op">-</span> candle.n<span class="fl">.01</span>)</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">                  (inside ?candle.n<span class="fl">.01</span> ?wicker_basket.n<span class="fl">.01</span>))</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">        ...</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">    )</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">)</a></code></pre></div>
+<p>Challenge <strong>部分成功</strong>（q_score）由 <code>TaskMetric</code> 计算：统计 goal 谓词从未满足到满足的比例（<a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/metrics/task_metric.py#L34-L46">task_metric.py L34–46</a>）。</p>
+<hr />
+<h2 id="7.-2025-behavior-challenge">7. 2025 BEHAVIOR Challenge</h2>
+<table>
+<thead>
+<tr class="header">
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>赛事</strong></td>
+<td>NeurIPS 2025 · Foundation Models Meet Embodied Agents</td>
+</tr>
+<tr class="even">
+<td><strong>任务</strong></td>
+<td>50 个 full-length 家务任务</td>
+</tr>
+<tr class="odd">
+<td><strong>训练数据</strong></td>
+<td><strong>10,000</strong> teleop 演示（<strong>1200+ 小时</strong>，JoyLo 采集）</td>
+</tr>
+<tr class="even">
+<td><strong>提交</strong></td>
+<td>2025-11-16 AoE 截止</td>
+</tr>
+</tbody>
+</table>
+<h3 id="7.1-">7.1 评测轨道</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Track</th>
+<th>观测</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Standard</strong></td>
+<td>onboard RGB + depth + <strong>instance segmentation</strong> + proprioception</td>
+</tr>
+<tr class="even">
+<td><strong>Privileged</strong></td>
+<td>可查询仿真器任意信息</td>
+</tr>
+</tbody>
+</table>
+<p>Challenge 机器人主要为 <strong>R1Pro</strong>（7-DoF 双臂 + 基座）；相机与 proprio 索引见 <a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/learning/utils/eval_utils.py#L6-L59">eval_utils.py L6–59</a>。</p>
+<h3 id="7.2-">7.2 评测入口</h3>
+<p><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/learning/eval.py"><code>eval.py</code></a> 中 <code>Evaluator</code> 类管理 policy rollout 与指标（L66–73）：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ex">conda</span> activate behavior</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="ex">python</span> OmniGibson/omnigibson/learning/eval.py \</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  policy=websocket task.name=turning_on_radio log_path=<span class="va">$LOG_PATH</span></a></code></pre></div>
+<p>Baseline：<a href="https://github.com/StanfordVL/b1k-baselines">StanfordVL/b1k-baselines</a></p>
+<hr />
+<h2 id="8.-">8. 系统要求</h2>
+<table>
+<thead>
+<tr class="header">
+<th>项目</th>
+<th>要求</th>
+<th>官方依据</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>OS</strong></td>
+<td>Ubuntu 20.04+ / Windows 10+</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/docs/getting_started/installation.md">installation.md</a></td>
+</tr>
+<tr class="even">
+<td><strong>RAM</strong></td>
+<td><strong>32GB+</strong></td>
+<td>同上</td>
+</tr>
+<tr class="odd">
+<td><strong>GPU</strong></td>
+<td>NVIDIA <strong>RTX 2070+</strong></td>
+<td>同上</td>
+</tr>
+<tr class="even">
+<td><strong>VRAM</strong></td>
+<td><strong>8GB+</strong></td>
+<td>同上</td>
+</tr>
+<tr class="odd">
+<td><strong>CUDA</strong></td>
+<td>默认 <strong>12.8</strong>（可 <code>--cuda-version</code>）</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/setup.sh#L16">setup.sh L16</a></td>
+</tr>
+</tbody>
+</table>
+<p>Headless：<code>OMNIGIBSON_GPU_ID</code> 指定 GPU。</p>
+<hr />
+<h2 id="9.-">9. 与相关项目对比</h2>
+<table>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th>BEHAVIOR-1K</th>
+<th>Habitat 2/3</th>
+<th>AI2-THOR</th>
+<th>iGibson</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>任务规模</td>
+<td><strong>1000</strong> BDDL</td>
+<td>ReplicaCAD 技能</td>
+<td>200+ actions</td>
+<td>15 interactive</td>
+</tr>
+<tr class="even">
+<td>流体/布料</td>
+<td>✅ OmniGibson</td>
+<td>有限</td>
+<td>有限</td>
+<td>有限</td>
+</tr>
+<tr class="odd">
+<td>引擎</td>
+<td>Isaac Sim</td>
+<td>Habitat-Sim</td>
+<td>Unity</td>
+<td>Bullet</td>
+</tr>
+<tr class="even">
+<td>任务定义</td>
+<td><strong>BDDL 逻辑</strong></td>
+<td>YAML/代码</td>
+<td>脚本/API</td>
+<td>代码</td>
+</tr>
+<tr class="odd">
+<td>数据许可</td>
+<td>加密 bundle</td>
+<td>多数据集</td>
+<td>开放 build</td>
+<td>填表下载</td>
+</tr>
+</tbody>
+</table>
+<p>BEHAVIOR-1K 是 <strong>NVIDIA Isaac 生态上的顶级家务 benchmark</strong>；OmniGibson 即 Isaac Sim 之上的高层封装（见 <a href="../igibson/介绍.html">../igibson/介绍.md §11</a> 对照 iGibson）。</p>
+<hr />
+<h2 id="10.-">10. 演进时间线</h2>
+<table>
+<thead>
+<tr class="header">
+<th>阶段</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>BEHAVIOR-100</strong></td>
+<td>100 活动 predecessor</td>
+</tr>
+<tr class="even">
+<td><strong>iGibson 2</strong></td>
+<td>Stanford 交互室内仿真</td>
+</tr>
+<tr class="odd">
+<td><strong>BEHAVIOR-1K 论文</strong></td>
+<td>2024 arXiv — 1000 活动 + OmniGibson</td>
+</tr>
+<tr class="even">
+<td><strong>BDDL3</strong></td>
+<td>v3.7.x monorepo 迁移</td>
+</tr>
+<tr class="odd">
+<td><strong>2025 Challenge</strong></td>
+<td>NeurIPS；v3.7.2</td>
+</tr>
+<tr class="even">
+<td><strong>PyPI</strong></td>
+<td><code>omnigibson</code>、<code>bddl</code>、<code>joylo</code> 即将发布</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="11.-">11. 本地文档索引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>文档</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="基本使用流程.html">基本使用流程.md</a></td>
+<td>setup.sh、conda、demo、评测、Challenge</td>
+</tr>
+<tr class="even">
+<td><a href="BDDL与任务体系.html">BDDL与任务体系.md</a></td>
+<td>谓词、采样、Transition Rules、自定义活动</td>
+</tr>
+<tr class="odd">
+<td><a href="OmniGibson技术参考.html">OmniGibson技术参考.md</a></td>
+<td>机器人、控制器、Object States、场景</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12.-">12. 官方仓库索引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>用途</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>项目说明</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/README.md">OmniGibson/README.md</a></td>
+</tr>
+<tr class="even">
+<td>安装脚本</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/setup.sh">setup.sh</a></td>
+</tr>
+<tr class="odd">
+<td>Environment</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/envs/env_base.py">env_base.py</a></td>
+</tr>
+<tr class="even">
+<td>BehaviorTask</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/tasks/behavior_task.py">behavior_task.py</a></td>
+</tr>
+<tr class="odd">
+<td>BDDL 活动</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/tree/main/bddl3/bddl/activity_definitions">bddl3/bddl/activity_definitions/</a></td>
+</tr>
+<tr class="even">
+<td>Challenge eval</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/OmniGibson/omnigibson/learning/eval.py">learning/eval.py</a></td>
+</tr>
+<tr class="odd">
+<td>JoyLo 遥操作</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/joylo/README.md">joylo/README.md</a></td>
+</tr>
+<tr class="even">
+<td>Quickstart</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/docs/getting_started/quickstart.md">docs/getting_started/quickstart.md</a></td>
+</tr>
+<tr class="odd">
+<td>本地快照</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/"><code>https://github.com/StanfordVL/BEHAVIOR-1K/blob/main/</code></a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="13.-">13. 资源与引用</h2>
+<table>
+<thead>
+<tr class="header">
+<th>资源</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>主站</td>
+<td><a href="https://behavior.stanford.edu/">https://behavior.stanford.edu/</a></td>
+</tr>
+<tr class="even">
+<td>Challenge</td>
+<td><a href="https://behavior.stanford.edu/challenge/">https://behavior.stanford.edu/challenge/</a></td>
+</tr>
+<tr class="odd">
+<td>GitHub</td>
+<td><a href="https://github.com/StanfordVL/BEHAVIOR-1K">https://github.com/StanfordVL/BEHAVIOR-1K</a></td>
+</tr>
+<tr class="even">
+<td>Baselines</td>
+<td><a href="https://github.com/StanfordVL/b1k-baselines">https://github.com/StanfordVL/b1k-baselines</a></td>
+</tr>
+<tr class="odd">
+<td>Discord</td>
+<td><a href="https://discord.gg/bccR5vGFEx">https://discord.gg/bccR5vGFEx</a></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="va">@article</span>{<span class="ot">li2024behavior</span>,</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">  <span class="dt">title</span>={Behavior-1k: A human-centered, embodied ai benchmark with 1,000 everyday activities and realistic simulation},</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">  <span class="dt">author</span>={Li, Chengshu and Zhang, Ruohan and Wong, Josiah and Gokmen, Cem and others},</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">  <span class="dt">journal</span>={arXiv preprint arXiv:2403.09227},</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">  <span class="dt">year</span>={2024}</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">}</a></code></pre></div>
+<hr />
+<p><em>基于本地 BEHAVIOR-1K 快照与官方仓库编写。</em></p></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 概述</a></li><li><a class="" href="#2.-monorepo-">2. Monorepo 结构</a></li><li><a class="" href="#3.-">3. 生态系统四大组件</a></li><li><a class="" href="#4.-behavior-">4. 核心概念（BEHAVIOR 数据模型）</a></li><li><a class="level-3" href="#4.1-tasks--task-instances">4.1 Tasks 与 Task Instances</a></li><li><a class="level-3" href="#4.2-synsets--categories--objects">4.2 Synsets · Categories · Objects</a></li><li><a class="level-3" href="#4.3-scenes--substances--transition-rules">4.3 Scenes · Substances · Transition Rules</a></li><li><a class="" href="#5.-omnigibson-">5. OmniGibson 仿真器</a></li><li><a class="level-3" href="#5.1-">5.1 技术栈</a></li><li><a class="level-3" href="#5.2-environment-api">5.2 Environment API</a></li><li><a class="level-3" href="#5.3-behaviortask-">5.3 BehaviorTask 要点</a></li><li><a class="" href="#6.-bddl-">6. BDDL 任务示例（源码）</a></li><li><a class="" href="#7.-2025-behavior-challenge">7. 2025 BEHAVIOR Challenge</a></li><li><a class="level-3" href="#7.1-">7.1 评测轨道</a></li><li><a class="level-3" href="#7.2-">7.2 评测入口</a></li><li><a class="" href="#8.-">8. 系统要求</a></li><li><a class="" href="#9.-">9. 与相关项目对比</a></li><li><a class="" href="#10.-">10. 演进时间线</a></li><li><a class="" href="#11.-">11. 本地文档索引</a></li><li><a class="" href="#12.-">12. 官方仓库索引</a></li><li><a class="" href="#13.-">13. 资源与引用</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+  <script src="../vendor/mermaid.min.js"></script>
+  <script src="../mermaid-init.js"></script>
+</body>
+</html>

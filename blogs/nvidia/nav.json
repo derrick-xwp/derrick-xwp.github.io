@@ -59,6 +59,32 @@
           "description": "14 个任务与奖励配置索引"
         }
       ]
+    },
+    {
+      "id": "cosmos",
+      "title": "Cosmos",
+      "docs": [
+        {
+          "path": "comos/介绍.md",
+          "title": "技术介绍",
+          "description": "Cosmos 3 omni 模型、Predict/Transfer/Reason 演进"
+        },
+        {
+          "path": "comos/基本使用流程.md",
+          "title": "基本使用流程",
+          "description": "Cookbook、推理 CLI、HF、NIM 与 Isaac 组合"
+        },
+        {
+          "path": "comos/官方仓库索引.md",
+          "title": "官方仓库索引",
+          "description": "GitHub / Hugging Face / NIM 链接"
+        },
+        {
+          "path": "comos/在线资源与Cookbook.md",
+          "title": "Cookbook 索引",
+          "description": "Cosmos Cookbook 配方与 case study 摘要"
+        }
+      ]
     }
   ]
 }

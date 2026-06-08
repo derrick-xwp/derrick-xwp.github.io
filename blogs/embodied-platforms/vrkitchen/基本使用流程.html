@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>基本使用流程 · VRKitchen</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>VRKitchen</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">VRKitchen</div>
+<a class="nav-link" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">UE4 厨房、VR 示教、VR Chef Challenge、2.0 Omniverse</span></a>
+<a class="nav-link active" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">v0.1.0 安装、UE4 二进制、socket、example 脚本</span></a>
+<a class="nav-link" href="VR Chef Challenge与API参考.html"><span class="nav-link-title">VR Chef Challenge 与 API 参考</span><span class="nav-link-desc">Tool/Dish 任务表、ObjDict、DiscreteAgent、RL</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>VRKitchen</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>VRKitchen</span> <span> / </span> <span>基本使用流程</span></div>
+          <article class="article"><h1 id="vrkitchen-">VRKitchen 基本使用流程</h1>
+<blockquote>
+<p>基于 <a href="https://github.com/xfgao/VRKitchen/blob/master/README.md">xfgao/VRKitchen README</a> · 本地源码 <a href="https://github.com/xfgao/VRKitchen/blob/master/"><code>https://github.com/xfgao/VRKitchen/blob/master/</code></a><br />
+论文 §3.4–3.5 · <a href="https://sites.google.com/view/vr-kitchen/">项目站</a></p>
+</blockquote>
+<h2 id="1.-">1. 系统要求</h2>
+<table>
+<thead>
+<tr class="header">
+<th>项</th>
+<th>要求</th>
+<th>源码依据</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>OS</strong></td>
+<td><strong>Ubuntu 16.04</strong></td>
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/README.md"><code>README.md</code></a></td>
+</tr>
+<tr class="even">
+<td><strong>Python</strong></td>
+<td><strong>2.7.12</strong></td>
+<td>同上</td>
+</tr>
+<tr class="odd">
+<td><strong>GPU</strong></td>
+<td>NVIDIA 独显推荐</td>
+<td>UE4 渲染 + RL 默认 <code>.cuda()</code></td>
+</tr>
+<tr class="even">
+<td><strong>VR（可选）</strong></td>
+<td>Oculus Rift + Touch</td>
+<td>示教采集（UE4 内）</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://github.com/xfgao/VRKitchen/blob/master/requirements.txt"><code>requirements.txt</code></a> 锁定 PyTorch 0.4 时代栈：</p>
+<pre><code>numpy==1.16.2
+torch==0.4.1
+gym==0.12.5
+pyrapidjson==0.5.1
+opencv-python==4.0.0.21
+...
+</code></pre>
+<blockquote>
+<p>复现论文建议 <strong>conda/venv 隔离</strong>；<code>task_tool.py</code> / <code>task_dish/*.py</code> 中状态张量直接 <code>.cuda()</code>，无 GPU 需改 CPU 或 mock。</p>
+</blockquote>
+<hr />
+<h2 id="2.-">2. 安装</h2>
+<h3 id="2.1--python-">2.1 克隆与 Python 依赖</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="fu">git</span> clone https://github.com/xfgao/VRKitchen.git</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="bu">cd</span> VRKitchen</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="ex">pip</span> install -r requirements.txt</a></code></pre></div>
+<p>本地已有一份完整树：<code>https://github.com/xfgao/VRKitchen/blob/master/</code>（无需再 clone 即可读源码）。</p>
+<h3 id="2.2--ue4-">2.2 下载 UE4 可执行文件</h3>
+<ol>
+<li><a href="https://github.com/xfgao/VRKitchen/releases/download/v0.1.0/VRKitchen-v0.1.0.zip">VRKitchen-v0.1.0.zip</a></li>
+<li>解压到仓库 <strong><code>Binaries/</code></strong></li>
+</ol>
+<p><code>DiscreteAgent</code> 启动 UE 时路径为：</p>
+<pre class="text"><code>./Binaries/{task_type}/VRInteractPlatform/Binaries/Linux/VRInteractPlatform
+</code></pre>
+<p>其中 <code>task_type</code> 为 <strong><code>PrepareDish</code></strong>（备菜）或 <strong><code>ToolUse</code></strong>（工具任务），见 <a href="https://github.com/xfgao/VRKitchen/blob/master/Script/DiscreteAgent.py"><code>DiscreteAgent.py</code> L31</a>。</p>
+<blockquote>
+<p>注意：构造函数内会 <code>subprocess.Popen</code> 拉起 UE 进程；若你 <strong>手动</strong> 先启动 release 二进制，需确保端口 <strong>10120/10121</strong> 未被占用。</p>
+</blockquote>
+<h3 id="2.3-">2.3 启动顺序</h3>
+<p><strong>推荐</strong>：先确保 UE4 在跑，再执行 Python RL/API 脚本。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># 1. 启动 UE4（路径以 zip 内实际文件为准）</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="ex">./Binaries/PrepareDish/VRInteractPlatform/Binaries/Linux/VRInteractPlatform</span>   # 备菜</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co"># 或 ToolUse 目录下同名可执行文件</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co"># 2. Script 目录</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="bu">cd</span> VRKitchen/Script</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="ex">python</span> example_dish.py    # 备菜 RL</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="ex">python</span> example_tool.py    # 工具连续 RL</a></code></pre></div>
+<p>连接失败时见 <a href="https://github.com/xfgao/VRKitchen/blob/master/Script/socketClient.py"><code>socketClient.py</code> L31</a>：<code>Can not connect to ('127.0.0.1', 10120)</code>。</p>
+<hr />
+<h2 id="3.-pythonue4-">3. Python–UE4 通信</h2>
+<p><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/DiscreteAgent.py"><code>DiscreteAgent</code></a> 默认端点：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode 17:18:https://github.com/xfgao/VRKitchen/blob/master/Script/DiscreteAgent.py"><code class="sourceCode python"><a class="sourceLine" id="cb5-1" data-line-number="1">            client_endpoint<span class="op">=</span>(<span class="st">&quot;127.0.0.1&quot;</span>, <span class="dv">10120</span>), <span class="op">\</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">            server_endpoint<span class="op">=</span>(<span class="st">&quot;127.0.0.1&quot;</span>, <span class="dv">10121</span>)):</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th>组件</th>
+<th>文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Client</strong></td>
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/socketClient.py"><code>socketClient.py</code></a></td>
+<td>TCP 发送 JSON 行（<code>rapidjson.dumps</code> + <code>\n</code>）</td>
+</tr>
+<tr class="even">
+<td><strong>Server</strong></td>
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/socketServer.py"><code>socketServer.py</code></a></td>
+<td>接收大块 buffer（RGB 用 <code>\nEND OF FILE\n</code> 分隔）</td>
+</tr>
+<tr class="odd">
+<td><strong>状态同步</strong></td>
+<td><code>send_tf()</code> / <code>receive_msg()</code></td>
+<td>发送 Agent 姿态；接收 Objects/RGB/Reward/Done</td>
+</tr>
+</tbody>
+</table>
+<p><code>start()</code> 流程：<code>server.listen()</code> → <code>client.connect()</code> → <code>send_tf()</code> 循环重试至多 50 次（<code>retry_num</code>）。</p>
+<hr />
+<h2 id="4.-">4. 复现论文实验</h2>
+<h3 id="4.1--rl">4.1 备菜（离散 RL）</h3>
+<p><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/example_dish.py"><code>example_dish.py</code></a> 注册四类任务：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode 21:21:https://github.com/xfgao/VRKitchen/blob/master/Script/example_dish.py"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" data-line-number="1">TaskMap <span class="op">=</span> {<span class="st">&quot;Cut&quot;</span>: Cut, <span class="st">&quot;Sandwich&quot;</span>: Sandwich, <span class="st">&quot;Stew&quot;</span>: Stew, <span class="st">&quot;Juice&quot;</span>: Juice}</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="bu">cd</span> Script</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="ex">python</span> example_dish.py</a></code></pre></div>
+<p>默认 <strong><code>ppo_dish(&quot;Sandwich&quot;, 1000)</code></strong>。切换任务：</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb8-1" data-line-number="1">task_name <span class="op">=</span> <span class="st">&quot;Juice&quot;</span>   <span class="co"># Cut / Sandwich / Stew / Juice</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">ppo_dish(task_name, max_steps)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co"># dqn_dish(...) / a2c_dish(...)</span></a></code></pre></div>
+<p>PPO 配置要点（与论文一致）：<code>state_dim=84</code>、<code>NatureConvBody</code>、<code>rollout_length=3000</code>、<code>discount=0.95</code>；checkpoint 路径 <code>data/model-{algo}-{task}-vanilla.bin</code>。</p>
+<h3 id="4.2--rl">4.2 工具使用（连续 RL）</h3>
+<p><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/example_tool.py"><code>example_tool.py</code></a>：</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode 13:13:https://github.com/xfgao/VRKitchen/blob/master/Script/example_tool.py"><code class="sourceCode python"><a class="sourceLine" id="cb9-1" data-line-number="1">TaskMap <span class="op">=</span> {<span class="st">&quot;CutCarrot&quot;</span>:CutCarrot, <span class="st">&quot;PourWater&quot;</span>:PourWater, <span class="st">&quot;GetWater&quot;</span>:GetWater, <span class="st">&quot;OpenCan&quot;</span>:OpenCan, <span class="st">&quot;PeelKiwi&quot;</span>:PeelKiwi}</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="bu">cd</span> Script</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="ex">python</span> example_tool.py</a></code></pre></div>
+<p>默认 <strong><code>ddpg_pixel(&quot;CutCarrot&quot;, 50)</code></strong>，<code>action_dim=7</code>。切换：</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb11-1" data-line-number="1">task_name <span class="op">=</span> <span class="st">&quot;PourWater&quot;</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">ddpg_pixel(task_name, max_steps)</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="co"># ppo_continuous / a2c_continuous</span></a></code></pre></div>
+<p>DDPG 使用 <code>DeterministicActorCriticNet</code> + OU noise（<code>random_process_fn</code>），<code>target_network_mix=1e-3</code>。</p>
+<h3 id="4.3--rl">4.3 规则测试（无 RL）</h3>
+<p><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/task_dish/Juice.py"><code>task_dish/Juice.py</code></a> 内 <code>test()</code> 固定 11 步动作序列：</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode 127:135:https://github.com/xfgao/VRKitchen/blob/master/Script/task_dish/Juice.py"><code class="sourceCode python"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">def</span> test():</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">    task_list <span class="op">=</span> [<span class="dv">5</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>]</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">    task_fn <span class="op">=</span> <span class="kw">lambda</span> : Juice(frame_skip<span class="op">=</span><span class="dv">1</span>, max_steps<span class="op">=</span><span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">    task <span class="op">=</span> task_fn()</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">    task.start()</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">    <span class="cf">for</span> a <span class="kw">in</span> task_list:</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">        a,b,c,d <span class="op">=</span> task.step(a)</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">        <span class="bu">print</span>(<span class="st">&quot;reward&quot;</span>, b)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="bu">cd</span> Script</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="ex">python</span> -m task_dish.Juice</a></code></pre></div>
+<hr />
+<h2 id="5.--api-rl">5. 高层备菜 API（非 RL）</h2>
+<p><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/api_dish.py"><code>api_dish.py</code></a> 模块级单例 <code>env</code>：</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode 28:46:https://github.com/xfgao/VRKitchen/blob/master/Script/api_dish.py"><code class="sourceCode python"><a class="sourceLine" id="cb14-1" data-line-number="1">env <span class="op">=</span> DiscreteAgent({<span class="st">&quot;Name&quot;</span>:<span class="st">&quot;Agent1&quot;</span>, <span class="op">\</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">            <span class="st">&quot;Actor&quot;</span>:{<span class="st">&quot;Loc&quot;</span>:{<span class="st">&quot;X&quot;</span>:<span class="dv">0</span>,<span class="st">&quot;Y&quot;</span>:<span class="dv">0</span>,<span class="st">&quot;Z&quot;</span>:<span class="dv">0</span>},<span class="op">\</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">                <span class="st">&quot;Rot&quot;</span>:{<span class="st">&quot;Pitch&quot;</span>:<span class="fl">0.0</span>,<span class="st">&quot;Yaw&quot;</span>:<span class="fl">0.0</span>,<span class="st">&quot;Roll&quot;</span>:<span class="fl">0.0</span>}}, <span class="op">\</span></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">            <span class="co"># ... LeftHand / RightHand / Head ...</span></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">            <span class="st">&quot;rgb&quot;</span>: <span class="va">True</span>, <span class="st">&quot;depth&quot;</span>: <span class="va">False</span>, <span class="st">&quot;mask&quot;</span>: <span class="va">False</span>,</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">            <span class="st">&quot;scene&quot;</span>: <span class="st">&quot;2&quot;</span></a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">            }, task_type<span class="op">=</span><span class="st">&quot;PrepareDish&quot;</span></a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">)</a></code></pre></div>
+<p>典型脚本（UE4 已启动，在 <code>Script/</code> 目录）：</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="im">from</span> api_dish <span class="im">import</span> GoTo, Take, PlaceTo, Use, Open, env, InitDict</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">env.start()</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">InitDict()</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">GoTo(<span class="st">&quot;Fridge&quot;</span>)</a>
+<a class="sourceLine" id="cb15-7" data-line-number="7">Open(<span class="st">&quot;Fridge&quot;</span>)</a>
+<a class="sourceLine" id="cb15-8" data-line-number="8">Take(<span class="st">&quot;Tomato&quot;</span>)</a>
+<a class="sourceLine" id="cb15-9" data-line-number="9">GoTo(<span class="st">&quot;Juicer&quot;</span>)</a>
+<a class="sourceLine" id="cb15-10" data-line-number="10">Use(<span class="st">&quot;Juicer&quot;</span>)</a></code></pre></div>
+<p><code>GoTo</code> 调用 <code>env.GoToPos(loc)</code>，坐标来自 <a href="https://github.com/xfgao/VRKitchen/blob/master/Script/tool_pos.py"><code>tool_pos.py</code></a> 中 <code>tool_pos[scene][loc]</code>。</p>
+<hr />
+<h2 id="6.-">6. 观测配置</h2>
+<p><code>DiscreteAgent</code> 构造 / <code>init_state</code> 字段：</p>
+<table>
+<thead>
+<tr class="header">
+<th>键</th>
+<th>默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>&quot;rgb&quot;</code></td>
+<td><code>True</code></td>
+<td>第一人称 RGB → RL 中 resize 84×84</td>
+</tr>
+<tr class="even">
+<td><code>&quot;depth&quot;</code></td>
+<td><code>False</code></td>
+<td>深度图（<code>receive_msg</code> 读 <code>Depth</code> 段）</td>
+</tr>
+<tr class="odd">
+<td><code>&quot;mask&quot;</code></td>
+<td><code>False</code></td>
+<td>实例分割</td>
+</tr>
+<tr class="even">
+<td><code>&quot;scene&quot;</code></td>
+<td><code>&quot;2&quot;</code></td>
+<td>场景 ID；<code>tool_pos</code> 含 <code>&quot;2&quot;</code>、<code>&quot;3&quot;</code> 等</td>
+</tr>
+</tbody>
+</table>
+<p>Tool 连续控制：</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb16-1" data-line-number="1">env.step_tool(<span class="st">&quot;ControlRightHand&quot;</span>, scale<span class="op">=</span><span class="dv">30</span>, loc<span class="op">=</span>..., rot<span class="op">=</span>..., grab_strength<span class="op">=</span>..., grab_actor<span class="op">=</span><span class="st">&quot;Knife&quot;</span>, grab_comp<span class="op">=</span><span class="st">&quot;StaticMeshComponent0&quot;</span>)</a></code></pre></div>
+<p>实现见 <a href="https://github.com/xfgao/VRKitchen/blob/master/Script/DiscreteAgent.py"><code>DiscreteAgent.step_tool</code></a> → <code>ControlRightHand()</code>。</p>
+<hr />
+<h2 id="7.-script-">7. 目录结构（Script 详解）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/DiscreteAgent.py"><code>DiscreteAgent.py</code></a></td>
+<td>桥接核心：motor 原语、<code>GoToPos</code>、<code>step</code>/<code>step_tool</code></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/api_dish.py"><code>api_dish.py</code></a></td>
+<td>备菜 API + <code>ObjDict</code> + 列表常量</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/task_dish"><code>task_dish/</code></a></td>
+<td><code>Juice</code>/<code>Stew</code>/<code>Sandwich</code>/<code>Cut</code> Gym 接口</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/task_tool.py"><code>task_tool.py</code></a></td>
+<td>五类 Tool Use 环境</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/deep_rl"><code>deep_rl/</code></a></td>
+<td>Agent、Replay、<code>NatureConvBody</code></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/example_dish.py"><code>example_dish.py</code></a> / <a href="https://github.com/xfgao/VRKitchen/blob/master/Script/example_tool.py"><code>example_tool.py</code></a></td>
+<td>论文 benchmark 入口</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/Script/tool_pos.py"><code>tool_pos.py</code></a></td>
+<td>各 scene 的 <code>PosList</code> 世界坐标</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/data"><code>data/</code></a></td>
+<td>模型 checkpoint（<code>.gitignore</code>，需训练生成）</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/xfgao/VRKitchen/blob/master/log"><code>log/</code></a></td>
+<td>TensorBoard 日志</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8.-">8. 数据集下载</h2>
+<p><a href="https://drive.google.com/file/d/1yahh4RGl7ofepoJin57n2mV1g-i7-T0L/view?usp=sharing">Google Drive — dish preparation</a>（<a href="https://github.com/xfgao/VRKitchen/blob/master/README.md"><code>README.md</code></a>）</p>
+<p>UCLA VR Chef 人类示教（论文 §6）：各 Tool / Dish 任务 <strong>20</strong> 条；详见 <a href="https://sites.google.com/view/vr-kitchen/">项目站</a>。</p>
+<hr />
+<h2 id="9.-vr-">9. VR 示教（概念流程）</h2>
+<p>论文配置：Oculus Rift + Touch；记录双手 3D 位姿/旋转/grab strength（100Hz）；状态含第一人称 RGB。</p>
+<p><strong>开源仓库以 Python API + RL 为主</strong>；VR 采集集成在 UE4 二进制与 UI 模块。备菜 demo 另提供 <strong>Web UI</strong> 点选离散原子动作（论文 §6.2）。</p>
+<hr />
+<h2 id="10.-faq">10. 常见问题（FAQ）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>现象</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Can not connect to ('127.0.0.1', 10120)</code></td>
+<td>启动 <strong>Binaries</strong> 下 UE4；检查 <code>PrepareDish</code>/<code>ToolUse</code> 是否与脚本一致</td>
+</tr>
+<tr class="even">
+<td>PyTorch/CUDA 报错</td>
+<td>需 <strong>torch 0.4.1</strong>；或改 <code>task_*.py</code> 中 <code>.cuda()</code> 为 CPU</td>
+</tr>
+<tr class="odd">
+<td><code>pip install</code> 失败</td>
+<td>Docker / conda 模拟 Ubuntu 16.04 + Py2.7</td>
+</tr>
+<tr class="even">
+<td>RL 不收敛</td>
+<td>与论文一致；先试 <code>Juice</code>、增大 <code>max_steps</code></td>
+</tr>
+<tr class="odd">
+<td>换场景无效</td>
+<td>改 <code>env</code> 的 <code>&quot;scene&quot;</code> 并确认 <a href="https://github.com/xfgao/VRKitchen/blob/master/Script/tool_pos.py"><code>tool_pos.py</code></a> 有对应键</td>
+</tr>
+<tr class="even">
+<td>现代 Python / GPU RL</td>
+<td>考虑 <a href="https://github.com/realvcla/VRKitchen2.0">VRKitchen 2.0</a> 或 port 通信层</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="11.-">11. 二次开发指引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>目标</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>新备菜任务</strong></td>
+<td>仿 <a href="https://github.com/xfgao/VRKitchen/blob/master/Script/task_dish/Juice.py"><code>task_dish/Juice.py</code></a> 定义 <code>action_dim</code>、<code>step()</code> 映射</td>
+</tr>
+<tr class="even">
+<td><strong>新 Tool 任务</strong></td>
+<td>仿 <a href="https://github.com/xfgao/VRKitchen/blob/master/Script/task_tool.py"><code>CutCarrot</code></a> 设置 <code>init_state</code> 与 <code>grab_actor</code></td>
+</tr>
+<tr class="odd">
+<td><strong>新原子动作</strong></td>
+<td>在 <a href="https://github.com/xfgao/VRKitchen/blob/master/Script/api_dish.py"><code>api_dish.py</code></a> 增加函数，组合 <code>env.MoveToObject</code> / <code>GrabObject</code> 等</td>
+</tr>
+<tr class="even">
+<td><strong>新导航点</strong></td>
+<td>扩展 <a href="https://github.com/xfgao/VRKitchen/blob/master/Script/tool_pos.py"><code>tool_pos.py</code></a> + <code>PosList</code></td>
+</tr>
+<tr class="odd">
+<td><strong>UE4 源码</strong></td>
+<td>联系作者 / 项目站（release 以二进制为主）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12.-vrkitchen-2.0">12. VRKitchen 2.0</h2>
+<p>Omniverse 版：<a href="https://github.com/realvcla/VRKitchen2.0">realvcla/VRKitchen2.0</a> — 安装与 API <strong>与 v0.1 不兼容</strong>；见 <a href="介绍.html">介绍.md</a> §8。</p></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 系统要求</a></li><li><a class="" href="#2.-">2. 安装</a></li><li><a class="level-3" href="#2.1--python-">2.1 克隆与 Python 依赖</a></li><li><a class="level-3" href="#2.2--ue4-">2.2 下载 UE4 可执行文件</a></li><li><a class="level-3" href="#2.3-">2.3 启动顺序</a></li><li><a class="" href="#3.-pythonue4-">3. Python–UE4 通信</a></li><li><a class="" href="#4.-">4. 复现论文实验</a></li><li><a class="level-3" href="#4.1--rl">4.1 备菜（离散 RL）</a></li><li><a class="level-3" href="#4.2--rl">4.2 工具使用（连续 RL）</a></li><li><a class="level-3" href="#4.3--rl">4.3 规则测试（无 RL）</a></li><li><a class="" href="#5.--api-rl">5. 高层备菜 API（非 RL）</a></li><li><a class="" href="#6.-">6. 观测配置</a></li><li><a class="" href="#7.-script-">7. 目录结构（Script 详解）</a></li><li><a class="" href="#8.-">8. 数据集下载</a></li><li><a class="" href="#9.-vr-">9. VR 示教（概念流程）</a></li><li><a class="" href="#10.-faq">10. 常见问题（FAQ）</a></li><li><a class="" href="#11.-">11. 二次开发指引</a></li><li><a class="" href="#12.-vrkitchen-2.0">12. VRKitchen 2.0</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+</body>
+</html>

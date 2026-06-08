@@ -223,9 +223,10 @@ def render_page(nav, md_path: str, md_text: str) -> None:
           <article class="article">{body}</article>
           <p class="footer-note">
             源码链接指向
-            <a href="https://github.com/isaac-sim/IsaacSim" target="_blank" rel="noopener">Isaac Sim</a>
-            与
+            <a href="https://github.com/isaac-sim/IsaacSim" target="_blank" rel="noopener">Isaac Sim</a>、
             <a href="https://github.com/isaac-sim/IsaacLab" target="_blank" rel="noopener">Isaac Lab</a>
+            与
+            <a href="https://github.com/nvidia/cosmos" target="_blank" rel="noopener">NVIDIA Cosmos</a>
             官方 GitHub 仓库。
           </p>
         </div>

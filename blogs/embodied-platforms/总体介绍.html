@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>总体介绍 · 具身智能仿真平台调研</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>具身智能仿真平台调研</h1>
+        <p>AI2-THOR · SAPIEN · TDW · iGibson · 等</p>
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">总体</div>
+<a class="nav-link" href="主页.html"><span class="nav-link-title">主页</span><span class="nav-link-desc">多维度能力矩阵、按目标选型、决策流程</span></a>
+<a class="nav-link active" href="总体介绍.html"><span class="nav-link-title">总体介绍</span><span class="nav-link-desc">平台一览、许可摘要、完整文档索引</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>具身智能仿真平台调研</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>总体介绍</span></div>
+          <article class="article"><h1 id="--">具身智能仿真平台 — 总体调研</h1>
+<blockquote>
+<p>本文档汇总主流 <strong>Embodied AI</strong> 仿真与 benchmark 平台，便于横向对比与选型。<br />
+<strong>多维度对比与选型决策</strong> 见 <strong><a href="主页.html">主页.md</a></strong>（能力矩阵、按研究目标、决策流程图）。<br />
+另见：<a href="https://aihabitat.org/">Meta Habitat</a> · <a href="../nvidia/总体介绍.html">NVIDIA Isaac</a></p>
+</blockquote>
+<h2 id="1.-">1. 为什么需要仿真</h2>
+<p>真实世界训练具身智能体存在 <strong>慢、贵、危险、难复现</strong> 等问题。仿真可在集群上 <strong>并行、加速</strong> rollout，在迁移到真机前验证算法。各平台在 <strong>视觉真实感、物理 fidelity、交互粒度、吞吐量</strong> 之间取舍不同。</p>
+<hr />
+<h2 id="2.-">2. 平台一览</h2>
+<table>
+<thead>
+<tr class="header">
+<th>平台</th>
+<th>机构</th>
+<th>引擎 / 后端</th>
+<th>强项</th>
+<th>典型任务</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="ai2thor/介绍.html">AI2-THOR</a></td>
+<td>Allen AI</td>
+<td>Unity</td>
+<td>物体状态变化、精细交互</td>
+<td>开冰箱、开关电器、ManipulaTHOR 操作</td>
+</tr>
+<tr class="even">
+<td><a href="sapien/介绍.html">SAPIEN / ManiSkill</a></td>
+<td>UCSD 等</td>
+<td>PhysX 5 GPU</td>
+<td>铰接物体、高吞吐机械臂 RL</td>
+<td>Pick/Place、灵巧操作 benchmark</td>
+</tr>
+<tr class="odd">
+<td><a href="tdw/介绍.html">ThreeDWorld</a></td>
+<td>MIT</td>
+<td>Unity + Flex</td>
+<td>多模态（视/听）、流体/布料</td>
+<td>物理预测、多智能体、认知实验</td>
+</tr>
+<tr class="even">
+<td><a href="igibson/介绍.html">iGibson</a></td>
+<td>Stanford</td>
+<td>Bullet</td>
+<td>572+ 真实扫描场景、室内 Nav</td>
+<td>开门、抓取、大规模导航</td>
+</tr>
+<tr class="odd">
+<td><a href="deepmind_lab/介绍.html">DeepMind Lab</a></td>
+<td>Google DeepMind</td>
+<td>Quake/ioquake3</td>
+<td>第一人称探索、记忆、迷宫</td>
+<td>Nav maze、Psychlab 认知任务</td>
+</tr>
+<tr class="even">
+<td><a href="virtualhome/介绍.html">VirtualHome</a></td>
+<td>MIT / Stanford HCI</td>
+<td>Unity + 图模拟</td>
+<td>高级程序指令、多智能体家庭活动</td>
+<td>做饭、清洁等长 horizon 程序</td>
+</tr>
+<tr class="odd">
+<td><a href="chalet/介绍.html">CHALET</a></td>
+<td>Cornell</td>
+<td>Unity</td>
+<td>58 房间组合、语言+规划</td>
+<td>导航、操作、指令跟随、QA</td>
+</tr>
+<tr class="even">
+<td><a href="vrkitchen/介绍.html">VRKitchen</a></td>
+<td>UCLA 等</td>
+<td>UE4 / Omniverse</td>
+<td>VR 示教、烹饪组合任务</td>
+<td>Tool use、备菜序列</td>
+</tr>
+<tr class="odd">
+<td><a href="behavior_1k/介绍.html">BEHAVIOR-1K</a></td>
+<td>Stanford</td>
+<td>OmniGibson (Isaac)</td>
+<td>1000 家务活动、流体/ deformable</td>
+<td>长 horizon 移动操作 benchmark</td>
+</tr>
+<tr class="even">
+<td><a href="https://aihabitat.org/">Habitat</a></td>
+<td>Meta</td>
+<td>自研 C++</td>
+<td>极速导航、Challenge</td>
+<td>PointNav、Rearrange</td>
+</tr>
+<tr class="odd">
+<td><a href="../nvidia/总体介绍.html">Isaac Sim/Lab</a></td>
+<td>NVIDIA</td>
+<td>Omniverse/PhysX</td>
+<td>高保真机器人 RL/IL</td>
+<td>loco/manipulation、Mimic</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3.-">3. 选型维度</h2>
+<div class="mermaid">graph TB
+    subgraph 需求["研究需求"]
+        N[导航 / 探索]
+        M[操作 / 铰接物体]
+        L[长 horizon 家务]
+        A[音频 / 多模态]
+        T[训练吞吐量]
+    end
+
+    subgraph 平台["候选平台"]
+        H[Habitat / iGibson]
+        S[SAPIEN / ManiSkill]
+        TH[AI2-THOR / BEHAVIOR]
+        TW[TDW]
+        D[DeepMind Lab]
+    end
+
+    N --> H
+    N --> D
+    M --> S
+    M --> TH
+    L --> TH
+    L --> B[BEHAVIOR-1K]
+    A --> TW
+    T --> S
+    T --> H</div>
+<table>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th>高吞吐训练</th>
+<th>高物理/状态 fidelity</th>
+<th>真实扫描大规模场景</th>
+<th>程序/语言高层任务</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>首选</strong></td>
+<td>ManiSkill 3、Habitat</td>
+<td>BEHAVIOR/OmniGibson、TDW</td>
+<td>iGibson、Habitat+HM3D</td>
+<td>VirtualHome、CHALET</td>
+</tr>
+<tr class="even">
+<td><strong>精细物体状态</strong></td>
+<td>AI2-THOR</td>
+<td>AI2-THOR</td>
+<td>—</td>
+<td>VirtualHome graph</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4.-">4. 引擎与许可（摘要）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>平台</th>
+<th>开源许可</th>
+<th>数据许可</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AI2-THOR</td>
+<td>Apache-2.0</td>
+<td>场景随仓库/文档</td>
+</tr>
+<tr class="even">
+<td>SAPIEN / ManiSkill</td>
+<td>Apache-2.0</td>
+<td>任务资产见文档</td>
+</tr>
+<tr class="odd">
+<td>TDW</td>
+<td>MIT（部分模块另议）</td>
+<td>见 TDW 数据集页</td>
+</tr>
+<tr class="even">
+<td>iGibson</td>
+<td>MIT</td>
+<td>Gibson/HM 等需填表</td>
+</tr>
+<tr class="odd">
+<td>DeepMind Lab</td>
+<td>Apache-2.0</td>
+<td>内置程序化关卡</td>
+</tr>
+<tr class="even">
+<td>VirtualHome</td>
+<td>MIT</td>
+<td>程序+场景图公开</td>
+</tr>
+<tr class="odd">
+<td>CHALET</td>
+<td>见仓库</td>
+<td>Cornell 语料</td>
+</tr>
+<tr class="even">
+<td>VRKitchen</td>
+<td>见仓库</td>
+<td>项目站下载</td>
+</tr>
+<tr class="odd">
+<td>BEHAVIOR-1K</td>
+<td>见仓库</td>
+<td>BDDL + 场景需注册</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5.-">5. 文档索引</h2>
+<table>
+<thead>
+<tr class="header">
+<th>入口</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>主页（多维度对比）</strong></td>
+<td><a href="主页.html">主页.md</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th>平台</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AI2-THOR 详解</td>
+<td><a href="ai2thor/介绍.html">ai2thor/介绍.md</a></td>
+</tr>
+<tr class="even">
+<td>AI2-THOR 使用流程</td>
+<td><a href="ai2thor/基本使用流程.html">ai2thor/基本使用流程.md</a></td>
+</tr>
+<tr class="odd">
+<td>AI2-THOR 动作参考</td>
+<td><a href="ai2thor/动作与对象参考.html">ai2thor/动作与对象参考.md</a></td>
+</tr>
+<tr class="even">
+<td>SAPIEN / ManiSkill 详解</td>
+<td><a href="sapien/介绍.html">sapien/介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>ManiSkill 使用流程</td>
+<td><a href="sapien/基本使用流程.html">sapien/基本使用流程.md</a></td>
+</tr>
+<tr class="even">
+<td>ManiSkill 任务与 API</td>
+<td><a href="sapien/ManiSkill任务与API参考.html">sapien/ManiSkill任务与API参考.md</a></td>
+</tr>
+<tr class="odd">
+<td>ThreeDWorld 详解</td>
+<td><a href="tdw/介绍.html">tdw/介绍.md</a></td>
+</tr>
+<tr class="even">
+<td>TDW 使用流程</td>
+<td><a href="tdw/基本使用流程.html">tdw/基本使用流程.md</a></td>
+</tr>
+<tr class="odd">
+<td>TDW 感知与数据集</td>
+<td><a href="tdw/多模态感知与数据集参考.html">tdw/多模态感知与数据集参考.md</a></td>
+</tr>
+<tr class="even">
+<td>iGibson 详解</td>
+<td><a href="igibson/介绍.html">igibson/介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>iGibson 使用流程</td>
+<td><a href="igibson/基本使用流程.html">igibson/基本使用流程.md</a></td>
+</tr>
+<tr class="even">
+<td>iGibson 场景与 API</td>
+<td><a href="igibson/场景任务与API参考.html">igibson/场景任务与API参考.md</a></td>
+</tr>
+<tr class="odd">
+<td>DeepMind Lab 详解</td>
+<td><a href="deepmind_lab/介绍.html">deepmind_lab/介绍.md</a></td>
+</tr>
+<tr class="even">
+<td>DeepMind Lab 使用流程</td>
+<td><a href="deepmind_lab/基本使用流程.html">deepmind_lab/基本使用流程.md</a></td>
+</tr>
+<tr class="odd">
+<td>DMLab 关卡参考</td>
+<td><a href="deepmind_lab/关卡与任务参考.html">deepmind_lab/关卡与任务参考.md</a></td>
+</tr>
+<tr class="even">
+<td>VirtualHome 详解</td>
+<td><a href="virtualhome/介绍.html">virtualhome/介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>VirtualHome 使用流程</td>
+<td><a href="virtualhome/基本使用流程.html">virtualhome/基本使用流程.md</a></td>
+</tr>
+<tr class="even">
+<td>VirtualHome 程序与数据集</td>
+<td><a href="virtualhome/程序图谱与数据集参考.html">virtualhome/程序图谱与数据集参考.md</a></td>
+</tr>
+<tr class="odd">
+<td>CHALET 详解</td>
+<td><a href="chalet/介绍.html">chalet/介绍.md</a></td>
+</tr>
+<tr class="even">
+<td>CHALET 使用流程</td>
+<td><a href="chalet/基本使用流程.html">chalet/基本使用流程.md</a></td>
+</tr>
+<tr class="odd">
+<td>CHAI 语料与评测</td>
+<td><a href="chalet/CHAI语料与评测.html">chalet/CHAI语料与评测.md</a></td>
+</tr>
+<tr class="even">
+<td>VRKitchen 详解</td>
+<td><a href="vrkitchen/介绍.html">vrkitchen/介绍.md</a></td>
+</tr>
+<tr class="odd">
+<td>VRKitchen 使用流程</td>
+<td><a href="vrkitchen/基本使用流程.html">vrkitchen/基本使用流程.md</a></td>
+</tr>
+<tr class="even">
+<td>VR Chef Challenge 参考</td>
+<td><a href="vrkitchen/VR%20Chef%20Challenge与API参考.html">vrkitchen/VR Chef Challenge与API参考.md</a></td>
+</tr>
+<tr class="odd">
+<td>BEHAVIOR-1K 详解</td>
+<td><a href="behavior_1k/介绍.html">behavior_1k/介绍.md</a></td>
+</tr>
+<tr class="even">
+<td>BEHAVIOR-1K 使用流程</td>
+<td><a href="behavior_1k/基本使用流程.html">behavior_1k/基本使用流程.md</a></td>
+</tr>
+<tr class="odd">
+<td>BEHAVIOR BDDL 体系</td>
+<td><a href="behavior_1k/BDDL与任务体系.html">behavior_1k/BDDL与任务体系.md</a></td>
+</tr>
+<tr class="even">
+<td>OmniGibson 参考</td>
+<td><a href="behavior_1k/OmniGibson技术参考.html">behavior_1k/OmniGibson技术参考.md</a></td>
+</tr>
+<tr class="odd">
+<td>Meta Habitat</td>
+<td><a href="https://aihabitat.org/">https://aihabitat.org/</a></td>
+</tr>
+<tr class="even">
+<td>NVIDIA Isaac</td>
+<td><a href="../nvidia/总体介绍.html">../nvidia/总体介绍.md</a></td>
+</tr>
+</tbody>
+</table></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 为什么需要仿真</a></li><li><a class="" href="#2.-">2. 平台一览</a></li><li><a class="" href="#3.-">3. 选型维度</a></li><li><a class="" href="#4.-">4. 引擎与许可（摘要）</a></li><li><a class="" href="#5.-">5. 文档索引</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../site-paths.js"></script>
+  <script src="./nav.js"></script>
+  <script src="./vendor/mermaid.min.js"></script>
+  <script src="./mermaid-init.js"></script>
+</body>
+</html>

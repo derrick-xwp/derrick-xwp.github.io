@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>技术介绍 · ThreeDWorld</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-topbar">
+    <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>ThreeDWorld</h1>
+        
+      </div>
+      <div class="search-box">
+        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
+      </div>
+      <nav id="nav-root" aria-label="文档导航">
+<div class="nav-section"><div class="nav-section-title">ThreeDWorld</div>
+<a class="nav-link active" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Build+Controller、Clatter/Flex、Agent、LTS 状态</span></a>
+<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">pip、图像采集、Floorplan、远程 Build、FAQ</span></a>
+<a class="nav-link" href="多模态感知与数据集参考.html"><span class="nav-link-title">多模态感知与数据集参考</span><span class="nav-link-desc">Command/Output、Replicant、TDW-Image/Physics</span></a>
+</div>
+      </nav>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
+        <strong>ThreeDWorld</strong>
+      </header>
+      <div class="content-wrap">
+        <div class="article-panel">
+          <div class="breadcrumb"><span>ThreeDWorld</span> <span> / </span> <span>技术介绍</span></div>
+          <article class="article"><h1 id="threedworld-(tdw)-">ThreeDWorld (TDW) 技术介绍</h1>
+<blockquote>
+<p><strong>MIT</strong>（CBBM、McDermott Lab 等）· Unity Build + Python Controller · 多模态物理仿真<br />
+官网：<a href="https://www.threedworld.org/">threedworld.org</a> · 仓库：<a href="https://github.com/threedworld-mit/tdw">threedworld-mit/tdw</a> · 许可：<strong>MIT</strong><br />
+<strong>本地源码</strong>：<code>https://github.com/threedworld-mit/tdw/blob/master/</code>（与官方 master 同步；下文链接默认指向 GitHub）</p>
+</blockquote>
+<h2 id="1.-">1. 概述</h2>
+<p><strong>ThreeDWorld (TDW)</strong> 是 NeurIPS 2021 <strong>Datasets &amp; Benchmarks</strong> 发布的 <strong>通用多模态物理仿真平台</strong>，可在丰富 3D 环境中模拟 <strong>移动 agent 与物体</strong> 的高保真 <strong>视觉 + 音频 + 物理</strong> 交互。</p>
+<table>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th>TDW 特点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>跨模态同等地位</strong></td>
+<td>视觉与听觉均为一等公民；<strong>Clatter</strong> 物理驱动 impact/scrape 音效</td>
+</tr>
+<tr class="even">
+<td><strong>材质物理 breadth</strong></td>
+<td>PhysX 刚体 + <strong>NVIDIA Flex</strong> 软体/布料/流体 + <strong>Obi</strong> 粒子流体</td>
+</tr>
+<tr class="odd">
+<td><strong>API 粒度</strong></td>
+<td>200+ <strong>命令式</strong> JSON 指令 + <strong>Add-on</strong> 高层封装</td>
+</tr>
+<tr class="even">
+<td><strong>人类被试</strong></td>
+<td>VR（Oculus Touch / Leap Motion）、键盘鼠标 FirstPersonAvatar</td>
+</tr>
+<tr class="odd">
+<td><strong>程序化场景</strong></td>
+<td>Floorplan、<strong>ProcGenKitchen</strong>、室外场景、Asset Bundle 资产库</td>
+</tr>
+</tbody>
+</table>
+<p>论文：<a href="https://openreview.net/forum?id=db1InWAwW2T">ThreeDWorld (NeurIPS 2021 D&amp;B)</a> · <a href="https://arxiv.org/abs/2007.04954">arXiv:2007.04954</a></p>
+<blockquote>
+<p><strong>维护状态</strong>：官方仓库已进入 <strong>LTS</strong> 模式（<a href="https://github.com/threedworld-mit/tdw/pull/709">PR #709</a>），仅 minor 更新与 bug fix。</p>
+</blockquote>
+<hr />
+<h2 id="2.-python-">2. 仓库结构（Python 侧）</h2>
+<p>本地快照：<code>https://github.com/threedworld-mit/tdw/blob/master/</code>（1200+ 文件）。Build 为 Unity 编译产物，由 <code>pip install tdw</code> 自动下载；<strong>Controller 与 Add-on 源码</strong> 在 <code>Python/tdw/</code>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>路径</th>
+<th>作用</th>
+<th>GitHub</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/controller.py"><code>Python/tdw/controller.py</code></a></td>
+<td><strong><code>Controller</code></strong>：ZMQ socket、Build 启动、<code>communicate()</code></td>
+<td>核心</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/tdw_utils.py"><code>Python/tdw/tdw_utils.py</code></a></td>
+<td><code>create_empty_room</code>、<code>save_images</code>、spawn 辅助</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/threedworld-mit/tdw/tree/master/Python/tdw/add_ons"><code>Python/tdw/add_ons/</code></a></td>
+<td>40+ Add-on：<code>Replicant</code>、<code>Clatter</code>、<code>Floorplan</code>、<code>ImageCapture</code>…</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/threedworld-mit/tdw/tree/master/Python/tdw/replicant/actions"><code>Python/tdw/replicant/actions/</code></a></td>
+<td><code>MoveBy</code>、<code>Grasp</code>、<code>ReachFor</code> 等 action 状态机</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/threedworld-mit/tdw/tree/master/Python/tdw/output_data"><code>Python/tdw/output_data/</code></a></td>
+<td>FlatBuffers 反序列化：<code>Images</code>、<code>Transforms</code>、<code>Rigidbodies</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/librarian.py"><code>Python/tdw/librarian.py</code></a></td>
+<td><code>ModelLibrarian</code>、<code>SceneLibrarian</code> 资产查询</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/threedworld-mit/tdw/tree/master/Python/tdw/physics_audio"><code>Python/tdw/physics_audio/</code></a></td>
+<td>Clatter 材质、<code>ClatterObject</code>、<code>ImpactMaterial</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/threedworld-mit/tdw/tree/master/Python/example_controllers"><code>Python/example_controllers/</code></a></td>
+<td>按主题分类的示例控制器</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/threedworld-mit/tdw/tree/master/Documentation/lessons"><code>Documentation/lessons/</code></a></td>
+<td>官方教程树</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Documentation/api/command_api.md"><code>Documentation/api/command_api.md</code></a></td>
+<td>200+ 命令全文</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/setup.py"><code>setup.py</code></a> 依赖：<code>pyzmq</code>、<code>numpy</code>、<code>scipy</code>、<code>pillow</code>、<code>boto3</code>（Build 下载）、<code>ikpy</code>（Replicant IK）等。</p>
+<hr />
+<h2 id="3.-build-+-controller">3. 系统架构：Build + Controller</h2>
+<div class="mermaid">flowchart LR
+    PY[Python Controller<br/>tdw.controller] -->|ZMQ JSON| BUILD[Unity Build]
+    BUILD -->|FlatBuffers multipart| PY
+    PY --> ADD[add_ons 注入 commands]
+    ADD --> PY</div>
+<h3 id="3.1-controller-">3.1 Controller 初始化</h3>
+<p>默认 <strong>端口 1071</strong>；<code>launch_build=True</code> 时通过 <a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/backend/update.py"><code>Update.check_for_update</code></a> 下载/启动匹配版本 Build：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode 47:74:https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/controller.py"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1">    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, port: <span class="bu">int</span> <span class="op">=</span> <span class="dv">1071</span>, check_version: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>, launch_build: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>):</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">        <span class="va">self</span>.add_ons: List[AddOn] <span class="op">=</span> <span class="bu">list</span>()</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">        <span class="cf">if</span> check_version:</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">            can_launch_build <span class="op">=</span> Update.check_for_update(download_build<span class="op">=</span>launch_build)</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">        <span class="co"># ...</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">        <span class="cf">if</span> launch_build <span class="kw">and</span> can_launch_build:</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">            Controller.launch_build(port<span class="op">=</span>port)</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">        context <span class="op">=</span> zmq.Context()</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">        <span class="va">self</span>.socket <span class="op">=</span> context.socket(zmq.REP)</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">        <span class="va">self</span>.socket.bind(<span class="st">&#39;tcp://*:&#39;</span> <span class="op">+</span> <span class="bu">str</span>(port))</a></code></pre></div>
+<p>首帧 <code>communicate</code> 加载 <code>ProcGenScene</code> 并 <code>send_version</code> 校验 <strong>Python 模块版本 = Build 版本</strong>。</p>
+<h3 id="3.2-communicate()--add-on">3.2 <code>communicate()</code> 与 Add-on</h3>
+<p>每帧流程（<a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/controller.py"><code>controller.py</code> L98–136</a>）：</p>
+<ol>
+<li>未初始化 add-on → 追加 <code>get_initialization_commands()</code></li>
+<li>已初始化 add-on → 追加 <code>m.commands</code>（由上一帧 <code>on_send(resp)</code> 产生）</li>
+<li><code>before_send(commands)</code> 钩子</li>
+<li><code>json.dumps(commands)</code> → ZMQ <code>send_multipart</code></li>
+<li>接收 FlatBuffers <code>resp</code>；遇 <code>ftre</code>（FailedToReceive）自动重发（最多 1000 次）</li>
+</ol>
+<p><strong>Add-on 设计</strong>（<a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/add_on.py"><code>add_on.py</code></a>）：等价于 Command API 的常用封装——<strong>无 add-on 做不到的事</strong>，但降低样板代码。</p>
+<h3 id="3.3--output-">3.3 命令与 Output 模型</h3>
+<ul>
+<li><strong>Command</strong>：<code>{&quot;$type&quot;: &quot;set_screen_size&quot;, &quot;width&quot;: 1024, ...}</code></li>
+<li><strong>Output</strong>：默认仅帧号；需 <code>send_images</code> / <code>send_transforms</code> 等显式订阅</li>
+<li>类型识别：<code>OutputData.get_data_type_id(resp[i])</code> → <code>&quot;imag&quot;</code> / <code>&quot;tran&quot;</code> / <code>&quot;rigi&quot;</code> 等</li>
+</ul>
+<hr />
+<h2 id="4.-">4. 核心能力</h2>
+<h3 id="4.1-">4.1 视觉</h3>
+<p>PBR + HDRI、<code>InteriorSceneLighting</code>；pass：<code>_img</code>、<code>_id</code>、<code>_category</code>、<code>_depth</code>、<code>_flow</code>、<code>_normals</code>、<code>_albedo</code>、<code>_mask</code>。<br />
+大规模合成：<a href="https://github.com/alters-mit/tdw_image_dataset">alters-mit/tdw_image_dataset</a>（默认 130 万 train 图）。</p>
+<h3 id="4.2-clatter">4.2 音频（Clatter）</h3>
+<p><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/clatter.py"><code>Clatter</code></a> Add-on 封装 McDermott Lab 感知驱动 <strong>impact / scrape / roll</strong> 合成：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode 13:16:https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/clatter.py"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">class</span> Clatter(AddOn):</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="co">&quot;&quot;&quot;</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">    Initialize [Clatter](../../lessons/clatter/overview.html) in TDW.</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">    &quot;&quot;&quot;</span></a></code></pre></div>
+<p>关键参数：<code>simulation_amp</code>、<code>min_collision_speed</code>、<code>scrape_angle</code>、<code>resonance_audio</code>（空间化）。论文 TDW-Sound：Sound-20K 材质分类 <strong>0.34 → 0.66</strong>（TDW 预训练后）。</p>
+<h3 id="4.3-">4.3 物理栈</h3>
+<table>
+<thead>
+<tr class="header">
+<th>引擎</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>PhysX</strong></td>
+<td>刚体、Robot 关节、Replicant 碰撞推动</td>
+</tr>
+<tr class="even">
+<td><strong>NVIDIA Flex</strong></td>
+<td>软体/布/流体（Linux 需高端 NVIDIA GPU；已停更）</td>
+</tr>
+<tr class="odd">
+<td><strong>Obi</strong></td>
+<td>流体/风/布替代路径</td>
+</tr>
+</tbody>
+</table>
+<p>高级物理数据集：<a href="https://github.com/alters-mit/tdw_physics">alters-mit/tdw_physics</a> → <code>.hdf5</code> trial。</p>
+<h3 id="4.4-">4.4 语义状态</h3>
+<p><strong>无 AI2-THOR 式内置 FSM</strong>；需 <code>Raycast</code> / <code>Overlap</code> / <code>ContainerManager</code> / <code>TriggerCollisionManager</code> + 自定义阈值（见 <a href="https://github.com/threedworld-mit/tdw/tree/master/Documentation/lessons/semantic_states">openness 教程</a>）。</p>
+<hr />
+<h2 id="5.-agent-">5. Agent 与交互</h2>
+<h3 id="5.1-replicant">5.1 Replicant</h3>
+<p><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/replicant.py"><code>Replicant</code></a> 类文档：</p>
+<blockquote>
+<p>A Replicant is an able-bodied human-like agent … <strong>pseudo-physics</strong> … movements are driven by <strong>non-physics animation</strong> … can walk, turn, reach, grasp, drop, turn its head.</p>
+</blockquote>
+<p>初始化注入 <code>add_replicant_rigidbody</code> + IK 空物体（L33–44）。<strong>非 avatar</strong>，不可用 avatar 相机命令。</p>
+<table>
+<thead>
+<tr class="header">
+<th>方法</th>
+<th>对应 action 类</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>move_by</code> / <code>move_to</code></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/replicant/actions/move_by.py"><code>MoveBy</code></a></td>
+</tr>
+<tr class="even">
+<td><code>grasp</code> / <code>drop</code></td>
+<td><code>Grasp</code> / <code>Drop</code></td>
+</tr>
+<tr class="odd">
+<td><code>reach_for</code></td>
+<td><code>ReachFor</code> / <code>ReachForWithPlan</code></td>
+</tr>
+</tbody>
+</table>
+<p>动作仅 <strong>启动</strong>；须循环 <code>communicate([])</code> 直至 <code>ActionStatus</code> 非 <code>ongoing</code>（见 <a href="基本使用流程.html">基本使用流程.md</a> §6）。</p>
+<h3 id="5.2--agent">5.2 其他 Agent</h3>
+<table>
+<thead>
+<tr class="header">
+<th>类型</th>
+<th>源码 / 仓库</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Robot / RobotArm</strong></td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/robot.py"><code>add_ons/robot.py</code></a></td>
+</tr>
+<tr class="even">
+<td><strong>Magnebot</strong></td>
+<td><a href="https://github.com/alters-mit/magnebot">alters-mit/magnebot</a></td>
+</tr>
+<tr class="odd">
+<td><strong>Vehicle / Drone</strong></td>
+<td><code>add_ons/vehicle.py</code>、<code>drone.py</code></td>
+</tr>
+<tr class="even">
+<td><strong>VR</strong></td>
+<td><code>add_ons/vr.py</code>、<code>oculus_touch.py</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6.-">6. 场景与资产</h2>
+<table>
+<thead>
+<tr class="header">
+<th>方式</th>
+<th>Add-on / API</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>空房间</td>
+<td><code>TDWUtils.create_empty_room(w, l)</code> → <code>create_exterior_walls</code></td>
+</tr>
+<tr class="even">
+<td>Floorplan</td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/floorplan.py"><code>Floorplan.init_scene(scene, layout)</code></a> — <code>1a–5c</code> × layout <code>0–2</code></td>
+</tr>
+<tr class="odd">
+<td>ProcGenKitchen</td>
+<td><a href="https://github.com/threedworld-mit/tdw/blob/master/Python/tdw/add_ons/proc_gen_kitchen.py"><code>ProcGenKitchen</code></a></td>
+</tr>
+<tr class="even">
+<td>流式场景</td>
+<td><code>add_scene</code> + <code>SceneLibrarian</code></td>
+</tr>
+<tr class="odd">
+<td>自定义</td>
+<td>Asset Bundle Creator；ShapeNet / URDF composite</td>
+</tr>
+</tbody>
+</table>
+<p>资产托管 S3；<code>ModelLibrarian</code> 读取 <code>models_core.json</code> / <code>models_full.json</code> / <code>models_flex.json</code>。</p>
+<hr />
+<h2 id="7.-">7. 官方数据集</h2>
+<table>
+<thead>
+<tr class="header">
+<th>数据集</th>
+<th>规模</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>TDW-Image</strong></td>
+<td>130 万 train + 5 万 val</td>
+<td><a href="https://github.com/alters-mit/tdw_image_dataset">tdw_image_dataset</a></td>
+</tr>
+<tr class="even">
+<td><strong>TDW-Sound</strong></td>
+<td>5 材质 × 多物体 × 多 drop 高度</td>
+<td>Clatter 录制</td>
+</tr>
+<tr class="odd">
+<td><strong>TDW-Physics / Physion</strong></td>
+<td>刚体/软体/布/流体 + RGB/depth/audio</td>
+<td><a href="https://github.com/alters-mit/tdw_physics">tdw_physics</a></td>
+</tr>
+</tbody>
+</table>
+<p>论文 Table 2：TDW-Image 预训练 ResNet-50 细粒度 <strong>0.76</strong>，接近 ImageNet <strong>0.78</strong>。</p>
+<hr />
+<h2 id="8.-">8. 与同类平台对比</h2>
+<table>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th>TDW</th>
+<th>AI2-THOR</th>
+<th>Habitat</th>
+<th>ManiSkill</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>物理驱动音频</td>
+<td>✅ Clatter</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr class="even">
+<td>流体/布料</td>
+<td>✅ Flex/Obi</td>
+<td>有限</td>
+<td>有限</td>
+<td>刚体为主</td>
+</tr>
+<tr class="odd">
+<td>语义状态机</td>
+<td>需自建</td>
+<td>✅</td>
+<td>任务定义</td>
+<td>reward</td>
+</tr>
+<tr class="even">
+<td>API</td>
+<td>JSON + add-on</td>
+<td>step(action)</td>
+<td>habitat.Env</td>
+<td>Gymnasium</td>
+</tr>
+<tr class="odd">
+<td>RL 吞吐</td>
+<td>中等</td>
+<td>中等</td>
+<td><strong>极高</strong></td>
+<td><strong>GPU 极高</strong></td>
+</tr>
+<tr class="even">
+<td>维护</td>
+<td><strong>LTS</strong></td>
+<td>活跃</td>
+<td>活跃</td>
+<td>活跃</td>
+</tr>
+</tbody>
+</table>
+<p><strong>选型</strong>：视听联合 / 材质从声音推断 → <strong>TDW</strong>；大规模操作 RL → ManiSkill / Isaac；开冰箱烹饪状态 → AI2-THOR / BEHAVIOR。</p>
+<hr />
+<h2 id="9.-">9. 相关仓库</h2>
+<table>
+<thead>
+<tr class="header">
+<th>仓库</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/threedworld-mit/tdw">threedworld-mit/tdw</a></td>
+<td>主平台</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/alters-mit/tdw_image_dataset">alters-mit/tdw_image_dataset</a></td>
+<td>TDW-Image</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/alters-mit/tdw_physics">alters-mit/tdw_physics</a></td>
+<td>Physion / HDF5</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/alters-mit/magnebot">alters-mit/magnebot</a></td>
+<td>Magnebot</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/alters-mit/clatter">alters-mit/clatter</a></td>
+<td>Clatter C# 库</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10.-">10. 文档导航（本站）</h2>
+<table>
+<thead>
+<tr class="header">
+<th>文档</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="基本使用流程.html">基本使用流程.md</a></td>
+<td>pip、首跑、图像、Floorplan、Replicant、远程 Build、FAQ</td>
+</tr>
+<tr class="even">
+<td><a href="多模态感知与数据集参考.html">多模态感知与数据集参考.md</a></td>
+<td>Command/Output、Clatter、Replicant 状态机、tdw_physics、Add-on 索引</td>
+</tr>
+</tbody>
+</table>
+<p><strong>官方</strong>：<a href="https://github.com/threedworld-mit/tdw/tree/master/Documentation/lessons">Documentation/lessons</a> · <a href="https://github.com/threedworld-mit/tdw/tree/master/Python/example_controllers">example_controllers</a></p></article>
+        </div>
+        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.-">1. 概述</a></li><li><a class="" href="#2.-python-">2. 仓库结构（Python 侧）</a></li><li><a class="" href="#3.-build-+-controller">3. 系统架构：Build + Controller</a></li><li><a class="level-3" href="#3.1-controller-">3.1 Controller 初始化</a></li><li><a class="level-3" href="#3.2-communicate()--add-on">3.2 communicate() 与 Add-on</a></li><li><a class="level-3" href="#3.3--output-">3.3 命令与 Output 模型</a></li><li><a class="" href="#4.-">4. 核心能力</a></li><li><a class="level-3" href="#4.1-">4.1 视觉</a></li><li><a class="level-3" href="#4.2-clatter">4.2 音频（Clatter）</a></li><li><a class="level-3" href="#4.3-">4.3 物理栈</a></li><li><a class="level-3" href="#4.4-">4.4 语义状态</a></li><li><a class="" href="#5.-agent-">5. Agent 与交互</a></li><li><a class="level-3" href="#5.1-replicant">5.1 Replicant</a></li><li><a class="level-3" href="#5.2--agent">5.2 其他 Agent</a></li><li><a class="" href="#6.-">6. 场景与资产</a></li><li><a class="" href="#7.-">7. 官方数据集</a></li><li><a class="" href="#8.-">8. 与同类平台对比</a></li><li><a class="" href="#9.-">9. 相关仓库</a></li><li><a class="" href="#10.-">10. 文档导航（本站）</a></li></ul></aside>
+      </div>
+    </div>
+  </div>
+  <script src="../../../site-paths.js"></script>
+  <script src="../nav.js"></script>
+  <script src="../vendor/mermaid.min.js"></script>
+  <script src="../mermaid-init.js"></script>
+</body>
+</html>
