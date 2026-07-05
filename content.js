@@ -82,6 +82,18 @@ window.RESUME = {
       loadErrorLabel: '加载失败，请刷新页面重试。',
       defaultOpen: true
     },
+    pipelineSeries: {
+      title: '具身智能训练场景构建 Pipeline',
+      summary: '从任务生成、资产生成、仿真装配到 Policy-Ready Data Engine；筛选最完整可行的少数主线论文，拼出可训练技术路线。',
+      seriesBadge: 'Pipeline',
+      paperCountLabel: '主线 8 篇',
+      overviewUrl: 'pipeline/training-pipeline-survey.html',
+      fullArticleUrl: 'pipeline/training-pipeline-survey.html',
+      viewFullArticle: '查看完整交互页 →',
+      loadingLabel: '正在加载 Pipeline 内容…',
+      loadErrorLabel: '加载失败，请打开完整文章页查看。',
+      defaultOpen: true
+    },
     methodLandscapeSeries: {
       title: '全链条方法图谱：完整度、平台族与工程现实',
       summary: '从 Task 到 Real Transfer 七维完整度；平台族聚类、兼容度与算力门槛；17 篇代表方法可交互对比。',
@@ -95,6 +107,14 @@ window.RESUME = {
       defaultOpen: true
     },
     blogs: [
+      {
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: '具身智能训练场景构建 Pipeline',
+        summary: '从任务生成到 Policy-Ready Data Engine；主线 8 篇论文的端到端技术路线与交互排序表。',
+        link: 'blogs/#pipeline',
+        tags: ['具身智能', 'Pipeline', 'Task Generation', 'Policy-Ready']
+      },
       {
         date: '2026-07',
         dateLabel: '2026年7月',
@@ -342,6 +362,18 @@ window.RESUME = {
       loadErrorLabel: '載入失敗，請刷新頁面重試。',
       defaultOpen: true
     },
+    pipelineSeries: {
+      title: '具身智能訓練場景構建 Pipeline',
+      summary: '從任務生成、資產生成、仿真裝配到 Policy-Ready Data Engine；篩選最完整可行的少數主線論文。',
+      seriesBadge: 'Pipeline',
+      paperCountLabel: '主線 8 篇',
+      overviewUrl: 'pipeline/training-pipeline-survey.html',
+      fullArticleUrl: 'pipeline/training-pipeline-survey.html',
+      viewFullArticle: '查看完整互動頁 →',
+      loadingLabel: '正在載入 Pipeline 內容…',
+      loadErrorLabel: '載入失敗，請打開完整文章頁查看。',
+      defaultOpen: true
+    },
     methodLandscapeSeries: {
       title: '全鏈條方法圖譜：完整度、平台族與工程現實',
       summary: '從 Task 到 Real Transfer 七維完整度；平台族聚類、兼容度與算力門檻；17 篇代表方法可互動對比。',
@@ -475,6 +507,18 @@ window.RESUME = {
       overviewUrl: 'policy-data/policy-data-survey.html',
       loadingLabel: 'Loading survey content…',
       loadErrorLabel: 'Failed to load. Please refresh.',
+      defaultOpen: true
+    },
+    pipelineSeries: {
+      title: 'Embodied Training Scene Pipeline',
+      summary: 'From task generation to Policy-Ready Data Engine; curated mainline papers forming an end-to-end trainable route.',
+      seriesBadge: 'Pipeline',
+      paperCountLabel: '8 mainline',
+      overviewUrl: 'pipeline/training-pipeline-survey.html',
+      fullArticleUrl: 'pipeline/training-pipeline-survey.html',
+      viewFullArticle: 'View full interactive page →',
+      loadingLabel: 'Loading pipeline content…',
+      loadErrorLabel: 'Failed to load. Open full article.',
       defaultOpen: true
     },
     methodLandscapeSeries: {
@@ -645,6 +689,18 @@ window.RESUME = {
       loadErrorLabel: '読み込みに失敗しました。',
       defaultOpen: true
     },
+    pipelineSeries: {
+      title: '具身知能トレーニングシーン構築 Pipeline',
+      summary: 'タスク生成から Policy-Ready Data Engine まで；訓練可能な少数主線論文の技術ルート。',
+      seriesBadge: 'Pipeline',
+      paperCountLabel: '主線 8 編',
+      overviewUrl: 'pipeline/training-pipeline-survey.html',
+      fullArticleUrl: 'pipeline/training-pipeline-survey.html',
+      viewFullArticle: '完全版を見る →',
+      loadingLabel: 'Pipeline を読み込み中…',
+      loadErrorLabel: '読み込み失敗。完全版を開いてください。',
+      defaultOpen: true
+    },
     methodLandscapeSeries: {
       title: '全チェーン方法マップ：完全性・プラットフォーム族・工学現実',
       summary: 'Task から Real Transfer まで 7 次元；プラットフォームクラスタ・互換性・計算コスト；17 手法の対話型比較。',
@@ -813,6 +869,18 @@ window.RESUME = {
       loadErrorLabel: '불러오기 실패.',
       defaultOpen: true
     },
+    pipelineSeries: {
+      title: '체화 지능 훈련 장면 구축 Pipeline',
+      summary: '작업 생성부터 Policy-Ready Data Engine까지；훈련 가능한 소수 주선 논문 기술 루트.',
+      seriesBadge: 'Pipeline',
+      paperCountLabel: '주선 8편',
+      overviewUrl: 'pipeline/training-pipeline-survey.html',
+      fullArticleUrl: 'pipeline/training-pipeline-survey.html',
+      viewFullArticle: '전체 페이지 보기 →',
+      loadingLabel: 'Pipeline 불러오는 중…',
+      loadErrorLabel: '불러오기 실패. 전체 페이지를 여세요.',
+      defaultOpen: true
+    },
     methodLandscapeSeries: {
       title: '전체 체인 방법 지도: 완전성·플랫폼족·엔지니어링 현실',
       summary: 'Task→Real Transfer 7차원；플랫폼 클러스터·호환성·연산 비용；17개 방법 대화형 비교.',
@@ -979,6 +1047,18 @@ window.RESUME = {
       overviewUrl: 'policy-data/policy-data-survey.html',
       loadingLabel: 'กำลังโหลดเนื้อหา…',
       loadErrorLabel: 'โหลดไม่สำเร็จ',
+      defaultOpen: true
+    },
+    pipelineSeries: {
+      title: 'Pipeline การสร้างฉากฝึก Embodied',
+      summary: 'จากการสร้างงานสู่ Policy-Ready Data Engine；เส้นทางเทคนิคจากงานวิจัยหลักที่คัดแล้ว',
+      seriesBadge: 'Pipeline',
+      paperCountLabel: 'หลัก 8 บทความ',
+      overviewUrl: 'pipeline/training-pipeline-survey.html',
+      fullArticleUrl: 'pipeline/training-pipeline-survey.html',
+      viewFullArticle: 'ดูหน้าเต็ม →',
+      loadingLabel: 'กำลังโหลด Pipeline…',
+      loadErrorLabel: 'โหลดไม่สำเร็จ เปิดหน้าเต็ม',
       defaultOpen: true
     },
     methodLandscapeSeries: {

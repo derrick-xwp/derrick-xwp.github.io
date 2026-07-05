@@ -6,6 +6,7 @@
   var COLLAPSE_KEY_WORLD_MODEL = 'blog-world-model-open';
   var COLLAPSE_KEY_POLICY_DATA = 'blog-policy-data-open';
   var COLLAPSE_KEY_METHOD_LANDSCAPE = 'blog-method-landscape-open';
+  var COLLAPSE_KEY_PIPELINE = 'blog-pipeline-open';
 
   function homeBase() {
     if (window.SITE_PATHS && window.SITE_PATHS.home) return window.SITE_PATHS.home;
@@ -325,9 +326,30 @@
       if (!href || /^https?:\/\//.test(href) || href.charAt(0) === '#') return;
       if (href.indexOf('policy-data/') === 0 || href.indexOf('training-env/') === 0) return;
       if (href.indexOf('world-model/') === 0 || href.indexOf('method-landscape/') === 0) return;
+      if (href.indexOf('pipeline/') === 0) return;
       if (href.indexOf('embodied-platforms/') === 0 || href.indexOf('nvidia/') === 0) return;
       if (href.indexOf('../') === 0) return;
     });
+  }
+
+  function fixPipelineOverviewLinks(root) {
+    if (!root) return;
+    root.querySelectorAll('a[href]').forEach(function (a) {
+      var href = a.getAttribute('href');
+      if (!href || /^https?:\/\//.test(href) || href.charAt(0) === '#') return;
+      if (href.indexOf('pipeline/') === 0 || href.indexOf('policy-data/') === 0) return;
+      if (href.indexOf('training-env/') === 0 || href.indexOf('method-landscape/') === 0) return;
+      if (href.indexOf('world-model/') === 0) return;
+      if (href.indexOf('embodied-platforms/') === 0 || href.indexOf('nvidia/') === 0) return;
+      if (href.indexOf('../') === 0) return;
+    });
+  }
+
+  function enhancePipelineOverviewArticle(root) {
+    if (!root) return;
+    var hero = root.querySelector('.te-hero');
+    if (hero) hero.remove();
+    wrapOverviewSections(root, '.te-section');
   }
 
   function fixMethodLandscapeOverviewLinks(root) {
@@ -396,6 +418,23 @@
       script.onerror = reject;
       document.head.appendChild(script);
     });
+  }
+
+  function ensurePipelineInteractive(scope) {
+    if (!scope || !scope.querySelector('#pipeline-method-table-root')) return;
+    var base = platformHref('pipeline/');
+    loadScriptOnce(base + 'pipelineMethods.js', function () {
+      return !!window.PipelineMethods;
+    })
+      .then(function () {
+        return loadScriptOnce(base + 'pipeline-view.js', function () {
+          return !!window.initPipelineView;
+        });
+      })
+      .then(function () {
+        if (window.initPipelineView) window.initPipelineView(scope);
+      })
+      .catch(function () { /* ignore */ });
   }
 
   function ensureMethodLandscapeInteractive(scope) {
@@ -508,9 +547,12 @@
     if (overviewRootId === 'blog-training-overview') {
       ensureTrainingEnvInteractive(wrap);
     }
-    if (overviewRootId === 'blog-method-landscape-overview') {
-      ensureMethodLandscapeInteractive(wrap);
-    }
+        if (overviewRootId === 'blog-method-landscape-overview') {
+          ensureMethodLandscapeInteractive(wrap);
+        }
+        if (overviewRootId === 'blog-pipeline-overview') {
+          ensurePipelineInteractive(wrap);
+        }
     if (series.viewFullArticle && (series.fullArticleUrl || series.overviewUrl)) {
       var fullLink = document.createElement('p');
       fullLink.className = 'blog-embodied-full-link';
@@ -597,6 +639,16 @@
     );
   }
 
+  function loadPipelineOverview(series) {
+    loadSeriesOverview(
+      series,
+      'blog-pipeline-overview',
+      fixPipelineOverviewLinks,
+      enhancePipelineOverviewArticle,
+      platformHref('pipeline/')
+    );
+  }
+
   function loadMethodLandscapeOverview(series) {
     loadSeriesOverview(
       series,
@@ -670,6 +722,40 @@
         '</summary>' +
         '<div class="blog-collapsible-body">' +
           '<div class="blog-embodied-overview" id="blog-world-model-overview" aria-live="polite"></div>' +
+        '</div>' +
+      '</details>'
+    );
+  }
+
+  function renderPipelinePanel(d) {
+    var series = d.pipelineSeries;
+    if (!series || !series.overviewUrl) return '';
+
+    var paperCount = series.paperCountLabel || '主线 8 篇';
+    var defaultOpen = series.defaultOpen !== false;
+    try {
+      var stored = localStorage.getItem(COLLAPSE_KEY_PIPELINE);
+      if (stored !== null) defaultOpen = stored === 'true';
+    } catch (e) { /* ignore */ }
+
+    if (window.location.hash === '#pipeline') defaultOpen = true;
+
+    return (
+      '<details class="blog-collapsible" id="blog-pipeline-collapsible"' + (defaultOpen ? ' open' : '') + '>' +
+        '<summary class="blog-collapsible-summary">' +
+          '<div class="blog-collapsible-head">' +
+            '<div class="blog-collapsible-text">' +
+              '<span class="blog-collapsible-badge">' + (series.seriesBadge || 'Pipeline') + '</span>' +
+              '<span class="blog-collapsible-title">' + (series.title || '') + '</span>' +
+            '</div>' +
+            '<div class="blog-collapsible-meta">' +
+              '<span class="blog-collapsible-count">' + paperCount + '</span>' +
+              '<span class="blog-collapsible-chevron" aria-hidden="true"></span>' +
+            '</div>' +
+          '</div>' +
+        '</summary>' +
+        '<div class="blog-collapsible-body">' +
+          '<div class="blog-embodied-overview" id="blog-pipeline-overview" aria-live="polite"></div>' +
         '</div>' +
       '</details>'
     );
@@ -806,18 +892,21 @@
 
     root.innerHTML =
       renderPolicyDataPanel(d) +
+      renderPipelinePanel(d) +
       renderMethodLandscapePanel(d) +
       renderTrainingEnvPanel(d) +
       renderWorldModelPanel(d) +
       renderEmbodiedPanelHtml(d);
 
     bindCollapsiblePersistence('blog-policy-data-collapsible', COLLAPSE_KEY_POLICY_DATA);
+    bindCollapsiblePersistence('blog-pipeline-collapsible', COLLAPSE_KEY_PIPELINE);
     bindCollapsiblePersistence('blog-method-landscape-collapsible', COLLAPSE_KEY_METHOD_LANDSCAPE);
     bindCollapsiblePersistence('blog-training-collapsible', COLLAPSE_KEY_TRAINING);
     bindCollapsiblePersistence('blog-world-model-collapsible', COLLAPSE_KEY_WORLD_MODEL);
     bindCollapsiblePersistence('blog-embodied-collapsible', COLLAPSE_KEY);
 
     if (d.policyDataSeries) loadPolicyDataOverview(d.policyDataSeries);
+    if (d.pipelineSeries) loadPipelineOverview(d.pipelineSeries);
     if (d.methodLandscapeSeries) loadMethodLandscapeOverview(d.methodLandscapeSeries);
     if (d.trainingEnvSeries) loadTrainingEnvOverview(d.trainingEnvSeries);
     if (d.worldModelSeries) loadWorldModelOverview(d.worldModelSeries);
@@ -831,6 +920,16 @@
         policyEl.open = true;
         setTimeout(function () {
           policyEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
+      }
+    }
+
+    if (window.location.hash === '#pipeline') {
+      var pipelineEl = document.getElementById('blog-pipeline-collapsible');
+      if (pipelineEl) {
+        pipelineEl.open = true;
+        setTimeout(function () {
+          pipelineEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 120);
       }
     }

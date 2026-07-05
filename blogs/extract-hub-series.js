@@ -14,6 +14,7 @@ const KEYS = [
   'trainingEnvSeries',
   'worldModelSeries',
   'policyDataSeries',
+  'pipelineSeries',
   'methodLandscapeSeries',
 ];
 
