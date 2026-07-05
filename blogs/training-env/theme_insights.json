@@ -1,0 +1,376 @@
+{
+  "theme-agentic": {
+    "route_intro": "本主题论文共享一条生成式技术路线：以自然语言或任务描述为条件，由大模型/多智能体担任编排器，调度布局生成、Text-to-3D、资产检索等异构工具，并在 Simulator-in-the-loop 或 VLM Critic 闭环中迭代修正语义与物理违规，最终导出 Isaac/USD/Gymnasium 等可部署仿真环境，部分工作进一步完成策略训练验证。",
+    "challenges": [
+      "多生成器编排的长链路易累积语义/物理错误，Critic 闭环质量高度依赖评测器可靠性",
+      "单次场景需多次 VLM 调用 + Text-to-3D + 仿真器内物理检验，规模化成本显著高于程序化生成",
+      "跨仿真器（Isaac / Drake / 多后端）的资产与关节参数对齐仍缺统一标准"
+    ],
+    "research_questions": [
+      "智能体编排能否在开放词汇任务下稳定产出 Sim-Ready USD/URDF，而非仅视觉合理布局？",
+      "Simulator-in-the-loop 物理 Critic 与视觉/语义 Critic 如何加权，才能兼顾可训练性？",
+      "自动合成演示数据（IK + 抓取规划）能否替代部分真机遥操作？"
+    ],
+    "future_trends": [
+      "MCP 式工具生态扩展（布局、T2-3D、物理检验模块化接入）",
+      "可训练编排器（SceneOrchestra）替代逐步 execute-review-reflect，降低工具调用延迟",
+      "环境生成与策略学习协同演化（SimWorld Studio co-evolution 课程）",
+      "大规模场景数据集（如 SAGE-10k）驱动策略 scaling law 验证",
+      "与重建式管线融合：图像条件场景 + Agent 修补物理违规"
+    ],
+    "compute": "单场景通常需数分钟至数十分钟（多轮 LLM/VLM + 资产生成 + Isaac 等物理回环）；批量生成 10k 级场景需多 GPU 集群与流水线并行。内存主要消耗在 T2-3D 与仿真渲染。",
+    "generality": "范式专用（生成式），语言/任务条件泛化较强；场景类型以室内为主，室外与工厂场景仍待验证。仿真就绪度在三主线中最高。",
+    "industry": "早期产业落地：NVIDIA Cosmos Lab 发布 SAGE 与 SAGE-10k；MIT CSAIL × Toyota Research Institute 的 SceneSmith 进入公开评测与媒体报导；RoboGen 开源 propose-generate-learn 管线；SimWorld Studio 基于 UE5 提供 Gym 导出与开源平台；SceneWeaver、SceneOrchestra 等仍处学术阶段。",
+    "news": [
+      {
+        "title": "MIT CSAIL：SceneSmith 用 AI 智能体为机器人构建虚拟训练场",
+        "source": "MIT CSAIL",
+        "url": "https://www.csail.mit.edu/news/ai-agents-create-virtual-playgrounds-help-robots-get-crucial-training-data",
+        "date": "2026"
+      },
+      {
+        "title": "NVIDIA SAGE：可扩展智能体 3D 场景生成与 SAGE-10k 数据集",
+        "source": "NVIDIA Cosmos Lab",
+        "url": "https://research.nvidia.com/labs/cosmos-lab/sage/",
+        "date": "2026"
+      },
+      {
+        "title": "综述：具身仿真 3D 生成将 Agent 闭环与物理检验标为前沿方向",
+        "source": "arXiv Survey",
+        "url": "https://arxiv.org/html/2604.26509v1",
+        "date": "2026"
+      }
+    ]
+  },
+  "theme-layout": {
+    "route_intro": "本主题聚焦生成式室内场景的布局合成闭环：以语言、户型、场景图或程序化参数为条件，经 ③ 场景表示（物体集合、Scene Graph、语义图、动态操作图）与 ④ 布局生成（LLM 规划、自回归 Transformer、扩散、程序化），再施加 ⑤ 物理约束（隐式、采样、可微引导或引擎规则）；仅 Holodeck、PhyScene、ProcTHOR、DynScene 等少数工作贯通 ⑥ 仿真装配与 ⑦ 策略验证，其余多止于布局网格或轻量渲染，构成「生成→物理→仿真→训练→反馈增广」的局部闭环。",
+    "challenges": [
+      "多数工作止于布局/网格导出，未贯通 ⑥ 装配与 ⑦ 策略训练",
+      "扩散/场景图模型的物理约束多为隐式或后处理，支撑关系与碰撞仍易违规",
+      "Holodeck 等依赖 GPT-4 与 Objaverse 检索，成本与许可约束商业化"
+    ],
+    "research_questions": [
+      "布局级生成如何与 Sim-Ready 资产管线（URDF/USD）自动对接？",
+      "场景图扩散能否在保持多样性的同时保证可交互物体状态机（如 AI2-THOR）？",
+      "程序化（ProcTHOR）与学习型布局的性价比边界在哪里？"
+    ],
+    "future_trends": [
+      "物理引导扩散（PhyScene、SPREAD）与布局-资产联合生成",
+      "场景图扩散信息回声（EchoScene）与级联布局扩散（CasLayout）提升可控性",
+      "动态操作场景（DynScene）从静态房间走向任务驱动布局",
+      "LLM 程序合成 + 不确定性感知布局（LayoutGPT 类）与 Critic 闭环结合"
+    ],
+    "compute": "Holodeck 类：每场景多次 GPT-4 调用 + 布局求解，中等算力；扩散训练需单卡至多卡 GPU；ProcTHOR 程序化生成算力最低，可百万级房间离线生成。",
+    "generality": "室内场景泛化较好，跨建筑风格与开放词汇布局能力强；但仿真部署链路不完整，通用「训练环境」能力弱于智能体编排主线。",
+    "industry": "Allen AI Holodeck + AI2-THOR 生态仍被广泛使用；ProcTHOR 为学术界大规模 RL 基线；PhyScene/DiffuScene 等多为论文开源，工业界更多将其作为数据增广而非生产管线。",
+    "news": [
+      {
+        "title": "Holodeck：语言驱动 3D 具身环境生成（CVPR 2024）",
+        "source": "Allen AI / CVPR",
+        "url": "https://yueyang1996.github.io/holodeck/",
+        "date": "2024"
+      },
+      {
+        "title": "ProcTHOR：大规模程序化具身场景仍为标准对比基线",
+        "source": "Allen AI",
+        "url": "https://procthor.allenai.org/",
+        "date": "2022–2025"
+      }
+    ]
+  },
+  "theme-assets": {
+    "route_intro": "本主题为支撑层资产管线：为 ④ 生成与 ⑥ 装配提供 Sim-Ready 的 mesh、URDF、USD。ArtVIP 以专业建模与动捕标定策展 USD 关节资产；SimFoundry 以可插拔 foundation model 从视频重建数字孪生并完成 sim↔real 评测。生成式编排路线见 §3.6。",
+    "challenges": [
+      "Text/Image-to-3D 网格的水密性、碰撞体与质量/摩擦参数估计",
+      "关节物体 URDF 的关节轴、限位与驱动接口一致性",
+      "资产许可、版本管理与 Sim-Ready 策展流程缺失行业标准"
+    ],
+    "research_questions": [
+      "生成资产何时可视为「默认可仿真」而无需人工修补？",
+      "模块化交互资产（ArtVIP）能否跨 Isaac/MuJoCo/SAPIEN 自动转换？",
+      "视频驱动场景工厂（SimFoundry）能否替代人工 USD 搭建？"
+    ],
+    "future_trends": [
+      "世界引擎式一站式生成（布局+物体+关节+物理标注）",
+      "与 NVIDIA SimReady / OpenUSD 规范深度对齐",
+      "资产库 + 检索增强生成（RAG）服务智能体编排主线"
+    ],
+    "compute": "单物体 Text-to-3D 约数分钟（A100 级）；批量资产库构建可离线并行；运行时以存储与加载为主，算力低于场景级 Agent 闭环。",
+    "generality": "支撑层，生成式/重建式均可接入；是提升全流水线通用性的关键横切能力。",
+    "industry": "NVIDIA SimReady 与 Omniverse 资产管线推动产业采纳；ArtVIP 等仍偏学术资产库。SimFoundry 展示视频→模块化场景工厂路径。生成式编排见 EmbodiedGen（§3.6）。",
+    "news": [
+      {
+        "title": "NVIDIA：SimReady 资产与 OpenUSD 机器人工作流",
+        "source": "NVIDIA Developer Blog",
+        "url": "https://developer.nvidia.com/blog/build-synthetic-data-pipelines-to-train-smarter-robots-with-nvidia-isaac-sim/",
+        "date": "2025"
+      }
+    ]
+  },
+  "theme-r2sim-compose": {
+    "route_intro": "本主题属于重建式主线 B：以 RGB 视频、单图或城市漫游等多源真实观测为输入，经 ② 感知重建（实例分割、深度、3DGS/网格）与 ③ 场景分解，将静态几何与语义关系组合为可仿真场景；部分工作引入物理引擎 in-the-loop（SimuScene、Phi-Scene）修正布局，最终装配至 Isaac/SAPIEN/城市导航仿真器，侧重组合式而非逐物体关节恢复。",
+    "challenges": [
+      "真实视频/图像实例分割与深度误差导致组合装配失败",
+      "静态组合场景难以覆盖可动部件与动态交互",
+      "光度真实（3DGS）与碰撞网格/动力学一致性难以同时满足",
+      "单图/稀疏视角组合后易出现穿透、悬浮等物理违规（SimuScene、Phi-Scene）"
+    ],
+    "research_questions": [
+      "组合式重建能否在未见房间布局上零样本部署策略？",
+      "室外大场景（WANDERLAND、Vid2Sim）与室内操作场景的重建范式能否统一？",
+      "物理引擎是否应嵌入重建回路而非仅作后处理布局修正（SimuScene vs Phi-Scene）？",
+      "Re3Sim 类光度真实数据能否缩小 sim2real 而不牺牲物理正确性？"
+    ],
+    "future_trends": [
+      "SimReady 组合重建（SimRecon）对接 Isaac/SAPIEN 标准",
+      "单视频/单图交互 Digital Twin（HoloScene、SimuScene）走向实时仿真",
+      "视频→城市导航仿真（Vid2Sim）与度量户外重建（WANDERLAND）融合",
+      "重建 + Agent 修补的混合管线"
+    ],
+    "compute": "每段视频/单图场景重建：数 GPU·小时（感知+组合优化+物理回路）；WANDERLAND 等城市尺度更高；装配后仿真取决于后端引擎。",
+    "generality": "重建式专用，依赖真实观测；对固定场景孪生能力强，跨场景泛化需大量数据增广；单图路线（SimuScene、Phi-Scene）条件更窄但部署更快。",
+    "industry": "SimRecon（CVPR 2026 Highlight）代表 NVIDIA 研究方向；Vid2Sim（CVPR 2025）提供可扩展城市 real2sim 数据集；HoloScene/Re3Sim 仍主要在学术与原型验证。",
+    "news": [
+      {
+        "title": "SimRecon：从真实视频到 Sim-Ready 组合场景（CVPR 2026）",
+        "source": "Project Page",
+        "url": "https://xiac20.github.io/SimRecon/",
+        "date": "2026"
+      },
+      {
+        "title": "SimuScene：物理在环的单图 Sim-Ready 组合场景重建",
+        "source": "SNU VCLab",
+        "url": "https://snuvclab.github.io/SimuScene/",
+        "date": "2026"
+      },
+      {
+        "title": "Vid2Sim：单目视频生成可交互城市导航仿真环境（CVPR 2025）",
+        "source": "MetaDriverse",
+        "url": "https://metadriverse.github.io/vid2sim/",
+        "date": "2025"
+      }
+    ]
+  },
+  "theme-articulation": {
+    "route_intro": "本主题属于重建式主线 C：从多视角扫描、交互视频或 egocentric RGB-D 中恢复单个或场景内多个物体的可动部件，技术路线涵盖 3DGS/隐式场/SDF 表征、部件分割与关节自由度估计，输出 mesh 或 URDF 并导入 Isaac 等仿真器；FunREC 等进一步将关节物体嵌入功能交互场景，DRAWER 等探索 Real2Sim2Real 扩展。",
+    "challenges": [
+      "单目/稀疏视角下关节轴估计不稳",
+      "3DGS/隐式场与 URDF 动力学参数分离优化",
+      "可动部件分割在遮挡与交互中易失败"
+    ],
+    "research_questions": [
+      "关节 Digital Twin 的最小观测（视角数、交互次数）是什么？",
+      "GS-on-Mesh（DRAWER）能否成为 Isaac Lab 默认资产格式？",
+      "物体级孪生如何扩展到功能场景（FunREC）？"
+    ],
+    "future_trends": [
+      "功能场景重建（egocentric 交互视频）",
+      "单目/RGB-D 连续运动约束（Articulat3D、ArtiTwinSplat）",
+      "物理约束 Part-aware 3DGS（Part2GS、PD2GS）",
+      "DRAWER-R2S2R 闭环扩展至更多关节物体",
+      "与支撑层资产库合并：可动部件即插即用"
+    ],
+    "compute": "每物体：10–60 分钟级 GPU 优化（视频/多视角）；URDF 导出轻量；仿真验证依赖 Isaac。批量低于全场景 Agent 生成。",
+    "generality": "物体/场景局部通用；全房屋级自动化仍不足。生成式编排资产见 §3.6。",
+    "industry": "DRAWER 等已演示 Isaac Lab / Real2Sim2Real 扩展；VideoArtGS、ArtGS 等多为论文+GitHub；产业端更多通过 NVIDIA 数字孪生整体方案间接采纳。",
+    "news": [
+      {
+        "title": "DRAWER：带环境真实感的关节数字重建（CVPR 2025）",
+        "source": "Project Page",
+        "url": "https://xiahongchi.github.io/DRAWER/",
+        "date": "2025"
+      },
+      {
+        "title": "Articulat3D：单目视频几何与运动约束关节孪生重建",
+        "source": "arXiv / Project",
+        "url": "https://maxwell-zhao.github.io/Articulat3D/",
+        "date": "2026"
+      },
+      {
+        "title": "Part2GS（CVPR 2026）：物理约束 Part-aware 关节 3DGS",
+        "source": "CVPR 2026",
+        "url": "https://openaccess.thecvf.com/content/CVPR2026/html/Yu_Part2GS_Part-aware_Modeling_of_Articulated_Objects_using_3D_Gaussian_Splatting_CVPR_2026_paper.html",
+        "date": "2026"
+      }
+    ]
+  },
+  "theme-cousins": {
+    "route_intro": "本主题为重建式单图/稀疏视角专题，共享 Real→Sim→Real 闭环：从单张 RGB、RGB-D 或全景图经感知分解，以「Digital Cousin」（保语义与几何 affordance，非像素级 Twin）合成可交互仿真场景，经物理校验与装配后采集演示或训练策略，并零样本部署回真实场景。四篇工作按 ④ 合成策略分为三条分支——资产库嵌入/VLM 匹配（ACDC、GRS）、生成式 Image-to-3D 混合（RoLA）、全景世界模型 + Cousin 编辑增广（WorldComposer）。",
+    "challenges": [
+      "单张 RGB 条件下深度/分割歧义",
+      "BEHAVIOR 资产库匹配的领域差距",
+      "Cousin vs Twin 策略鲁棒性评估仍缺大规模基准"
+    ],
+    "research_questions": [
+      "Digital Cousin 是否比精确 Digital Twin 更适合策略泛化？",
+      "单图→可仿真场景的最小语义标注是什么？",
+      "能否与语言条件生成结合做 Cousin 增广？"
+    ],
+    "future_trends": [
+      "与 OmniGibson/BEHAVIOR 深度集成的单图部署",
+      "Cousin 分布上的课程学习",
+      "结合 3DGS 外观 + 库资产动力学的混合 Cousin"
+    ],
+    "compute": "单场景：中等（分割+深度+资产检索+OmniGibson 加载）；远低于视频重建全流水线。",
+    "generality": "条件窄（单图），但策略鲁棒性假设有启发性；作为重建式专题分支。",
+    "industry": "CoRL 2024 开源后主要在学术评测；尚未见大规模商业机器人栈默认采用 Cousin 范式。",
+    "news": [
+      {
+        "title": "Digital Cousins：自动创建 Cousin 场景用于鲁棒策略学习",
+        "source": "CoRL 2024 / Project",
+        "url": "https://digital-cousins.github.io/",
+        "date": "2024"
+      },
+      {
+        "title": "GRS：单张 RGB-D 图像生成可解机器人仿真任务",
+        "source": "CVPR 2025 Workshop",
+        "url": "https://arxiv.org/abs/2410.15536",
+        "date": "2025"
+      },
+      {
+        "title": "RoLA：任意单图转物理可交互机器人环境",
+        "source": "CoRL 2025",
+        "url": "https://sihengz02.github.io/RoLA/",
+        "date": "2025"
+      },
+      {
+        "title": "WorldComposer：全景图生成高保真 Digital Cousin 仿真平台",
+        "source": "arXiv 2026",
+        "url": "https://stubborn111.github.io/WorldComposer/",
+        "date": "2026"
+      }
+    ]
+  },
+  "theme-deformable": {
+    "route_intro": "本主题专注可变形体 Digital Twin：从多视角动态视频、RGB-D 或真机操作观测出发，联合 NeRF/3DGS 外观重建与逆物理（MPM、弹簧-质点）或神经动力学辨识本构参数，构建可微仿真 Playground；技术谱系由 PAC-NeRF（无几何先验 MPM）经 Spring-Gaus（弹簧质点 3DGS）演进至 PhysTwin（稀疏视角+生成补全），PhysGaussian 提供前向 WS² 统一路径，SoMA 则以机器人关节条件的 GS 神经仿真器实现 Real-to-Sim 长程操作。",
+    "challenges": [
+      "可变形体本构参数辨识病态",
+      "3DGS 外观与弹簧-质点动力学耦合",
+      "与刚体机器人操作联合仿真的稳定性"
+    ],
+    "research_questions": [
+      "逆物理重建（PAC-NeRF / Spring-Gaus / PhysTwin）能否泛化到新材质？",
+      "可变形 Digital Twin 是否必须进入 ⑦ 策略训练才具实用价值？",
+      "神经仿真（SoMA）与显式物理引擎（弹簧质点 / MPM）如何分工？"
+    ],
+    "future_trends": [
+      "PhysGaussian / 可微仿真与 3DGS 融合",
+      "Real2Sim-Eval 标准化可变形体验证",
+      "厨房软体操作（布料、液体）与 BEHAVIOR 任务对齐"
+    ],
+    "compute": "每物体视频重建+逆物理：单卡数小时；可微仿真 playground 交互中等。",
+    "generality": "专题（可变形体），不覆盖常刚体场景；与主线 B/C 互补。",
+    "industry": "学术原型为主（ECCV 2024–ICCV 2025）；工业软体仿真仍多依赖专有 FEM/质点引擎，PhysTwin / SoMA 尚未规模化落地。",
+    "news": [
+      {
+        "title": "Spring-Gaus：弹簧质点 3DGS 弹性物体重建与仿真",
+        "source": "ECCV 2024",
+        "url": "https://zlicheng.com/spring_gaus/",
+        "date": "2024"
+      },
+      {
+        "title": "PhysTwin：视频中可变形体的物理知情重建与仿真",
+        "source": "ICCV 2025",
+        "url": "https://jianghanxiao.github.io/phystwin-web/",
+        "date": "2025"
+      },
+      {
+        "title": "SoMA：机器人软体操作的 Real-to-Sim 神经仿真器",
+        "source": "arXiv 2026",
+        "url": "https://city-super.github.io/SoMA/",
+        "date": "2026"
+      }
+    ]
+  },
+  "theme-r2s2r": {
+    "route_intro": "本主题为支撑层 Real2Sim2Real 闭环：在已有 ⑥ 仿真环境（常由 ①② 重建得到 3DGS 或 mesh）上，通过高保真渲染与物理引擎并行 rollout 完成 ⑦ 策略训练，并以 ⑧ 真机部署或闭环评测验证 sim2real；技术共性是以 3D Gaussian Splatting 作为主导视觉表征，在视觉对齐与物理对齐之间做工程权衡。",
+    "challenges": [
+      "3DGS 外观与刚体/关节动力学双轨维护",
+      "视觉对齐（EmbodiedDreamer）与物理对齐（Real-is-Sim）难以同时最优",
+      "闭环数据噪声在 IL/RL 中被放大"
+    ],
+    "research_questions": [
+      "像素级策略是否必须在 3DGS 渲染下训练才能 sim2real？",
+      "Real→Sim 再 Real 相比纯 Sim 增广的样本效率边界？",
+      "手机扫描场景能否支撑操作类而非仅导航类任务？"
+    ],
+    "future_trends": [
+      "3DGS 写入 glTF / OpenUSD 标准（2026 产业推进）",
+      "Isaac Sim NuRec + GaussGym 类高吞吐像素 RL",
+      "生成式视频（Veo）→ 可仿真世界（GaussGym 已探索）"
+    ],
+    "compute": "重建：每场景数 GPU·小时；训练：GaussGym 宣称消费级 GPU 10万+ step/s（RGB）；RialTo 等 PPO 4096 并行需高端 GPU。",
+    "generality": "支撑层 ⑦⑧，依赖已有 ⑥ 环境；3DGS 视觉层跨任务通用性高，但物理仍靠传统引擎。",
+    "industry": "NVIDIA Isaac Sim 5.0+ 集成 NuRec/3DGS；GaussGym、RoboGSim、GSWorld、SplatSim 开源推动社区采纳；Khronos glTF 3DGS 2026 RC 标志产业标准化。",
+    "news": [
+      {
+        "title": "GaussGym：消费级 GPU 上 10 万+ step/s 的像素级 locomotion RL",
+        "source": "GaussGym",
+        "url": "https://gauss-gym.com/",
+        "date": "2025"
+      },
+      {
+        "title": "NVIDIA Isaac Sim + OSMO：合成数据与 Cosmos Transfer 端到端工作流",
+        "source": "NVIDIA Technical Blog",
+        "url": "https://developer.nvidia.com/blog/build-synthetic-data-pipelines-to-train-smarter-robots-with-nvidia-isaac-sim/",
+        "date": "2025"
+      },
+      {
+        "title": "产业观察：3DGS 成为 2026 机器人合成数据与 VLA 训练标准组件",
+        "source": "Pebblous",
+        "url": "https://blog.pebblous.ai/report/isaac-sim-3dgs-vla-synthetic-data-2026-04/en/",
+        "date": "2026"
+      }
+    ]
+  },
+  "theme-platforms": {
+    "route_intro": "本主题为支撑层仿真平台与数据扩展：不承担 ①–⑤ 场景构建，而是提供 GPU 并行物理引擎、标准任务 API 与大规模 benchmark（操作、导航、家务长程任务等）；技术路线涵盖 SAPIEN/MuJoCo/PhysX/OmniGibson 等后端，以及 MimicGen、SkillMimicGen 等演示扩展管线，为 ⑥ 装配后的 ⑦ 训练与横向评测提供基础设施。",
+    "challenges": [
+      "引擎异构（PhysX/MuJoCo/Bullet/OmniGibson）导致资产与任务迁移困难",
+      "Benchmark 指标与真实部署成功率脱节",
+      "GPU 并行渲染+物理的内存墙与 API 碎片化",
+      "robosuite 生态（RoboCasa/LIBERO/MimicGen）与 Isaac/SAPIEN 栈之间资产格式割裂"
+    ],
+    "research_questions": [
+      "何种平台最适合 VLA 大规模预训练 vs 灵巧操作微调？",
+      "BEHAVIOR-1K 长程家务任务能否预测真机家务成功率？",
+      "ManiSkill3 / Isaac Lab / MuJoCo Playground 的 GPU 吞吐能否转化为 wall-clock 样本效率领先？",
+      "LIBERO / CALVIN 等语言条件 benchmark 能否成为通才策略的通用评测底座？"
+    ],
+    "future_trends": [
+      "统一 GPU 并行 API（ManiSkill3、Isaac Lab、MuJoCo Playground）与数字孪生场景导入",
+      "BEHAVIOR Challenge 推动长程规划+操作联合",
+      "RoboCasa / Robotwin 等日常任务与生成式 Twin 结合",
+      "SkillMimicGen 类技能级数据扩展与 MimicGen 轨迹级扩展融合"
+    ],
+    "compute": "ManiSkill3：单卡 30,000+ FPS（特定 benchmark）；Isaac Lab：4096 并行 env 级 RL；MuJoCo Playground：单卡分钟级收敛；BEHAVIOR/OmniGibson 重物理流体算力需求高；RoboCasa 大规模厨房场景内存占用显著。",
+    "generality": "通用性最高——不构建场景，但承载 ⑥⑦；robosuite/LIBERO 偏操作 IL，Habitat 偏导航，Isaac Lab/ManiSkill3 覆盖操作+移动机器人。",
+    "industry": "ManiSkill3（RSS 2025）、Isaac Lab（NVIDIA 官方栈）、MuJoCo Playground（DeepMind/Google）成为 GPU 并行训练主流；BEHAVIOR-1K 举办 NeurIPS 2025 Challenge；RoboCasa、LIBERO 被 VLA/操作多条学术与产业链路采用。",
+    "news": [
+      {
+        "title": "Isaac Lab：GPU 加速多模态机器人学习统一框架",
+        "source": "NVIDIA / arXiv",
+        "url": "https://arxiv.org/abs/2511.04831",
+        "date": "2025"
+      },
+      {
+        "title": "MuJoCo Playground：RSS 2025 Outstanding Demo，单卡分钟级 RL",
+        "source": "DeepMind / playground.mujoco.org",
+        "url": "https://arxiv.org/abs/2502.08844",
+        "date": "2025"
+      },
+      {
+        "title": "ManiSkill3：GPU 并行仿真与渲染（RSS 2025）",
+        "source": "RSS / haosulab",
+        "url": "https://arxiv.org/abs/2410.00425",
+        "date": "2025"
+      },
+      {
+        "title": "BEHAVIOR Challenge：NeurIPS 2025 家务长程任务竞赛",
+        "source": "Stanford BEHAVIOR",
+        "url": "https://behavior.stanford.edu/challenge/call_for_participation.html",
+        "date": "2025"
+      }
+    ]
+  }
+}

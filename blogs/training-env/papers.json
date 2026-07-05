@@ -1,0 +1,2288 @@
+{
+  "SAGE": {
+    "title": "SAGE: Scalable Agentic 3D Scene Generation for Embodied AI",
+    "authors": "Xia et al.",
+    "venue": "CVPR 2026",
+    "arxiv": "2602.10116",
+    "github": "https://github.com/NVlabs/sage",
+    "project": "https://research.nvidia.com/labs/cosmos-lab/sage/",
+    "images": [
+      {
+        "url": "https://research.nvidia.com/labs/cosmos-lab/sage/assets/images/teaser.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://research.nvidia.com/labs/cosmos-lab/sage/assets/videos/image_ref/images/green_2.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://research.nvidia.com/labs/cosmos-lab/sage/assets/videos/image_ref/images/village.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://research.nvidia.com/labs/cosmos-lab/sage/assets/videos/image_ref/images/umbridge.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://research.nvidia.com/labs/cosmos-lab/sage/assets/images/method.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://research.nvidia.com/labs/cosmos-lab/sage/assets/images/preview_grid.jpg",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://research.nvidia.com/labs/cosmos-lab/sage/assets/video-sage.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://research.nvidia.com/labs/cosmos-lab/sage/assets/videos/scenes/room_2adee539_circular_cam_sampling_video.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://research.nvidia.com/labs/cosmos-lab/sage/assets/videos/scenes/room_1848f09b_circular_cam_sampling_video.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "SceneSmith": {
+    "title": "SceneSmith: Agentic Generation of Simulation-Ready Indoor Scenes",
+    "authors": "Pfaff et al.",
+    "venue": "ICML 2026 Spotlight",
+    "arxiv": "2602.09153",
+    "github": "https://github.com/nepfaff/scenesmith",
+    "project": "https://scenesmith.github.io/",
+    "images": [
+      {
+        "url": "https://scenesmith.github.io/static/images/teaser.webp",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://scenesmith.github.io/static/images/symbol_no_text.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://scenesmith.github.io/static/images/symbol.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://scenesmith.github.io/static/images/robot_eval.webp",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "V5Sg2NPqJb8",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://scenesmith.github.io/static/videos/scene_buildup/158.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://scenesmith.github.io/static/videos/scene_buildup/174.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "SceneWeaver": {
+    "title": "SceneWeaver: All-in-One 3D Scene Synthesis with an Extensible and Self-Reflective Agent",
+    "authors": "Yang et al.",
+    "venue": "NeurIPS 2025",
+    "arxiv": "2509.20414",
+    "github": "https://github.com/wangyueze/SceneWeaver",
+    "project": "https://scene-weaver.github.io/",
+    "images": [
+      {
+        "url": "https://scene-weaver.github.io/assets/images/teaser.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://scene-weaver.github.io/assets/images/model_final.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://scene-weaver.github.io/assets/images/toolcard.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://scene-weaver.github.io/assets/images/initializer.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://scene-weaver.github.io/assets/images/bookstore_shelf.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://scene-weaver.github.io/assets/images/kitchen_shelf.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "fOakyZ5H7iE",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://scene-weaver.github.io/assets/videos/pipeline.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://scene-weaver.github.io/assets/videos/room_rotate/simple/kitchen_2.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "SceneOrchestra": {
+    "title": "SceneOrchestra: Efficient Agentic 3D Scene Synthesis via Full Tool-Call Trajectory Generation",
+    "authors": "He et al.",
+    "venue": "arXiv 2026",
+    "arxiv": "2604.19907"
+  },
+  "DisCo-Layout": {
+    "title": "DisCo-Layout: Disentangling and Coordinating Semantic and Physical Refinement in a Multi-Agent Framework for 3D Indoor Layout Synthesis",
+    "authors": "Gao et al.",
+    "venue": "arXiv 2025",
+    "arxiv": "2510.02178",
+    "project": "https://jialin75.github.io/DisCo-Layout/",
+    "images": [
+      {
+        "url": "https://jialin75.github.io/DisCo-Layout/static/images/teaserv9.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://jialin75.github.io/DisCo-Layout/static/images/piplinev3.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://jialin75.github.io/DisCo-Layout/static/images/qualv2.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "MrKrnHhk8IA",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "PhyScensis": {
+    "title": "PhyScensis: Physics-Augmented LLM Agents for Complex Physical Scene Arrangement",
+    "authors": "Wang et al.",
+    "venue": "ICLR 2026",
+    "arxiv": "2602.14968",
+    "project": "https://physcensis.github.io/",
+    "images": [
+      {
+        "url": "https://physcensis.github.io/image/text_control/book.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://physcensis.github.io/image/text_control/shelf.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://physcensis.github.io/image/qualitative/00.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://physcensis.github.io/image/qualitative/01.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://physcensis.github.io/image/qualitative/02.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://physcensis.github.io/image/qualitative/03.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://physcensis.github.io/video/pipeline.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://physcensis.github.io/video/demos/method1.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://physcensis.github.io/video/demos/method2.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "SimWorld Studio": {
+    "title": "SimWorld Studio: Automatic Environment Generation with Evolving Coding Agent for Embodied Agent Learning",
+    "authors": "Kang et al.",
+    "venue": "arXiv 2026",
+    "arxiv": "2605.09423",
+    "github": "https://github.com/SimWorld-AI/SimWorld-Studio",
+    "project": "https://github.com/SimWorld-AI/SimWorld-Studio",
+    "images": [
+      {
+        "url": "https://opengraph.githubassets.com/2be6eae26684e879097c4edd0320cdcabf5e14a818683f6e7f1be097e842d46f/SimWorld-AI/SimWorld-Studio",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://private-user-images.githubusercontent.com/93996508/595639931-5e670cf3-d263-4d37-b851-8afaf3c30856.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3ODMwNjI0NzAsIm5iZiI6MTc4MzA2MjE3MCwicGF0aCI6Ii85Mzk5NjUwOC81OTU2Mzk5MzEtNWU2NzBjZjMtZDI2My00ZDM3LWI4NTEtOGFmYWYzYzMwODU2LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjA3MDMlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwNzAzVDA3MDI1MFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWMxYzNmMDIwY2RhMTMzMTY3M2IwNjZhOGMzMDI3NDliZWQzNGM4OGI3MTFjMzU4NDI1YTlmZWI3NmYzMWNjYjUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JnJlc3BvbnNlLWNvbnRlbnQtdHlwZT1pbWFnZSUyRnBuZyJ9.cAidHghvBR-xKJJTA7Ty3cFylN0oXFCsjPi6sZaWM54",
+        "alt": "项目配图"
+      }
+    ]
+  },
+  "RoboGen": {
+    "title": "RoboGen: Towards Unleashing Infinite Data for Automated Robot Learning via Generative Simulation",
+    "authors": "Wang et al.",
+    "venue": "ICML 2024",
+    "arxiv": "2311.01455",
+    "github": "https://github.com/Genesis-Embodied-AI/RoboGen",
+    "project": "https://robogen-ai.github.io/",
+    "images": [
+      {
+        "url": "https://robogen-ai.github.io/assets/images/long-horizon.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robogen-ai.github.io/videos/task_store_an_item_into_the_storagefurniture_2023-10-05-00-26-46.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robogen-ai.github.io/videos/task_Throw_Trash_Away_2023-10-09-01-01-03.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robogen-ai.github.io/videos/task_Heat_up_a_bowl_of_soup_in_microwave_2023-10-05-02-51-38.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robogen-ai.github.io/videos/task_Open_Window_Halfway_2023-10-05-00-47-41.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robogen-ai.github.io/videos/2023-10-07-18-37-30_a1_run_at_3_-61.125.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://robogen-ai.github.io/videos/trailer.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://robogen-ai.github.io/videos/pipeline_cropped.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://robogen-ai.github.io/videos/task_Change_Lamp_Direction_2023-10-08-02-54-38.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "Holodeck": {
+    "title": "Holodeck: Language Guided Generation of 3D Embodied AI Environments",
+    "authors": "Yang et al.",
+    "venue": "CVPR 2024",
+    "arxiv": "2312.09067",
+    "github": "https://github.com/allenai/Holodeck",
+    "project": "https://yueyang1996.github.io/holodeck/",
+    "images": [
+      {
+        "url": "https://yueyang1996.github.io/holodeck/static/images/floorplan_customizability.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://yueyang1996.github.io/holodeck/static/images/material_customizability.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://yueyang1996.github.io/holodeck/static/images/asset_customizability.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://yueyang1996.github.io/holodeck/static/images/door_winodw_customizability.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://yueyang1996.github.io/holodeck/static/images/human_eval_1.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://yueyang1996.github.io/holodeck/static/images/mit_bar_plot.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://yueyang1996.github.io/holodeck/static/videos/three_professors_office_connected_to_a_long_hall_way,_the_professor_in_office_1_is_a_fan_of_star_war|0|0|sunny_vondelpark_4k|1.0|100.0|360|24.0|30|10|CYCLES_video_compressed.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://yueyang1996.github.io/holodeck/static/videos/a_1b1b_apartment_of_a_researcher_who_has_a_cat|0|0|sunny_vondelpark_4k|1.0|100.0|360|16.0|30|10|CYCLES_video_compressed.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://yueyang1996.github.io/holodeck/static/videos/an_arcade_room_with_a_pool_table_placed_in_the_middle|0|0|shanghai_bund_4k|1.0|100.0|360|12.0|30|10|CYCLES_video_compressed.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "PhyScene": {
+    "title": "PhyScene: Physically Interactable 3D Scene Synthesis for Embodied AI",
+    "authors": "Yang et al.",
+    "venue": "CVPR 2024",
+    "arxiv": "2404.09465",
+    "github": "https://github.com/THU-ML/PhyScene",
+    "project": "https://physcene.github.io/",
+    "images": [
+      {
+        "url": "https://physcene.github.io/assets/images/teaser_compress.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://physcene.github.io/assets/images/procthor/1.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://physcene.github.io/assets/images/procthor/2.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://physcene.github.io/assets/images/procthor/3.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://physcene.github.io/assets/images/procthor/4.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://physcene.github.io/assets/images/procthor/5.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "C9sEwcqrTww",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://physcene.github.io/assets/videos/gif.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://physcene.github.io/assets/videos/articulated/a1.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "ProcTHOR": {
+    "title": "ProcTHOR: Large-Scale Embodied AI Using Procedural Generation",
+    "authors": "Deitke et al.",
+    "venue": "NeurIPS 2022",
+    "arxiv": "2206.06994",
+    "github": "https://github.com/allenai/procthor",
+    "project": "https://procthor.allenai.org/",
+    "images": [
+      {
+        "url": "https://procthor.allenai.org/static/0-acff405a245e23a2a6259dc276288715.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://procthor.allenai.org/demo2/0.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://procthor.allenai.org/demo2/1.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://procthor.allenai.org/demo2/2.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://procthor-10k.s3.us-west-2.amazonaws.com/static/demo1/Apartment_0_top.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://procthor-10k.s3.us-west-2.amazonaws.com/static/demo1/Apartment_0_top_small.jpg",
+        "alt": "项目配图"
+      }
+    ]
+  },
+  "DynScene": {
+    "title": "DynScene: Scalable Generation of Dynamic Robotic Manipulation Scenes for Embodied AI",
+    "authors": "Lee et al.",
+    "venue": "CVPR 2025",
+    "arxiv": null,
+    "github": null,
+    "project": "https://openaccess.thecvf.com/content/CVPR2025/html/Lee_DynScene_Scalable_Generation_of_Dynamic_Robotic_Manipulation_Scenes_for_Embodied_CVPR_2025_paper.html"
+  },
+  "InstructScene": {
+    "title": "InstructScene: Instruction-Driven 3D Indoor Scene Synthesis with Semantic Graph Prior",
+    "authors": "Guolin et al.",
+    "venue": "ICLR 2024",
+    "arxiv": "2402.04717",
+    "github": "https://github.com/chenguolin/InstructScene",
+    "project": "https://chenguolin.github.io/projects/InstructScene/",
+    "images": [
+      {
+        "url": "https://chenguolin.github.io/projects/InstructScene/static/images/pipeline.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://chenguolin.github.io/projects/InstructScene/static/images/semantic_graph_prior.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://chenguolin.github.io/projects/InstructScene/static/images/layout_decoder.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://chenguolin.github.io/projects/InstructScene/static/images/applications/rearrangement-1.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://chenguolin.github.io/projects/InstructScene/static/images/applications/rearrangement-2.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://chenguolin.github.io/projects/InstructScene/static/images/applications/completion-1.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://chenguolin.github.io/projects/InstructScene/static/images/teaser/bedroom_1.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://chenguolin.github.io/projects/InstructScene/static/images/teaser/bedroom_2.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://chenguolin.github.io/projects/InstructScene/static/images/teaser/bedroom_3.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "CommonScenes": {
+    "title": "CommonScenes: Generating Commonsense 3D Indoor Scenes with Scene Graph Diffusion",
+    "authors": "Wei et al.",
+    "venue": "NeurIPS 2023",
+    "arxiv": "2305.11337",
+    "github": "https://github.com/QiuhongAnnaWei/CommonScenes",
+    "project": "https://qiuhongannawei.github.io/CommonScenes-website/"
+  },
+  "DiffuScene": {
+    "title": "DiffuScene: Denoising Diffusion Models for Generative Indoor Scene Synthesis",
+    "authors": "Tang et al.",
+    "venue": "CVPR 2024",
+    "arxiv": null,
+    "github": "https://github.com/tangjqcheng/DiffuScene",
+    "project": "https://tangjiapeng.github.io/projects/DiffuScene/",
+    "images": [
+      {
+        "url": "https://tangjiapeng.github.io/projects/DiffuScene/teaser.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://tangjiapeng.github.io/projects/DiffuScene/overview.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://tangjiapeng.github.io/projects/DiffuScene/static/videos/text/LivingDiningRoom-107_text.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://tangjiapeng.github.io/projects/DiffuScene/static/videos/text/LivingDiningRoom-3483_text.jpg",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "PFi-03T1lN0",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://homes.cs.washington.edu/~kpar/nerfies/videos/teaser.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://tangjiapeng.github.io/projects/DiffuScene/static/videos/completion.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "LayoutGPT": {
+    "title": "LayoutGPT: Compositional Visual Planning and Generation with Large Language Models",
+    "authors": "Feng et al.",
+    "venue": "NeurIPS 2023",
+    "arxiv": "2305.15393",
+    "github": "https://github.com/weixi-feng/LayoutGPT",
+    "project": "https://weixi-feng.github.io/layoutgpt/",
+    "images": [
+      {
+        "url": "https://layoutgpt.github.io/static/images/2d_visualize.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://layoutgpt.github.io/static/images/2d_application.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://layoutgpt.github.io/static/images/3d_qualitative.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://layoutgpt.github.io/static/images/3d_completion.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://layoutgpt.github.io/static/videos/merged_images.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://layoutgpt.github.io/static/videos/merged_scenes.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "EchoScene": {
+    "title": "EchoScene: Indoor Scene Generation via Information Echo over Scene Graph Diffusion",
+    "authors": "Zhai et al.",
+    "venue": "ECCV 2024",
+    "arxiv": "2405.00915",
+    "github": "https://github.com/ymxlzgy/echoscene",
+    "project": "https://sites.google.com/view/echoscene",
+    "images": [
+      {
+        "url": "https://lh3.googleusercontent.com/sitesv/AA5AbUBf-p-FHTkJ-IKTUuGI1QbuHsO18jIjEYVJExho7CQaOJM87dA3pCrsOntuP9faeM4Kx3GpwTyjBJNYT3OnVDDPzNxG-3hGYYCHQZsig6saPi5U79OMVjMjL9SzTdxXVmpLBF-lqAGsTMq3fvoVKNY7ooVy5NI4be-R4xgjSaCIOF-txSgdHZs7EJKJ=w16383",
+        "alt": "项目预览图"
+      }
+    ]
+  },
+  "MiDiffusion": {
+    "title": "Mixed Diffusion for 3D Indoor Scene Synthesis",
+    "authors": "Hu et al.",
+    "venue": "WACV 2026",
+    "arxiv": "2405.21066",
+    "github": "https://github.com/MIT-SPARK/MiDiffusion",
+    "project": "https://arxiv.org/abs/2405.21066"
+  },
+  "ATISS": {
+    "title": "ATISS: Autoregressive Transformers for Indoor Scene Synthesis",
+    "authors": "Paschalidou et al.",
+    "venue": "NeurIPS 2021",
+    "arxiv": "2110.06199",
+    "github": "https://github.com/nv-tlabs/ATISS",
+    "project": "https://research.nvidia.com/labs/toronto-ai/ATISS/",
+    "images": [
+      {
+        "url": "https://research.nvidia.com/labs/toronto-ai/ATISS/assets/nvidia.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://research.nvidia.com/labs/toronto-ai/ATISS/atiss/teaser.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://research.nvidia.com/labs/toronto-ai/ATISS/atiss/ours_Bedroom-1540.gif",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://research.nvidia.com/labs/toronto-ai/ATISS/atiss/ours_Bedroom-2719.gif",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://research.nvidia.com/labs/toronto-ai/ATISS/atiss/ours_LivingDiningRoom-1203.gif",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://research.nvidia.com/labs/toronto-ai/ATISS/atiss/ours_LivingDiningRoom-23371.gif",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "VNY0BFMi2j4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "SPREAD": {
+    "title": "SPREAD: Spatial-Physical REasoning via geometry Aware Diffusion",
+    "authors": "Shao et al.",
+    "venue": "arXiv 2026",
+    "arxiv": "2603.27573",
+    "github": null,
+    "project": "https://arxiv.org/abs/2603.27573"
+  },
+  "SceneFormer": {
+    "title": "SceneFormer: Indoor Scene Generation with Transformers",
+    "authors": "Wang et al.",
+    "venue": "3DV 2021",
+    "arxiv": "2012.09793",
+    "github": "https://github.com/cy94/sceneformer",
+    "project": "https://xinpeng-wang.github.io/sceneformer/"
+  },
+  "CasLayout": {
+    "title": "CasLayout: Cascaded 3D Layout Diffusion for Indoor Scene Synthesis with Implicit Relation Modeling",
+    "authors": "Liu et al.",
+    "venue": "arXiv 2026",
+    "arxiv": "2604.27361",
+    "github": null,
+    "project": "https://arxiv.org/abs/2604.27361"
+  },
+  "EmbodiedGen": {
+    "title": "EmbodiedGen: Towards a Generative 3D World Engine for Embodied Intelligence",
+    "authors": "Wang et al.",
+    "venue": "arXiv 2025",
+    "arxiv": "2506.10600",
+    "github": "https://github.com/HorizonRobotics/EmbodiedGen",
+    "project": "https://horizonrobotics.github.io/EmbodiedGen/",
+    "images": [
+      {
+        "url": "https://horizonrobotics.github.io/EmbodiedGen/assets/overall.jpg",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "rG4odybuJRk",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "ArtVIP": {
+    "title": "ArtVIP: Articulated Digital Assets of Visual Realism, Modular Interaction, and Physical Fidelity",
+    "authors": "Li et al.",
+    "venue": "ICLR 2026",
+    "arxiv": "2506.04941",
+    "github": null,
+    "project": "https://arxiv.org/abs/2506.04941"
+  },
+  "SimFoundry": {
+    "title": "SimFoundry: Modular and Automated Scene Generation for Policy Learning and Evaluation",
+    "authors": "Chen et al.",
+    "venue": "CoRL 2025",
+    "arxiv": "2606.28276",
+    "github": null,
+    "project": "https://arxiv.org/abs/2606.28276"
+  },
+  "SimRecon": {
+    "title": "SimRecon: SimReady Compositional Scene Reconstruction from Real Videos",
+    "authors": "Xia et al.",
+    "venue": "CVPR 2026 Highlight",
+    "arxiv": "2603.02133",
+    "github": "https://github.com/xiac20/SimRecon",
+    "project": "https://xiac20.github.io/SimRecon/",
+    "images": [
+      {
+        "url": "https://xiac20.github.io/SimRecon/static/image/your_banner_image.png",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://xiac20.github.io/SimRecon/static/images/teaser.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiac20.github.io/SimRecon/static/images/pipeline.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiac20.github.io/SimRecon/static/images/supp_vis.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://xiac20.github.io/SimRecon/static/videos/banner_video.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://xiac20.github.io/SimRecon/static/videos/demo.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://xiac20.github.io/SimRecon/static/videos/rgb/01.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "HoloScene": {
+    "title": "HoloScene: Simulation-Ready Interactive 3D Worlds from a Single Video",
+    "authors": "Xia et al.",
+    "venue": "NeurIPS 2025",
+    "arxiv": "2510.05560",
+    "github": "https://github.com/xiahongchi/HoloScene",
+    "project": "https://xiahongchi.github.io/HoloScene/",
+    "images": [
+      {
+        "url": "https://xiahongchi.github.io/HoloScene/src/images/teaser.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiahongchi.github.io/HoloScene/src/images/method.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiahongchi.github.io/HoloScene/src/images/3dprint/3dprint_0.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiahongchi.github.io/HoloScene/src/videos/physim/67d/DSC09303.JPG",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiahongchi.github.io/HoloScene/src/videos/physim/783/DSC04096.JPG",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiahongchi.github.io/HoloScene/src/videos/physim/room2/frame000201.jpg",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://xiahongchi.github.io/HoloScene/src/videos/int/editing/demo.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://xiahongchi.github.io/HoloScene/src/videos/int/vfx/blended_0.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://xiahongchi.github.io/HoloScene/src/videos/int/vfx/blended_1.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "WANDERLAND": {
+    "title": "WANDERLAND: Geometrically Grounded Simulation for Open-World Embodied AI",
+    "authors": "Lee et al.",
+    "venue": "CVPR 2026",
+    "arxiv": "2511.20620",
+    "github": "https://github.com/ai4ce/wanderland",
+    "project": "https://ai4ce.github.io/wanderland/",
+    "images": [
+      {
+        "url": "https://ai4ce.github.io/wanderland/static/images/logo.png",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://ai4ce.github.io/wanderland/static/images/ai4ce_new_linear_notext.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://ai4ce.github.io/wanderland/static/images/NYU_Long_RGB_Color.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://ai4ce.github.io/wanderland/static/images/3d_recon_radar.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://ai4ce.github.io/wanderland/static/images/3rdst_rgb_vid2sim.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://ai4ce.github.io/wanderland/static/images/3rdst_rgb_ours.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://ai4ce.github.io/wanderland/static/videos/rgb.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://ai4ce.github.io/wanderland/static/videos/wanderland_multimodal_quality_lighting.mp4?v=compressed-720p",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://ai4ce.github.io/wanderland/static/videos/wanderland_coverage_scale.mp4?v=compressed-720p",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "Re3Sim": {
+    "title": "Re3Sim: Generating High-Fidelity Simulation Data via 3D-Photorealistic Real-to-Sim for Robotic Manipulation",
+    "authors": "Han et al.",
+    "venue": "ICRA 2026",
+    "arxiv": "2502.08645",
+    "github": "https://github.com/InternRobotics/Re3Sim",
+    "project": "https://xshenhan.github.io/Re3Sim/",
+    "images": [
+      {
+        "url": "https://xshenhan.github.io/Re3Sim/static/images/teaser.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xshenhan.github.io/Re3Sim/static/images/tasks.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xshenhan.github.io/Re3Sim/static/images/visual-comparison.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xshenhan.github.io/Re3Sim/static/images/compare_web.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xshenhan.github.io/Re3Sim/static/images/scale_results.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xshenhan.github.io/Re3Sim/static/images/dataset_size_ablation.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "vbARimN1WO0",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://xshenhan.github.io/Re3Sim/videos/visual-comparison.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://xshenhan.github.io/Re3Sim/videos/sim_vs_real/sim-s-2.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "SimuScene": {
+    "title": "SimuScene: Simulation-Ready Compositional 3D Scene Reconstruction from a Single Image",
+    "authors": "Lee et al.",
+    "venue": "arXiv 2026",
+    "arxiv": "2606.03994",
+    "github": null,
+    "project": "https://snuvclab.github.io/SimuScene/"
+  },
+  "Phi-Scene": {
+    "title": "φ-Scene: Physically Grounded Image-to-3D Scene Reconstruction",
+    "authors": "Li et al.",
+    "venue": "arXiv 2026",
+    "arxiv": "2606.21596",
+    "github": null,
+    "project": "https://phi-scene.github.io/"
+  },
+  "Vid2Sim": {
+    "title": "Vid2Sim: Realistic and Interactive Simulation from Video for Urban Navigation",
+    "authors": "Xie et al.",
+    "venue": "CVPR 2025",
+    "arxiv": "2501.06693",
+    "github": "https://github.com/Vid2Sim/Vid2Sim",
+    "project": "https://metadriverse.github.io/vid2sim/"
+  },
+  "DP-Recon": {
+    "title": "Decompositional Neural Scene Reconstruction with Generative Diffusion Prior",
+    "authors": "Ni et al.",
+    "venue": "CVPR 2025",
+    "arxiv": "2503.14830",
+    "github": "https://github.com/DP-Recon/DP-Recon",
+    "project": "https://dp-recon.github.io/"
+  },
+  "DreMa": {
+    "title": "Dream to Manipulate: Compositional World Models Empowering Robot Imitation Learning with Imagination",
+    "authors": "Barcellona et al.",
+    "venue": "ICLR 2025",
+    "arxiv": "2412.14957",
+    "github": null,
+    "project": "https://dreamtomanipulate.github.io/"
+  },
+  "FunREC": {
+    "title": "FunREC: Reconstructing Functional 3D Scenes from Egocentric Interaction Videos",
+    "authors": "Delitzas et al.",
+    "venue": "CVPR 2026",
+    "arxiv": "2604.05621",
+    "github": null,
+    "project": "https://functionalscenes.github.io/",
+    "images": [
+      {
+        "url": "https://functionalscenes.github.io/static/images/social_preview.png",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://functionalscenes.github.io/static/images/teaser.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://functionalscenes.github.io/static/images/dataset.jpg",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://functionalscenes.github.io/static/videos/funrec_video.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://functionalscenes.github.io/static/videos/interactive_manipulation.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://functionalscenes.github.io/static/videos/simulation_isaac_sim.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "DRAWER": {
+    "title": "DRAWER: Digital Reconstruction and Articulation With Environment Realism",
+    "authors": "Xia et al.",
+    "venue": "CVPR 2025",
+    "arxiv": null,
+    "github": "https://github.com/xiahongchi/DRAWER",
+    "project": "https://xiahongchi.github.io/DRAWER/",
+    "images": [
+      {
+        "url": "https://xiahongchi.github.io/DRAWER/src/images/drawer.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiahongchi.github.io/DRAWER/src/images/teaser.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiahongchi.github.io/DRAWER/src/images/method.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiahongchi.github.io/DRAWER/src/duo/cs_kitchen_n_rgb_gt.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiahongchi.github.io/DRAWER/src/duo/cs_kitchen_n_gs_mesh.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://xiahongchi.github.io/DRAWER/src/duo/cs_kitchen_n_our_mesh.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://xiahongchi.github.io/DRAWER/src/overview/collection.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://xiahongchi.github.io/DRAWER/src/videos/cs_kitchen_n_trans.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://xiahongchi.github.io/DRAWER/src/art_sim_render/ours/drawer_06.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "Ditto": {
+    "title": "Ditto: Building Digital Twins of Articulated Objects from Interaction",
+    "authors": "Jiang et al.",
+    "venue": "CoRL 2023",
+    "arxiv": "2306.08533",
+    "github": "https://github.com/UT-Austin-RPL/Ditto",
+    "project": "https://ut-austin-rpl.github.io/Ditto/",
+    "images": [
+      {
+        "url": "https://ut-austin-rpl.github.io/Ditto/images/teaser_fb.jpg",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://ut-austin-rpl.github.io/Ditto/src/ditto.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://ut-austin-rpl.github.io/Ditto/src/overview.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://ut-austin-rpl.github.io/Ditto/src/pipeline.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://ut-austin-rpl.github.io/Ditto/src/real.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://ut-austin-rpl.github.io/Ditto/video/sim.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://ut-austin-rpl.github.io/Ditto/video/real.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://ut-austin-rpl.github.io/Ditto/video/real2sim.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "VideoArtGS": {
+    "title": "VideoArtGS: Building Digital Twins of Articulated Objects from Monocular Video",
+    "authors": "Liu et al.",
+    "venue": "arXiv 2025",
+    "arxiv": "2509.17647",
+    "github": "https://github.com/YuLiu-LY/VideoArtGS",
+    "project": "https://arxiv.org/abs/2509.17647"
+  },
+  "ArtGS": {
+    "title": "ArtGS: Building Interactable Replicas of Complex Articulated Objects via Gaussian Splatting",
+    "authors": "Lei et al.",
+    "venue": "ICLR 2025",
+    "arxiv": "2502.19459",
+    "github": "https://github.com/JiahuiLei/ArtGS",
+    "project": "https://jiahui-lei.github.io/projects/ArtGS/"
+  },
+  "ArticulatedGS": {
+    "title": "ArticulatedGS: Self-supervised Digital Twin Modeling of Articulated Objects using 3D Gaussian Splatting",
+    "authors": "Guo et al.",
+    "venue": "CVPR 2025",
+    "arxiv": null,
+    "github": "https://github.com/JiaweiGuo382/ArticulatedGS",
+    "project": "https://openaccess.thecvf.com/content/CVPR2025/html/Guo_ArticulatedGS_Self-supervised_Digital_Twin_Modeling_of_Articulated_Objects_using_3D_CVPR_2025_paper.html"
+  },
+  "Neural Implicit": {
+    "title": "Neural Implicit Representation for Building Digital Twins of Unknown Articulated Objects",
+    "authors": "Weng et al.",
+    "venue": "CVPR 2024",
+    "arxiv": null,
+    "github": "https://github.com/NVlabs/DigitalTwinArt",
+    "project": "https://openaccess.thecvf.com/content/CVPR2024/html/Weng_Neural_Implicit_Representation_for_Building_Digital_Twins_of_Unknown_Articulated_CVPR_2024_paper.html"
+  },
+  "Articulat3D": {
+    "title": "Articulat3D: Reconstructing Articulated Digital Twins From Monocular Videos with Geometric and Motion Constraints",
+    "authors": "Guo et al.",
+    "venue": "arXiv 2026",
+    "arxiv": "2603.11606",
+    "github": "https://github.com/ShawnRicardo/Articulat3D",
+    "project": "https://maxwell-zhao.github.io/Articulat3D/"
+  },
+  "ArtiTwinSplat": {
+    "title": "ArtiTwinSplat: Interactable Digital Twin Reconstruction via Gaussian Splatting from RGB-D videos",
+    "authors": "Mishra et al.",
+    "venue": "arXiv 2026",
+    "arxiv": "2606.24628",
+    "github": null,
+    "project": "https://arxiv.org/abs/2606.24628"
+  },
+  "Part2GS": {
+    "title": "Part2GS: Part-aware Modeling of Articulated Objects using 3D Gaussian Splatting",
+    "authors": "Yu et al.",
+    "venue": "CVPR 2026",
+    "arxiv": "2506.17212",
+    "github": null,
+    "project": "https://openaccess.thecvf.com/content/CVPR2026/html/Yu_Part2GS_Part-aware_Modeling_of_Articulated_Objects_using_3D_Gaussian_Splatting_CVPR_2026_paper.html"
+  },
+  "PD2GS": {
+    "title": "PD2GS: Part-Level Decoupling and Continuous Deformation of Articulated Objects via Gaussian Splatting",
+    "authors": "Wang et al.",
+    "venue": "ICLR 2026",
+    "arxiv": "2506.09663",
+    "github": null,
+    "project": "https://pd2gs-iclr.github.io/pd2gs-iclr/"
+  },
+  "Digital Cousins": {
+    "title": "Automated Creation of Digital Cousins for Robust Policy Learning",
+    "authors": "Dai et al.",
+    "venue": "CoRL 2024",
+    "arxiv": "2410.07408",
+    "github": "https://github.com/cremebrule/digital-cousins",
+    "project": "https://digital-cousins.github.io/",
+    "images": [
+      {
+        "url": "https://digital-cousins.github.io/assets/imgs/SUSig-red.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://digital-cousins.github.io/assets/imgs/method_figure.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://digital-cousins.github.io/assets/imgs/experiment_sim2sim_reconstruct.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://digital-cousins.github.io/assets/imgs/experiment_real2sim_reconstruct.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://digital-cousins.github.io/assets/imgs/sim2sim_policy_results_figure.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://digital-cousins.github.io/assets/imgs/experiment_sim2real.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://digital-cousins.github.io/assets/videos/full_screen.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://digital-cousins.github.io/assets/videos/acdc_splash_video_isolated_comp.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://digital-cousins.github.io/assets/videos/acdc_method_comp.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "GRS": {
+    "title": "GRS: Generating Robotic Simulation Tasks from Real-World Images",
+    "authors": "Zook et al.",
+    "venue": "CVPR 2025 Workshop (CV2)",
+    "arxiv": "2410.15536",
+    "github": null,
+    "project": "https://arxiv.org/abs/2410.15536"
+  },
+  "RoLA": {
+    "title": "Robot Learning from Any Images",
+    "authors": "Zhao et al.",
+    "venue": "CoRL 2025",
+    "arxiv": "2509.22970",
+    "github": "https://github.com/sihengz02/RoLA",
+    "project": "https://sihengz02.github.io/RoLA/",
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://sihengz02.github.io/RoLA/assets/videos/full_screen.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://sihengz02.github.io/RoLA/assets/videos/demo.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://sihengz02.github.io/RoLA/assets/videos/method.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "WorldComposer": {
+    "title": "From Seeing to Simulating: Generative High-Fidelity Simulation with Digital Cousins for Generalizable Robot Learning and Evaluation",
+    "authors": "Lu et al.",
+    "venue": "arXiv 2026",
+    "arxiv": "2604.15805",
+    "github": "https://github.com/jaber628/WorldComposer",
+    "project": "https://stubborn111.github.io/WorldComposer/",
+    "images": [
+      {
+        "url": "https://worldcomposer-project.github.io/static/images/social_preview.png",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://stubborn111.github.io/WorldComposer/static/images/Teaser.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://stubborn111.github.io/WorldComposer/static/images/Marble_pipeline_v6.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://stubborn111.github.io/WorldComposer/static/images/Marble_SimBigPic_5x4.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://stubborn111.github.io/WorldComposer/static/images/Marble_real.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://stubborn111.github.io/WorldComposer/static/images/Correlation_Final.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://stubborn111.github.io/WorldComposer/static/videos/video.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "PAC-NeRF": {
+    "title": "PAC-NeRF: Physics Augmented Continuum Neural Radiance Fields for Geometry-Agnostic System Identification",
+    "authors": "Li et al.",
+    "venue": "ICLR 2023",
+    "arxiv": "2303.05512",
+    "github": "https://github.com/xuan-li/PAC-NeRF",
+    "project": "https://xuan-li.github.io/PAC-NeRF/",
+    "images": [
+      {
+        "url": "https://xuan-li.github.io/PAC-NeRF/Overview/a1920e7e490fd1e05e5bce1c4ee04ce6.jpg",
+        "alt": "方法概览"
+      },
+      {
+        "url": "https://xuan-li.github.io/PAC-NeRF/Overview/87e915f831b79de78234ba9ee2b19d92.jpg",
+        "alt": "Newtonian 流体"
+      },
+      {
+        "url": "https://xuan-li.github.io/PAC-NeRF/Overview/cebc7869b1d26cee3c66f500c571c2fe.jpg",
+        "alt": "弹性体"
+      },
+      {
+        "url": "https://xuan-li.github.io/PAC-NeRF/Overview/d5cf9830ee900ebd9579741496344094.jpg",
+        "alt": "塑性体"
+      },
+      {
+        "url": "https://xuan-li.github.io/PAC-NeRF/Overview/a27c6363d7d6ded91ce76ffff9eef92e.jpg",
+        "alt": "颗粒材质"
+      }
+    ]
+  },
+  "Spring-Gaus": {
+    "title": "Reconstruction and Simulation of Elastic Objects with Spring-Mass 3D Gaussians",
+    "authors": "Zhong et al.",
+    "venue": "ECCV 2024",
+    "arxiv": "2403.09434",
+    "github": "https://github.com/Colmar-zlicheng/Spring-Gaus",
+    "project": "https://zlicheng.com/spring_gaus/",
+    "images": [
+      {
+        "url": "https://zlicheng.com/spring_gaus/static/images/teaser.png",
+        "alt": "项目 Teaser"
+      },
+      {
+        "url": "https://zlicheng.com/spring_gaus/static/images/pipeline.png",
+        "alt": "方法 Pipeline"
+      }
+    ]
+  },
+  "PhysGaussian": {
+    "title": "PhysGaussian: Physics-Integrated 3D Gaussians for Generative Dynamics",
+    "authors": "Xie et al.",
+    "venue": "CVPR 2024",
+    "arxiv": "2311.12198",
+    "github": "https://github.com/xpandora/PhysGaussian",
+    "project": "https://xpandora.github.io/PhysGaussian/",
+    "images": [
+      {
+        "url": "https://xpandora.github.io/PhysGaussian/static/images/teaser-1.jpg",
+        "alt": "项目 Teaser"
+      },
+      {
+        "url": "https://xpandora.github.io/PhysGaussian/static/images/pipeline-1.jpg",
+        "alt": "方法 Pipeline"
+      }
+    ]
+  },
+  "PhysTwin": {
+    "title": "PhysTwin: Physics-Informed Reconstruction and Simulation of Deformable Objects from Videos",
+    "authors": "Jiang et al.",
+    "venue": "ICCV 2025",
+    "arxiv": "2503.17973",
+    "github": "https://github.com/Jianghanxiao/PhysTwin",
+    "project": "https://jianghanxiao.github.io/phystwin-web/",
+    "images": [
+      {
+        "url": "https://jianghanxiao.github.io/phystwin-web/resources/github.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://jianghanxiao.github.io/phystwin-web/resources/phystwin-motif.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://jianghanxiao.github.io/phystwin-web/src/imgs/pipeline.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://jianghanxiao.github.io/phystwin-web/src/videos/application_pl/target_cloth.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://jianghanxiao.github.io/phystwin-web/src/videos/application_pl/target_rope.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://jianghanxiao.github.io/phystwin-web/src/videos/combine_rendering/cloth_red_lift/0_combine.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://jianghanxiao.github.io/phystwin-web/src/videos/indomain_rendering_map/7/0_integrate.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://jianghanxiao.github.io/phystwin-web/src/videos/indomain_rendering_map/14/0_integrate.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "SoMA": {
+    "title": "SoMA: A Real-to-Sim Neural Simulator for Robotic Soft-body Manipulation",
+    "authors": "Huang et al.",
+    "venue": "arXiv 2026",
+    "arxiv": "2602.02402",
+    "project": "https://city-super.github.io/SoMA/",
+    "images": [
+      {
+        "url": "https://city-super.github.io/SoMA/imgs_png/teaser.png",
+        "alt": "项目 Teaser"
+      },
+      {
+        "url": "https://city-super.github.io/SoMA/imgs_png/framework.png",
+        "alt": "方法框架"
+      },
+      {
+        "url": "https://city-super.github.io/SoMA/imgs_png/main_results.png",
+        "alt": "重仿真与泛化结果"
+      },
+      {
+        "url": "https://city-super.github.io/SoMA/imgs_png/multiview.png",
+        "alt": "多视角一致性"
+      }
+    ]
+  },
+  "GaussGym": {
+    "title": "GaussGym: An Open-Source Real-to-Sim Framework for Learning Locomotion from Pixels",
+    "authors": "Escontrela et al.",
+    "venue": "arXiv 2025",
+    "arxiv": "2510.15352",
+    "github": "https://github.com/gauss-gym/gauss-gym",
+    "project": "https://escontrela.me/gauss_gym/",
+    "images": [
+      {
+        "url": "https://gauss-gym.escontrela.me/all_scenes_compressed.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://gauss-gym.escontrela.me/motion_blur_compressed.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://gauss-gym.escontrela.me/data_compressed.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://gauss-gym.escontrela.me/veo_compressed.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://gauss-gym.escontrela.me/amazon_depth_compressed.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://gauss-gym.escontrela.me/network_compressed.png",
+        "alt": "项目配图"
+      }
+    ]
+  },
+  "RoboGSim": {
+    "title": "RoboGSim: A Real2Sim2Real Robotic Gaussian Splatting Simulator",
+    "authors": "Li et al.",
+    "venue": "arXiv 2024",
+    "arxiv": "2411.11839",
+    "github": "https://github.com/lixinhai/robogsim",
+    "project": "https://robogsim.github.io/",
+    "images": [
+      {
+        "url": "https://robogsim.github.io/static/image/your_banner_image.png",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://robogsim.github.io/static/images/main.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robogsim.github.io/static/images/pipeline.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robogsim.github.io/static/images/novel_scene.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robogsim.github.io/static/images/exp43.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robogsim.github.io/static/images/exp44.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "JkaxUblCGz0",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://robogsim.github.io/static/videos/render_gt.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://robogsim.github.io/static/videos/render_depth.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "Real2Render2Real": {
+    "title": "Real2Render2Real: Scaling Robot Data Without Dynamics Simulation or Robot Hardware",
+    "authors": "Yu et al.",
+    "venue": "arXiv 2025",
+    "arxiv": "2505.09601",
+    "github": "https://github.com/uynitsuj/real2render2real",
+    "project": "https://real2render2real.github.io/",
+    "images": [
+      {
+        "url": "https://real2render2real.github.io/data/r2r2r_plot.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://real2render2real.github.io/data/traj_interp.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://real2render2real.github.io/data/real_vids/faucet_real_5x_side.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://real2render2real.github.io/data/real_vids/mug_real_5x_side.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://real2render2real.github.io/data/real_vids/franka_real_30x_front.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "Video2Robo": {
+    "title": "Video2Robo: 3DGS-based Synthetic Data from One Video Enables Scalable Robot Learning",
+    "authors": "Deng et al.",
+    "venue": "CVPR 2026",
+    "arxiv": null,
+    "github": null,
+    "project": "https://video2robo.github.io/",
+    "images": [
+      {
+        "url": "https://video2robo.github.io/assets/mp4/method.gif",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://video2robo.github.io/assets/mp4/Video2Robo.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://video2robo.github.io/assets/mp4/attach/000000_0.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://video2robo.github.io/assets/mp4/attach/000001_0.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "EmbodiedDreamer": {
+    "title": "EmbodiedDreamer: Advancing Real2Sim2Real Transfer for Policy Training via Embodied World Modeling",
+    "authors": "Wang et al.",
+    "venue": "arXiv 2025",
+    "arxiv": "2507.05198",
+    "github": "https://github.com/GigaAI-research/EmbodieDreamer",
+    "project": "https://embodiedreamer.github.io/",
+    "images": [
+      {
+        "url": "https://embodiedreamer.github.io/static/images/main_demo.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://embodiedreamer.github.io/static/images/PhysAligner.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://embodiedreamer.github.io/static/images/VisAligner.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://embodiedreamer.github.io/static/videos/compare_physaligner.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://embodiedreamer.github.io/static/videos/compare_seg.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://embodiedreamer.github.io/static/videos/rt1_0.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "Real-is-Sim": {
+    "title": "Real-is-Sim: Bridging the Sim-to-Real Gap with a Dynamic Digital Twin for Robot Policy Evaluation",
+    "authors": "Abou-Chakra et al.",
+    "venue": "arXiv 2025",
+    "arxiv": "2504.03597",
+    "github": null,
+    "project": "https://arxiv.org/abs/2504.03597"
+  },
+  "EmbodiedSplat (Nav)": {
+    "title": "EmbodiedSplat: Personalized Real-to-Sim-to-Real Navigation with Gaussian Splats",
+    "authors": "Chhablani et al.",
+    "venue": "arXiv 2025",
+    "arxiv": "2509.17430",
+    "github": "https://github.com/gchhablani/embodied-splat-v1",
+    "project": "https://gchhablani.github.io/embodied-splat/",
+    "images": [
+      {
+        "url": "https://gchhablani.github.io/embodied-splat/static/image/your_banner_image.png",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://gchhablani.github.io/embodied-splat/static/images/EmbodiedSplat_teaser.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://gchhablani.github.io/embodied-splat/static/images/EmbodiedSplat_Architecture.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://gchhablani.github.io/embodied-splat/static/images/dataset.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://gchhablani.github.io/embodied-splat/static/images/lounge_dn.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://gchhablani.github.io/embodied-splat/static/images/classroom_dn.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "JkaxUblCGz0",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://gchhablani.github.io/embodied-splat/static/videos/banner_video.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://gchhablani.github.io/embodied-splat/static/videos/dn-zero.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "GSWorld": {
+    "title": "GSWorld: Closed-Loop Photo-Realistic Simulation Suite for Robotic Manipulation",
+    "authors": "Jiang et al.",
+    "venue": "ICRA 2026",
+    "arxiv": "2510.20813",
+    "github": "https://github.com/luccachiang/GSWorld",
+    "project": "https://3dgsworld.github.io/",
+    "images": [
+      {
+        "url": "https://3dgsworld.github.io/static/images/pdf.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://3dgsworld.github.io/static/images/arxiv.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://3dgsworld.github.io/static/images/youtube.svg",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "uNj8RuFrhgQ",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://3dgsworld.github.io/resources/videos/gsworld_sim_data/fr3/align_right_cam_compatible.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://3dgsworld.github.io/resources/videos/gsworld_sim_data/fr3/align_wrist_cam_compatible.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "SplatSim": {
+    "title": "SplatSim: Zero-Shot Sim2Real Transfer of RGB Manipulation Policies Using Gaussian Splatting",
+    "authors": "Qureshi et al.",
+    "venue": "ICRA 2025",
+    "arxiv": "2409.10161",
+    "github": "https://github.com/qureshinomaan/SplatSim",
+    "project": "https://splatsim.github.io/",
+    "images": [
+      {
+        "url": "https://splatsim.github.io/assets/images/ri-cmu.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "r_URAU6bpas",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://splatsim.github.io/assets/simvideos/output_1.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://splatsim.github.io/assets/simvideos/clips/clips_compressed/4.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "RL-GSBridge": {
+    "title": "RL-GSBridge: 3D Gaussian Splatting Based Real2Sim2Real Method for Robotic Manipulation Learning",
+    "authors": "Wu et al.",
+    "venue": "ICRA 2025",
+    "arxiv": "2409.20291",
+    "github": null,
+    "project": "https://arxiv.org/abs/2409.20291"
+  },
+  "RoboSplat": {
+    "title": "Novel Demonstration Generation with Gaussian Splatting Enables Robust One-Shot Manipulation",
+    "authors": "Yang et al.",
+    "venue": "RSS 2025",
+    "arxiv": "2504.13175",
+    "github": "https://github.com/InternRobotics/robosplat",
+    "project": "https://yangsizhe.github.io/robosplat/",
+    "images": [
+      {
+        "url": "https://yangsizhe.github.io/robosplat/static/images/pdf.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://yangsizhe.github.io/robosplat/static/images/arxiv.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://yangsizhe.github.io/robosplat/static/images/github.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://yangsizhe.github.io/robosplat/static/images/teaser.jpg",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://yangsizhe.github.io/robosplat/static/videos/aug_demo_with_caption_large_black.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://yangsizhe.github.io/robosplat/static/videos/method.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://yangsizhe.github.io/robosplat/static/videos/augmented_demo.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "X-Sim": {
+    "title": "X-Sim: Cross-Embodiment Learning via Real-to-Sim-to-Real",
+    "authors": "Dan et al.",
+    "venue": "CoRL 2025",
+    "arxiv": "2505.07096",
+    "github": "https://github.com/portal-cornell/X-Sim",
+    "project": "https://portal-cornell.github.io/X-Sim/",
+    "images": [
+      {
+        "url": "https://portal-cornell.github.io/X-Sim/static/images/realtosim.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://portal-cornell.github.io/X-Sim/static/images/simtoreal.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://portal-cornell.github.io/X-Sim/static/images/autocalibration.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://portal-cornell.github.io/X-Sim/static/images/xsim-coverphoto.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://portal-cornell.github.io/X-Sim/static/videos/overview.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://portal-cornell.github.io/X-Sim/static/videos/1_headliner.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://portal-cornell.github.io/X-Sim/static/videos/retargeting-2x-speed.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "RialTo": {
+    "title": "RialTo: Reconciling Reality through Simulation (Real-to-Sim-to-Real)",
+    "authors": "Szot et al.",
+    "venue": "RSS 2024",
+    "arxiv": "2403.03949",
+    "github": "https://github.com/NVlabs/rialto",
+    "project": "https://real-to-sim-to-real.github.io/RialTo/",
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "H0TQCbTSGVY",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://real-to-sim-to-real.github.io/RialTo/materials/videos/robustnessteasershort.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://real-to-sim-to-real.github.io/RialTo/materials/videos/teaservideorialto.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "ManiSkill3": {
+    "title": "ManiSkill3: GPU Parallelized Robotics Simulation and Rendering for Generalizable Embodied AI",
+    "authors": "Tao et al.",
+    "venue": "arXiv 2024",
+    "arxiv": "2410.00425",
+    "github": "https://github.com/haosulab/ManiSkill",
+    "project": "https://maniskill.ai/",
+    "images": [
+      {
+        "url": "https://maniskill.ai/imgs/home/OG.webp",
+        "alt": "项目预览图"
+      }
+    ]
+  },
+  "RoboCasa": {
+    "title": "RoboCasa: Large-Scale Simulation of Everyday Tasks for Generalist Robots",
+    "authors": "Nasiriany et al.",
+    "venue": "arXiv 2024",
+    "arxiv": "2406.02523",
+    "github": "https://github.com/robocasa/robocasa",
+    "project": "https://robocasa.ai/",
+    "images": [
+      {
+        "url": "https://robocasa.ai/assets/images/og-image.png",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://robocasa.ai/assets/images/soroush_nasiriany.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robocasa.ai/assets/images/sep_nasiriany.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robocasa.ai/assets/images/abhi_maddukuri.jpeg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robocasa.ai/assets/images/yuke_zhu.jpeg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robocasa.ai/assets/images/lance_zhang.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://robocasa.ai/assets/videos/release.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://robocasa.ai/assets/videos/scene_collage.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://robocasa.ai/assets/videos/robot_grid/media15.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "Behavior-1k": {
+    "title": "BEHAVIOR-1K: A Benchmark for Embodied AI with 1,000 Everyday Activities and Realistic Simulation",
+    "authors": "Li et al.",
+    "venue": "CoRL 2023",
+    "arxiv": "2403.09227",
+    "github": "https://github.com/StanfordVL/BEHAVIOR-1K",
+    "project": "https://behavior.stanford.edu/",
+    "images": [
+      {
+        "url": "https://behavior.stanford.edu/assets/people/wensi_ai.jpg",
+        "alt": "Wensi Ai"
+      },
+      {
+        "url": "https://behavior.stanford.edu/assets/people/stef-ren.jpg",
+        "alt": "Stef Ren"
+      },
+      {
+        "url": "https://behavior.stanford.edu/assets/people/cemgokmen.jpg",
+        "alt": "Cem Gokmen"
+      },
+      {
+        "url": "https://behavior.stanford.edu/assets/people/yalcin-tur.jpg",
+        "alt": "Yalcin Tur"
+      },
+      {
+        "url": "https://behavior.stanford.edu/assets/people/minyeong-kim.jpg",
+        "alt": "Minyeong Kim"
+      },
+      {
+        "url": "https://behavior.stanford.edu/assets/people/brenda-chen.jpg",
+        "alt": "Brenda Chen"
+      }
+    ]
+  },
+  "iGibson 2.0": {
+    "title": "iGibson 2.0: Object-Centric Simulation for Robot Learning of Everyday Household Tasks",
+    "authors": "Li et al.",
+    "venue": "arXiv 2021",
+    "arxiv": "2108.03272",
+    "github": "https://github.com/StanfordVL/iGibson",
+    "project": "https://svl.stanford.edu/igibson/",
+    "images": [
+      {
+        "url": "https://svl.stanford.edu/igibson/images/SU_New_BlockStree_Red.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "http://svl.stanford.edu//igibson/c88c46b9e14bf897e57e597109c97005.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://svl.stanford.edu/igibson/images/table.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://svl.stanford.edu/igibson/images/hrl4in.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://svl.stanford.edu/igibson/images/ig.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://svl.stanford.edu/igibson/images/relmogen.jpeg",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://svl.stanford.edu/igibson/demos/scenes.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://svl.stanford.edu/igibson/demos/cluttered_scenes.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://svl.stanford.edu/igibson/demos/vr_interface.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "Habitat 3.0": {
+    "title": "Habitat 3.0: A Co-Habitat for Humans, Avatars and Robots",
+    "authors": "Puig et al.",
+    "venue": "arXiv 2023",
+    "arxiv": "2310.13724",
+    "github": "https://github.com/facebookresearch/habitat-lab",
+    "project": "https://aihabitat.org/",
+    "images": [
+      {
+        "url": "https://aihabitat.org/static/habitat-blue.png",
+        "alt": "项目预览图"
+      },
+      {
+        "url": "https://aihabitat.org/static/habitat.svg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://aihabitat.org/static/heads/alex.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://aihabitat.org/static/heads/john.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://aihabitat.org/static/heads/mosra.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://aihabitat.org/static/heads/vincentpierre.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://dl.fbaipublicfiles.com/habitat/video/AI_HABITAT_EDIT_V86_1280_2000.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "Robotwin 2.0": {
+    "title": "Robotwin 2.0: A Scalable Data Generator and Benchmark with Generative Digital Twins",
+    "authors": "Mu et al.",
+    "venue": "arXiv 2025",
+    "arxiv": "2506.18088",
+    "github": "https://github.com/RoboTwin-Platform/RoboTwin",
+    "project": "https://robotwin-platform.github.io/",
+    "images": [
+      {
+        "url": "https://robotwin-platform.github.io/assets/images/teaser.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robotwin-platform.github.io/assets/images/robotwin-od.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robotwin-platform.github.io/assets/images/50-tasks.gif",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robotwin-platform.github.io/assets/images/cross-embodiment.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robotwin-platform.github.io/assets/images/randomization.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "6H2MkMetmFk",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://robotwin-platform.github.io/RoboTwin2.0_video.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "ThreeDWorld": {
+    "title": "ThreeDWorld: A Platform for Interactive Multi-Modal Physical Simulation",
+    "authors": "Gan et al.",
+    "venue": "arXiv 2020",
+    "arxiv": "2007.04954",
+    "github": "https://github.com/threedworld-mit/tdw",
+    "project": "https://www.threedworld.org/"
+  },
+  "MimicGen": {
+    "title": "MimicGen: A Data Generation System for Scalable Robot Learning Using Human Demonstrations",
+    "authors": "Mandlekar et al.",
+    "venue": "CoRL 2023",
+    "arxiv": "2310.17596",
+    "github": "https://github.com/NVlabs/mimicgen",
+    "project": "https://mimicgen.github.io/",
+    "images": [
+      {
+        "url": "https://mimicgen.github.io/resources/overview.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "WdMYGESu8Ak",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://mimicgen.github.io/resources/highlights.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://mimicgen.github.io/resources/title.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "Isaac Lab": {
+    "title": "Isaac Lab: A GPU-Accelerated Simulation Framework for Multi-Modal Robot Learning",
+    "authors": "Mittal et al.",
+    "venue": "arXiv 2025",
+    "arxiv": "2511.04831",
+    "github": "https://github.com/isaac-sim/IsaacLab",
+    "project": "https://isaac-sim.github.io/IsaacLab/"
+  },
+  "SAPIEN": {
+    "title": "SAPIEN: A SimulAted Part-based Interactive ENvironment",
+    "authors": "Xiang et al.",
+    "venue": "CVPR 2020",
+    "arxiv": "2003.08515",
+    "github": "https://github.com/haosulab/SAPIEN",
+    "project": "https://sapien.ucsd.edu/"
+  },
+  "robosuite": {
+    "title": "robosuite: A Modular Simulation Framework and Benchmark for Robot Learning",
+    "authors": "Zhu et al.",
+    "venue": "arXiv 2020",
+    "arxiv": "2009.12293",
+    "github": "https://github.com/ARISE-Initiative/robosuite",
+    "project": "https://robosuite.ai/",
+    "images": [
+      {
+        "url": "https://robosuite.ai/assets/images/yuke_zhu.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robosuite.ai/assets/images/josiah_wong.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robosuite.ai/assets/images/ajay_mandlek.png",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robosuite.ai/assets/images/roberto_martinmartin.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robosuite.ai/assets/images/abhishek_joshi.jpg",
+        "alt": "项目配图"
+      },
+      {
+        "url": "https://robosuite.ai/assets/images/kevin_lin.jpg",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://robosuite.ai/assets/robosuite-v1.5-video.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "youtube",
+        "id": "2IwDSbj9igQ",
+        "title": "项目演示"
+      },
+      {
+        "type": "youtube",
+        "id": "2xesly6JrQ8",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "MuJoCo Playground": {
+    "title": "MuJoCo Playground: An Open-Source Framework for GPU-Accelerated Robot Learning and Sim-to-Real Transfer",
+    "authors": "Zakka et al.",
+    "venue": "RSS 2025",
+    "arxiv": "2502.08844",
+    "github": "https://github.com/google-deepmind/mujoco_playground",
+    "project": "https://playground.mujoco.org/",
+    "images": [
+      {
+        "url": "https://kevinzakka.github.io/mujoco_playground/assets/teaser.jpeg",
+        "alt": "项目预览图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://playground.mujoco.org/assets/teaser.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://playground.mujoco.org/assets/go1_indoor.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://playground.mujoco.org/assets/go1_handstand.mp4",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "LIBERO": {
+    "title": "LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning",
+    "authors": "Liu et al.",
+    "venue": "NeurIPS 2023 D&B",
+    "arxiv": "2306.03310",
+    "github": "https://github.com/Lifelong-Robot-Learning/LIBERO",
+    "project": "https://libero-project.github.io/"
+  },
+  "RLBench": {
+    "title": "RLBench: The Robot Learning Benchmark & Learning Environment",
+    "authors": "James et al.",
+    "venue": "RA-L 2020",
+    "arxiv": "1909.12271",
+    "github": "https://github.com/stepjam/RLBench",
+    "project": "https://sites.google.com/view/rlbench",
+    "videos": [
+      {
+        "type": "youtube",
+        "id": "og4c1urBoqA",
+        "title": "项目演示"
+      },
+      {
+        "type": "youtube",
+        "id": "pTaJoOeurEs",
+        "title": "项目演示"
+      },
+      {
+        "type": "youtube",
+        "id": "bKaK_9O3v7Y",
+        "title": "项目演示"
+      }
+    ]
+  },
+  "CALVIN": {
+    "title": "CALVIN: A Benchmark for Language-Conditioned Policy Learning for Long-Horizon Robot Manipulation Tasks",
+    "authors": "Mees et al.",
+    "venue": "RA-L 2022",
+    "arxiv": "2112.03227",
+    "github": "https://github.com/mees/calvin",
+    "project": "https://calvin.cs.uni-freiburg.de/"
+  },
+  "SkillMimicGen": {
+    "title": "SkillMimicGen: Automated Demonstration Generation for Efficient Skill Learning and Deployment",
+    "authors": "Garrett et al.",
+    "venue": "CoRL 2024",
+    "arxiv": "2410.18907",
+    "github": "https://github.com/NVlabs/skillmimicgen",
+    "project": "https://skillgen.github.io/",
+    "images": [
+      {
+        "url": "https://skillgen.github.io/resources/overview.png",
+        "alt": "项目配图"
+      }
+    ],
+    "videos": [
+      {
+        "type": "mp4",
+        "url": "https://skillgen.github.io/resources/highlights.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://skillgen.github.io/resources/real_robot/Butter_Policy.mp4",
+        "title": "项目演示"
+      },
+      {
+        "type": "mp4",
+        "url": "https://skillgen.github.io/resources/real_robot/Coffee_Policy_with_labels_comp.mp4",
+        "title": "项目演示"
+      }
+    ]
+  }
+}

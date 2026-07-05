@@ -1,0 +1,17 @@
+{
+  "title": "World 与 World Model 调研",
+  "subtitle": "四层概念 × 五类模型 × 三条闭环 · 20 篇代表论文",
+  "sections": [
+    {
+      "id": "overview",
+      "title": "调研",
+      "docs": [
+        {
+          "path": "world-model-survey.html",
+          "title": "World 与 World Model：从外部训练环境到内部预测模型",
+          "description": "概念区分、技术谱系、论文对比表、成熟度框架与附录"
+        }
+      ]
+    }
+  ]
+}

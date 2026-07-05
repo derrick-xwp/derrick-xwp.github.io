@@ -1,0 +1,79 @@
+{
+  "title": "Sim-Ready 资产 · 技术路线与范式对比",
+  "caption": "ArtVIP 与 SimFoundry 代表支撑层中「策展型标准库」与「模块化 Real2Sim 工厂」两条路径；生成式编排路线见 §3.6。",
+  "consensus": {
+    "title": "行业共识 · Industry Consensus",
+    "pains": [
+      "视觉合理的 3D 网格 ≠ 可仿真：水密性、碰撞体、惯性/摩擦参数是部署门槛",
+      "关节物体需一致的 URDF/USD 关节轴、限位与驱动接口，否则跨 Isaac/MuJoCo/SAPIEN 失败",
+      "手工图形资产成本高、规模小，难以支撑具身策略的数据饥渴",
+      "缺乏统一的 Sim-Ready 规范（OpenUSD / SimReady 仍在推进中）",
+      "资产质量直接决定 sim↔real 迁移上限——支撑层是八阶段流水线的横切瓶颈"
+    ],
+    "goal": "产出可直接导入物理引擎、支持接触/关节交互、可被下游主线复用的 mesh / URDF / USD 资产"
+  },
+  "lifecycle": [
+    { "id": "capture", "label": "① 条件采集", "desc": "多模态观测入口", "techniques": "Text/Image prompt · RGB 视频 · 实景扫描 · 程序化参数" },
+    { "id": "decompose", "label": "② 结构分解", "desc": "语义与装配策划", "techniques": "任务/布局 JSON · Assembly-Module-Mesh · VLM 迭代实例分割" },
+    { "id": "generate", "label": "③ 几何生成", "desc": "外观+拓扑", "techniques": "T2-3D / I2-3D · PBR 手工建模 · 2D→3D Foundation Model" },
+    { "id": "physics", "label": "④ 物理接地", "desc": "动力学可执行", "techniques": "VLM 尺度/质量/摩擦 · 动捕关节辨识 · CoACD+引擎沉降" },
+    { "id": "serialize", "label": "⑤ Sim-Ready 序列化", "desc": "格式标准化", "techniques": "URDF · USD · MJCF · 碰撞/材质绑定" },
+    { "id": "validate", "label": "⑥ 仿真验证", "desc": "可训练性检验", "techniques": "多后端导入 · IL/RL · sim-real 相关评测" },
+    { "id": "feedback", "label": "⑦ 闭环回馈", "desc": "质量与规模迭代", "techniques": "自动质检重试 · 生产规范复刻 · Digital Cousins 扩增" }
+  ],
+  "branches": [
+    {
+      "id": "curated",
+      "label": "策展型标准资产库",
+      "color": "#4ade80",
+      "representative": "ArtVIP",
+      "mount": "③④⑤",
+      "summary": "专业 3D 建模师按统一规范自顶向下装配（Assembly→Module→Mesh），光学动捕标定关节，USD 内嵌模块化交互行为。",
+      "strengths": ["视觉+物理双保真，sim2real 证据充分", "像素级 affordance · 即插即用交互", "206 关节物体 + 场景资产开源"],
+      "tradeoffs": ["人力密集、难无限扩展", "偏 Isaac Sim / USD 生态", "更新周期长、许可需治理"],
+      "loop": "生产规范开源 → 社区复刻 → 资产库版本迭代"
+    },
+    {
+      "id": "real2sim",
+      "label": "模块化 Real2Sim 工厂",
+      "color": "#c084fc",
+      "representative": "SimFoundry",
+      "mount": "①②③④⑤⑥⑦",
+      "summary": "单段视频 → 可插拔 FM 流水线（分割/深度/mesh/姿态/关节）→ PyBullet 稳定化 → Isaac Lab；Digital Cousins 三轴扩增训练数据。",
+      "strengths": ["真实场景锚定，eval 与 real 强相关 (r≈0.91)", "对象/场景/任务 Cousins 闭环扩增", "模块化可替换最新 FM"],
+      "tradeoffs": ["逐场景流水线成本高", "依赖多模型编排与调参", "背景重建需额外视频或算力"],
+      "loop": "重建孪生 → Cousins 扩增 → 策略训练/评测 → 真机反馈 → 新视频输入"
+    }
+  ],
+  "compare_axes": [
+    { "key": "input", "label": "输入" },
+    { "key": "scale", "label": "规模化" },
+    { "key": "format", "label": "格式" },
+    { "key": "physics", "label": "物理接地" },
+    { "key": "downstream", "label": "下游" },
+    { "key": "loop", "label": "闭环" }
+  ],
+  "compare_rows": [
+    {
+      "branch": "curated",
+      "input": "扫描 + 人工建模",
+      "scale": "低（策展）",
+      "format": "USD (PBR+行为)",
+      "physics": "动捕 + 碰撞精调",
+      "downstream": "标准资产库 · IL/RL benchmark",
+      "loop": "规范复刻扩库"
+    },
+    {
+      "branch": "real2sim",
+      "input": "真实 RGB 视频",
+      "scale": "中（场景级）",
+      "format": "mesh/USD → Isaac Lab",
+      "physics": "CoACD + VLM 标注",
+      "downstream": "场景工厂 · ⑦⑧ 策略闭环",
+      "loop": "Cousins → 真机 → 新视频"
+    }
+  ],
+  "mermaid": "flowchart TB\n  subgraph LOOP[\"Sim-Ready 资产生命周期 · 宏观闭环\"]\n    direction TB\n    N1[\"① 条件采集<br/><small>Text·Image·Video·扫描</small>\"]\n    N2[\"② 结构分解<br/><small>任务图·层级装配·VLM 实例</small>\"]\n    N3[\"③ 几何生成<br/><small>T2-3D·PBR·2D→3D FM</small>\"]\n    N4[\"④ 物理接地<br/><small>尺度·质量·关节·碰撞</small>\"]\n    N5[\"⑤ Sim-Ready 序列化<br/><small>URDF·USD·MJCF</small>\"]\n    N6[\"⑥ 仿真验证<br/><small>引擎导入·IL/RL·相关评测</small>\"]\n    N7[\"⑦ 闭环回馈<br/><small>质检·规范·Cousins</small>\"]\n    N1 --> N2 --> N3 --> N4 --> N5 --> N6 --> N7\n    N7 -.\"质量/数据反馈\".-> N1\n  end\n\n  subgraph BCUR[\"策展型标准库\"]\n    C1[\"人工 PBR 建模<br/>动捕 · 嵌入式 USD 行为\"]\n  end\n  subgraph BRS[\"模块化 Real2Sim 工厂\"]\n    R1[\"FM 抽取对齐<br/>CoACD · Digital Cousins\"]\n  end\n\n  N3 -.技术挂载.-> BCUR\n  N2 -.技术挂载.-> BRS\n\n  subgraph DOWN[\"下游主线 ④⑥\"]\n    direction LR\n    D1[\"智能体编排\"]\n    D2[\"组合重建\"]\n    D3[\"关节孪生\"]\n  end\n\n  N5 --> DOWN\n  N6 --> OUT[\"策略训练 / sim↔real\"]\n  OUT -.部署反馈.-> N7\n\n  classDef loopN fill:#1e3a5f,stroke:#7ecbff,color:#e8f4ff\n  classDef bCur fill:#1a2e2a,stroke:#4ade80,color:#dcfce7\n  classDef bRs fill:#2a1a3a,stroke:#c084fc,color:#f3e8ff\n  classDef downN fill:#1a3d2e,stroke:#86efac,color:#ecfdf5\n  class N1,N2,N3,N4,N5,N6,N7 loopN\n  class C1 bCur\n  class R1 bRs\n  class D1,D2,D3,OUT downN",
+  "roadmap_caption_kicker": "方法梳理",
+  "roadmap_caption": "ArtVIP 与 SimFoundry 分别代表策展型标准库与模块化 Real2Sim 工厂：前者以人力换取视觉–物理双保真 USD 资产，后者以视频驱动流水线完成 sim↔real 闭环（r≈0.91）。生成式基础模型编排（EmbodiedGen 等）已独立归入 §3.6，不在此重复展开。"
+}

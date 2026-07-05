@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <link rel="stylesheet" href="../blog-auth.css">
+  <script src="../blog-auth.config.js"></script>
+  <script src="../blog-crypto.js"></script>
+  <script src="../blog-auth.js"></script>
+<meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>具身智能训练环境构建调研</title>
+  <link rel="stylesheet" href="../../styles.css" />
+  <link rel="stylesheet" href="./overview.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="blog-hub-page blog-training-fullpage te-overview-page">
+<div id="blog-encrypted-root" class="blog-encrypted-root" data-enc="overview-shell.enc.json" hidden aria-hidden="true">
+  <p class="blog-encrypted-placeholder">内容已加密，请输入访问密码解锁。</p>
+</div>
+<script src="../../site-paths.js"></script>
+  <script>
+    (function () {
+      function fixHref(id, fallback) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (window.SITE_PATHS) {
+          if (id === 'site-back-blogs' && window.SITE_PATHS.blogs) el.href = window.SITE_PATHS.blogs;
+          if (id === 'site-back-home' && window.SITE_PATHS.home) el.href = window.SITE_PATHS.home;
+        } else {
+          el.href = fallback;
+        }
+      }
+      fixHref('site-back-blogs', '../');
+      fixHref('site-back-home', '../../');
+      function runInteractive() {
+        if (window.initTrainingEnvInteractive) {
+          window.initTrainingEnvInteractive(document.querySelector('.te-overview-article'));
+        }
+        if (window.initAssetsParadigmView) {
+          window.initAssetsParadigmView(document);
+        }
+      }
+      if (window.BlogAuth && window.BlogAuth.requireAuth) {
+        window.BlogAuth.requireAuth(runInteractive);
+      } else {
+        runInteractive();
+      }
+    })();
+  </script>
+</body>
+</html>

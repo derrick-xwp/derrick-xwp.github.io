@@ -1,0 +1,64 @@
+/* Method Landscape — blog hub embed */
+
+#blog-method-landscape-collapsible .blog-collapsible-body {
+  padding: 0;
+  background: transparent;
+}
+
+#blog-method-landscape-collapsible #blog-method-landscape-overview,
+#blog-method-landscape-collapsible .blog-embodied-overview {
+  width: 100%;
+}
+
+#blog-method-landscape-collapsible .te-overview-article.te-overview-main,
+#blog-method-landscape-collapsible .blog-embodied-overview-article.te-overview-article {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0 0 1.25rem;
+  border: none;
+  border-radius: 0;
+  box-sizing: border-box;
+  background: linear-gradient(165deg, #0a1635 0%, #0c1428 42%, #081222 100%);
+}
+
+#blog-method-landscape-collapsible .te-section {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+#blog-method-landscape-collapsible .te-hero {
+  display: none;
+}
+
+#blog-method-landscape-collapsible .blog-embodied-overview-article.te-overview-article p,
+#blog-method-landscape-collapsible .blog-embodied-overview-article.te-overview-article h2,
+#blog-method-landscape-collapsible .blog-embodied-overview-article.te-overview-article h3,
+#blog-method-landscape-collapsible .blog-embodied-overview-article.te-overview-article li,
+#blog-method-landscape-collapsible .blog-embodied-overview-article.te-overview-article td,
+#blog-method-landscape-collapsible .blog-embodied-overview-article.te-overview-article th {
+  color: var(--te-text, #e8f4ff);
+}
+
+#blog-method-landscape-collapsible .te-section-desc,
+#blog-method-landscape-collapsible .ml-intro-text,
+#blog-method-landscape-collapsible .ml-chart-note,
+#blog-method-landscape-collapsible .ml-disclaimer-footer {
+  color: var(--te-text-muted, #8ba3c4);
+}
+
+#blog-method-landscape-collapsible .te-section-head h2 {
+  color: var(--te-text, #e8f4ff);
+}
+
+#blog-method-landscape-collapsible a {
+  color: var(--te-accent, #7ecbff);
+}
+
+#blog-method-landscape-collapsible .te-page-footer {
+  display: none;
+}
+
+#blog-method-landscape-collapsible .ml-drawer {
+  z-index: 2000;
+}

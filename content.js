@@ -23,7 +23,7 @@ window.RESUME = {
     blogHubBack: '← 返回主页',
     blogHubReadMore: '进入专栏 →',
     embodiedSeries: {
-      title: '具身智能平台调研',
+      title: '具身智能成熟平台调研',
       summary: '涵盖 NVIDIA Isaac 生态与 9 大开源仿真平台；含多维度能力矩阵、选型决策与各平台技术文档。',
       seriesBadge: 'Embodied AI',
       platformCountLabel: '10 个平台',
@@ -52,7 +52,81 @@ window.RESUME = {
         { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: '1000 项家务 BDDL 任务、OmniGibson 流体/关节状态与 2025 Challenge 评测栈。', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
       ]
     },
+    trainingEnvSeries: {
+      title: '具身智能训练环境构建调研',
+      summary: '八阶段操作流水线 × 双构建范式 × 三技术主线；43 篇文献阶段参与详表。',
+      seriesBadge: 'Training Env',
+      paperCountLabel: '43 篇论文',
+      overviewUrl: 'training-env/训练环境构建调研.html',
+      loadingLabel: '正在加载调研内容…',
+      loadErrorLabel: '加载失败，请刷新页面重试。',
+      defaultOpen: true
+    },
+    worldModelSeries: {
+      title: 'World 与 World Model：从外部训练环境到内部预测模型',
+      summary: '四层概念 × 五类模型 × 三条闭环；区分 World、Simulator 与 World Model，梳理 latent dynamics 到 embodied world model 技术谱系。',
+      seriesBadge: 'World Model',
+      paperCountLabel: '20 篇论文',
+      overviewUrl: 'world-model/world-model-survey.html',
+      loadingLabel: '正在加载调研内容…',
+      loadErrorLabel: '加载失败，请刷新页面重试。',
+      defaultOpen: true
+    },
+    policyDataSeries: {
+      title: '从 Sim-Ready World 到 Policy-Ready Data Engine',
+      summary: 'Sim-Ready 之后的任务、奖励、数据、评测与真机迁移；六节凝练版 + 9 篇代表论文对比。',
+      seriesBadge: 'Policy Data',
+      paperCountLabel: '9 篇论文',
+      overviewUrl: 'policy-data/policy-data-survey.html',
+      loadingLabel: '正在加载调研内容…',
+      loadErrorLabel: '加载失败，请刷新页面重试。',
+      defaultOpen: true
+    },
+    methodLandscapeSeries: {
+      title: '全链条方法图谱：完整度、平台族与工程现实',
+      summary: '从 Task 到 Real Transfer 七维完整度；平台族聚类、兼容度与算力门槛；17 篇代表方法可交互对比。',
+      seriesBadge: 'Method Landscape',
+      paperCountLabel: '17 篇方法',
+      overviewUrl: 'method-landscape/method-landscape-survey.html',
+      fullArticleUrl: 'method-landscape/method-landscape-survey.html',
+      viewFullArticle: '查看完整交互页 →',
+      loadingLabel: '正在加载方法图谱…',
+      loadErrorLabel: '加载失败，请打开完整文章页查看。',
+      defaultOpen: true
+    },
     blogs: [
+      {
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: '全链条方法图谱：完整度、平台族与工程现实',
+        summary: '雷达图、平台族聚类、完整度×兼容度气泡图与热力矩阵；17 篇代表方法可检索对比。',
+        link: 'blogs/#method-landscape',
+        tags: ['具身智能', '方法图谱', '平台族', '完整度']
+      },
+      {
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: '从 Sim-Ready World 到 Policy-Ready Data Engine',
+        summary: 'Sim-Ready 之后的任务、奖励、数据、评测与真机迁移；六节凝练版 + 9 篇论文对比。',
+        link: 'blogs/#policy-data',
+        tags: ['具身智能', 'Policy-Ready', 'Task Generation', 'Sim2Real']
+      },
+      {
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'World 与 World Model：从外部训练环境到内部预测模型',
+        summary: '四层概念 × 五类模型 × 三条闭环；区分 World、Simulator 与 World Model，20 篇代表论文对比表。',
+        link: 'blogs/#world-model',
+        tags: ['具身智能', 'World Model', 'Model-Based RL', 'Planning']
+      },
+      {
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: '具身智能训练环境构建调研',
+        summary: '8 阶段流水线 × 两入口 × 三主线；43 篇论文阶段参与详表（非平台选型）。',
+        link: 'blogs/#training-env',
+        tags: ['具身智能', '训练环境', 'Real2Sim', '场景生成']
+      },
       {
         date: '2026-06',
         dateLabel: '2026年6月',
@@ -209,7 +283,7 @@ window.RESUME = {
     blogHubBack: '← 返回主頁',
     blogHubReadMore: '進入專欄 →',
     embodiedSeries: {
-      title: '具身智能平台調研',
+      title: '具身智能成熟平台調研',
       summary: '涵蓋 NVIDIA Isaac 生態與 9 大開源仿真平台；含多維度能力矩陣、選型決策與各平台技術文檔。',
       seriesBadge: 'Embodied AI',
       platformCountLabel: '10 個平台',
@@ -238,7 +312,53 @@ window.RESUME = {
         { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: '1000 項家務 BDDL 任務、OmniGibson 與 2025 Challenge。', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
       ]
     },
+    trainingEnvSeries: {
+      title: '具身智能訓練環境構建調研',
+      summary: '八階段流水線 × 兩入口 × 三主線；43 篇論文的階段參與詳表與框架關係圖。',
+      seriesBadge: 'Training Env',
+      paperCountLabel: '43 篇論文',
+      overviewUrl: 'training-env/训练环境构建调研.html',
+      loadingLabel: '正在載入調研內容…',
+      loadErrorLabel: '載入失敗，請打開完整文章頁查看。',
+      defaultOpen: true
+    },
+    worldModelSeries: {
+      title: 'World 與 World Model：從外部訓練環境到內部預測模型',
+      summary: '四層概念 × 五類模型 × 三條閉環；區分 World、Simulator 與 World Model 技術譜系。',
+      seriesBadge: 'World Model',
+      paperCountLabel: '20 篇論文',
+      overviewUrl: 'world-model/world-model-survey.html',
+      loadingLabel: '正在載入調研內容…',
+      loadErrorLabel: '載入失敗，請刷新頁面重試。',
+      defaultOpen: true
+    },
+    policyDataSeries: {
+      title: '從 Sim-Ready World 到 Policy-Ready Data Engine',
+      summary: 'Sim-Ready 之後的任務、獎勵、示範、rollout、benchmark 與真實遷移；七模組後端數據生成路線圖。',
+      seriesBadge: 'Policy Data',
+      paperCountLabel: '9 篇論文',
+      overviewUrl: 'policy-data/policy-data-survey.html',
+      loadingLabel: '正在載入調研內容…',
+      loadErrorLabel: '載入失敗，請刷新頁面重試。',
+      defaultOpen: true
+    },
+    methodLandscapeSeries: {
+      title: '全鏈條方法圖譜：完整度、平台族與工程現實',
+      summary: '從 Task 到 Real Transfer 七維完整度；平台族聚類、兼容度與算力門檻；17 篇代表方法可互動對比。',
+      seriesBadge: 'Method Landscape',
+      paperCountLabel: '17 篇方法',
+      overviewUrl: 'method-landscape/method-landscape-survey.html',
+      fullArticleUrl: 'method-landscape/method-landscape-survey.html',
+      viewFullArticle: '查看完整互動頁 →',
+      loadingLabel: '正在載入方法圖譜…',
+      loadErrorLabel: '載入失敗，請打開完整文章頁查看。',
+      defaultOpen: true
+    },
     blogs: [
+      { date: '2026-07', dateLabel: '2026年7月', title: '全鏈條方法圖譜：完整度、平台族與工程現實', summary: '雷達圖、平台族聚類、完整度×兼容度氣泡圖與熱力矩陣；17 篇代表方法可檢索對比。', link: 'blogs/#method-landscape', tags: ['具身智能', '方法圖譜', '平台族'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: '從 Sim-Ready World 到 Policy-Ready Data Engine', summary: 'Sim-Ready 之後的任務生成、獎勵程序、域隨機化、示範/rollout 數據與 Real2Sim2Real 閉環。', link: 'blogs/#policy-data', tags: ['具身智能', 'Policy-Ready', 'Sim2Real'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'World 與 World Model 調研', summary: '四層概念 × 五類模型；區分 World 與 World Model，20 篇代表論文對比表。', link: 'blogs/#world-model', tags: ['具身智能', 'World Model'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: '具身智能訓練環境構建調研', summary: '8 階段流水線 × 兩入口 × 三主線；43 篇論文階段參與詳表（非平台選型）。', link: 'blogs/#training-env', tags: ['具身智能', '訓練環境', 'Real2Sim'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'NVIDIA 具身智能平台調研', summary: 'Isaac Sim、Isaac Lab 與 Cosmos 定位與使用流程。', link: 'blogs/nvidia/', tags: ['具身智能', 'NVIDIA', 'Isaac Sim'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'AI2-THOR 調研', summary: 'Unity 互動室內仿真與 Controller API。', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['仿真平台', 'AI2-THOR'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'SAPIEN / ManiSkill 調研', summary: 'GPU 並行物理仿真與 ManiSkill3 benchmark。', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['仿真平台', 'ManiSkill'] },
@@ -327,7 +447,52 @@ window.RESUME = {
         { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: '1000 household BDDL tasks, OmniGibson fluids/states, and 2025 Challenge stack.', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
       ]
     },
+    trainingEnvSeries: {
+      title: 'Embodied AI Training Environment Survey',
+      summary: '8-stage pipeline × two entry points × three main lines; stage-by-stage map of 43 papers.',
+      seriesBadge: 'Training Env',
+      paperCountLabel: '43 papers',
+      overviewUrl: 'training-env/训练环境构建调研.html',
+      loadingLabel: 'Loading survey content…',
+      loadErrorLabel: 'Failed to load. Open the full article page instead.',
+      defaultOpen: true
+    },
+    worldModelSeries: {
+      title: 'World vs World Model: External Environment to Internal Prediction',
+      summary: 'Four concepts × five model families × three loops; latent dynamics to embodied world models.',
+      seriesBadge: 'World Model',
+      paperCountLabel: '20 papers',
+      overviewUrl: 'world-model/world-model-survey.html',
+      loadingLabel: 'Loading survey content…',
+      loadErrorLabel: 'Failed to load. Please refresh.',
+      defaultOpen: true
+    },
+    policyDataSeries: {
+      title: 'From Sim-Ready World to Policy-Ready Data Engine',
+      summary: 'Post Sim-Ready task, reward, demo, rollout, benchmark and real transfer; seven-module backend data pipeline.',
+      seriesBadge: 'Policy Data',
+      paperCountLabel: '9 papers',
+      overviewUrl: 'policy-data/policy-data-survey.html',
+      loadingLabel: 'Loading survey content…',
+      loadErrorLabel: 'Failed to load. Please refresh.',
+      defaultOpen: true
+    },
+    methodLandscapeSeries: {
+      title: 'Method Landscape: Completeness, Platform Families & Engineering Reality',
+      summary: 'Seven-dimension pipeline coverage; platform clustering, compatibility and compute; 17 methods with interactive charts.',
+      seriesBadge: 'Method Landscape',
+      paperCountLabel: '17 methods',
+      overviewUrl: 'method-landscape/method-landscape-survey.html',
+      fullArticleUrl: 'method-landscape/method-landscape-survey.html',
+      viewFullArticle: 'Open full interactive page →',
+      loadingLabel: 'Loading method landscape…',
+      loadErrorLabel: 'Failed to load. Open the full article page.',
+      defaultOpen: true
+    },
     blogs: [
+      { date: '2026-07', dateLabel: 'July 2026', title: 'Method Landscape: Completeness & Platform Families', summary: 'Radar, cluster map, bubble chart, heatmap and reference table for 17 representative methods.', link: 'blogs/#method-landscape', tags: ['Embodied AI', 'Method Landscape', 'Platforms'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'World vs World Model Survey', summary: 'Four concepts × five families; 20-paper comparison table.', link: 'blogs/#world-model', tags: ['Embodied AI', 'World Model'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'Embodied AI Training Environment Survey', summary: '8-stage pipeline with per-paper contributions across 43 papers (not platform selection).', link: 'blogs/#training-env', tags: ['Embodied AI', 'Training Env', 'Real2Sim'] },
       { date: '2026-06', dateLabel: 'June 2026', title: 'NVIDIA Embodied AI Platform Survey', summary: 'Isaac Sim, Isaac Lab, and Cosmos workflows.', link: 'blogs/nvidia/', tags: ['Embodied AI', 'NVIDIA'] },
       { date: '2026-06', dateLabel: 'June 2026', title: 'AI2-THOR Survey', summary: 'Unity interactive indoor simulation and Controller API.', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['Simulation', 'AI2-THOR'] },
       { date: '2026-06', dateLabel: 'June 2026', title: 'SAPIEN / ManiSkill Survey', summary: 'GPU-parallel physics and ManiSkill3 benchmarks.', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['Simulation', 'ManiSkill'] },
@@ -450,7 +615,52 @@ window.RESUME = {
         { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: 'BDDL 1000 タスクと OmniGibson。', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
       ]
     },
+    trainingEnvSeries: {
+      title: 'エンボディド AI 訓練環境構築調査',
+      summary: '8 段階パイプライン × 2 入口 × 3 主線；43 論文の段階別貢献とフレーム図。',
+      seriesBadge: 'Training Env',
+      paperCountLabel: '43 論文',
+      overviewUrl: 'training-env/训练环境构建调研.html',
+      loadingLabel: '調査内容を読み込み中…',
+      loadErrorLabel: '読み込みに失敗しました。全文ページを開いてください。',
+      defaultOpen: true
+    },
+    worldModelSeries: {
+      title: 'World と World Model：外部訓練環境から内部予測モデルへ',
+      summary: '四層概念 × 五類モデル × 三閉環；World と World Model の技術系譜。',
+      seriesBadge: 'World Model',
+      paperCountLabel: '20 論文',
+      overviewUrl: 'world-model/world-model-survey.html',
+      loadingLabel: '調査内容を読み込み中…',
+      loadErrorLabel: '読み込みに失敗しました。',
+      defaultOpen: true
+    },
+    policyDataSeries: {
+      title: 'Sim-Ready World から Policy-Ready Data Engine へ',
+      summary: 'Sim-Ready 以降のタスク・報酬・デモ・rollout・benchmark・実機移行；7 モジュール後端データ生成。',
+      seriesBadge: 'Policy Data',
+      paperCountLabel: '9 論文',
+      overviewUrl: 'policy-data/policy-data-survey.html',
+      loadingLabel: '調査内容を読み込み中…',
+      loadErrorLabel: '読み込みに失敗しました。',
+      defaultOpen: true
+    },
+    methodLandscapeSeries: {
+      title: '全チェーン方法マップ：完全性・プラットフォーム族・工学現実',
+      summary: 'Task から Real Transfer まで 7 次元；プラットフォームクラスタ・互換性・計算コスト；17 手法の対話型比較。',
+      seriesBadge: 'Method Landscape',
+      paperCountLabel: '17 手法',
+      overviewUrl: 'method-landscape/method-landscape-survey.html',
+      fullArticleUrl: 'method-landscape/method-landscape-survey.html',
+      viewFullArticle: '完全な対話ページを開く →',
+      loadingLabel: '方法マップを読み込み中…',
+      loadErrorLabel: '読み込みに失敗しました。',
+      defaultOpen: true
+    },
     blogs: [
+      { date: '2026-07', dateLabel: '2026年7月', title: '全チェーン方法マップ', summary: 'レーダー・クラスタ・バブル・ヒートマップ；17 代表手法の検索可能な比較。', link: 'blogs/#method-landscape', tags: ['エンボディド AI', '方法マップ'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'World と World Model 調査', summary: '四層概念 × 五類モデル；20 論文比較表。', link: 'blogs/#world-model', tags: ['エンボディド AI', 'World Model'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'エンボディド AI 訓練環境構築調査', summary: '8 段階パイプライン × 2 入口 × 3 主線；43 論文の段階別貢献（プラットフォーム選定ではない）。', link: 'blogs/#training-env', tags: ['エンボディド AI', '訓練環境'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'NVIDIA エンボディド AI プラットフォーム調査', summary: 'Isaac Sim・Isaac Lab・Cosmos。', link: 'blogs/nvidia/', tags: ['エンボディド AI', 'NVIDIA'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'AI2-THOR 調査', summary: 'Unity 室内仿真。', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['シミュレーション', 'AI2-THOR'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'SAPIEN / ManiSkill 調査', summary: 'GPU 並列物理仿真。', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['シミュレーション', 'ManiSkill'] },
@@ -573,7 +783,52 @@ window.RESUME = {
         { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: 'BDDL 1000 태스크와 OmniGibson.', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
       ]
     },
+    trainingEnvSeries: {
+      title: '엠보디드 AI 훈련 환경 구축 조사',
+      summary: '8단계 파이프라인 × 2개 진입점 × 3개 주선；43편 논문의 단계별 기여와 프레임워크 도.',
+      seriesBadge: 'Training Env',
+      paperCountLabel: '43편 논문',
+      overviewUrl: 'training-env/训练环境构建调研.html',
+      loadingLabel: '조사 내용 불러오는 중…',
+      loadErrorLabel: '불러오기 실패. 전문 페이지를 여세요.',
+      defaultOpen: true
+    },
+    worldModelSeries: {
+      title: 'World 와 World Model: 외부 훈련 환경에서 내부 예측 모델까지',
+      summary: '4개 개념 × 5개 모델 계열 × 3개 폐루프；World Model 기술 계보.',
+      seriesBadge: 'World Model',
+      paperCountLabel: '20편 논문',
+      overviewUrl: 'world-model/world-model-survey.html',
+      loadingLabel: '조사 내용 불러오는 중…',
+      loadErrorLabel: '불러오기 실패.',
+      defaultOpen: true
+    },
+    policyDataSeries: {
+      title: 'Sim-Ready World에서 Policy-Ready Data Engine까지',
+      summary: 'Sim-Ready 이후 작업·보상·데모·rollout·benchmark·실기 이전；7모듈 백엔드 데이터 생성.',
+      seriesBadge: 'Policy Data',
+      paperCountLabel: '9편 논문',
+      overviewUrl: 'policy-data/policy-data-survey.html',
+      loadingLabel: '조사 내용 불러오는 중…',
+      loadErrorLabel: '불러오기 실패.',
+      defaultOpen: true
+    },
+    methodLandscapeSeries: {
+      title: '전체 체인 방법 지도: 완전성·플랫폼족·엔지니어링 현실',
+      summary: 'Task→Real Transfer 7차원；플랫폼 클러스터·호환성·연산 비용；17개 방법 대화형 비교.',
+      seriesBadge: 'Method Landscape',
+      paperCountLabel: '17개 방법',
+      overviewUrl: 'method-landscape/method-landscape-survey.html',
+      fullArticleUrl: 'method-landscape/method-landscape-survey.html',
+      viewFullArticle: '전체 대화형 페이지 열기 →',
+      loadingLabel: '방법 지도 불러오는 중…',
+      loadErrorLabel: '불러오기 실패.',
+      defaultOpen: true
+    },
     blogs: [
+      { date: '2026-07', dateLabel: '2026년 7월', title: '전체 체인 방법 지도', summary: '레이더·클러스터·버블·히트맵；17개 대표 방법 비교.', link: 'blogs/#method-landscape', tags: ['엠보디드 AI', '방법 지도'] },
+      { date: '2026-07', dateLabel: '2026년 7월', title: 'World 와 World Model 조사', summary: '4개 개념 × 5개 계열；20편 논문 비교표.', link: 'blogs/#world-model', tags: ['엠보디드 AI', 'World Model'] },
+      { date: '2026-07', dateLabel: '2026년 7월', title: '엠보디드 AI 훈련 환경 구축 조사', summary: '8단계 파이프라인 × 2개 진입점 × 3개 주선；43편 논문 단계별 기여(플랫폼 선정 아님).', link: 'blogs/#training-env', tags: ['엠보디드 AI', '훈련 환경'] },
       { date: '2026-06', dateLabel: '2026년 6월', title: 'NVIDIA 엠보디드 AI 플랫폼 조사', summary: 'Isaac Sim, Isaac Lab, Cosmos.', link: 'blogs/nvidia/', tags: ['엠보디드 AI', 'NVIDIA'] },
       { date: '2026-06', dateLabel: '2026년 6월', title: 'AI2-THOR 조사', summary: 'Unity 실내 시뮬레이션.', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['시뮬레이션', 'AI2-THOR'] },
       { date: '2026-06', dateLabel: '2026년 6월', title: 'SAPIEN / ManiSkill 조사', summary: 'GPU 병렬 물리 시뮬레이션.', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['시뮬레이션', 'ManiSkill'] },
@@ -696,7 +951,52 @@ window.RESUME = {
         { vendor: 'Stanford', title: 'BEHAVIOR-1K', summary: 'BDDL 1000 tasks และ OmniGibson', link: 'embodied-platforms/behavior_1k/介绍.html', tags: ['BDDL', 'OmniGibson'] }
       ]
     },
+    trainingEnvSeries: {
+      title: 'สำรวจการสร้างสภาพแวดล้อมฝึก Embodied AI',
+      summary: 'ไพป์ไลน์ 8 ขั้นตอน × 2 จุดเข้า × 3 เส้นหลัก；43 บทความและแผนภาพกรอบงาน',
+      seriesBadge: 'Training Env',
+      paperCountLabel: '43 บทความ',
+      overviewUrl: 'training-env/训练环境构建调研.html',
+      loadingLabel: 'กำลังโหลดเนื้อหา…',
+      loadErrorLabel: 'โหลดไม่สำเร็จ กรุณาเปิดหน้าบทความเต็ม',
+      defaultOpen: true
+    },
+    worldModelSeries: {
+      title: 'World กับ World Model: จากสภาพแวดล้อมภายนอกสู่โมเดลทำนายภายใน',
+      summary: '4 แนวคิด × 5 ตระกูลโมเดล × 3 วงจร；เทคนิค World Model',
+      seriesBadge: 'World Model',
+      paperCountLabel: '20 บทความ',
+      overviewUrl: 'world-model/world-model-survey.html',
+      loadingLabel: 'กำลังโหลดเนื้อหา…',
+      loadErrorLabel: 'โหลดไม่สำเร็จ',
+      defaultOpen: true
+    },
+    policyDataSeries: {
+      title: 'จาก Sim-Ready World สู่ Policy-Ready Data Engine',
+      summary: 'งาน·รางวัล·สาธิต·rollout·benchmark·การถ่ายโอนจริงหลัง Sim-Ready；7 โมดูลสร้างข้อมูลแบ็กเอนด์',
+      seriesBadge: 'Policy Data',
+      paperCountLabel: '9 บทความ',
+      overviewUrl: 'policy-data/policy-data-survey.html',
+      loadingLabel: 'กำลังโหลดเนื้อหา…',
+      loadErrorLabel: 'โหลดไม่สำเร็จ',
+      defaultOpen: true
+    },
+    methodLandscapeSeries: {
+      title: 'แผนที่วิธีการทั้งสายโซ่: ความสมบูรณ์·ตระกูลแพลตฟอร์ม·ความเป็นจริงทางวิศวกรรม',
+      summary: '7 มิติ Task→Real Transfer；การจัดกลุ่มแพลตฟอร์ม·ความเข้ากันได้·ต้นทุนคำนวณ；17 วิธีแบบโต้ตอบ',
+      seriesBadge: 'Method Landscape',
+      paperCountLabel: '17 วิธี',
+      overviewUrl: 'method-landscape/method-landscape-survey.html',
+      fullArticleUrl: 'method-landscape/method-landscape-survey.html',
+      viewFullArticle: 'เปิดหน้าโต้ตอบฉบับเต็ม →',
+      loadingLabel: 'กำลังโหลดแผนที่วิธีการ…',
+      loadErrorLabel: 'โหลดไม่สำเร็จ',
+      defaultOpen: true
+    },
     blogs: [
+      { date: '2026-07', dateLabel: 'กรกฎาคม 2026', title: 'แผนที่วิธีการทั้งสายโซ่', summary: 'เรดาร์·คลัสเตอร์·บับเบิล·ฮีตแมป；17 วิธีเปรียบเทียบได้', link: 'blogs/#method-landscape', tags: ['Embodied AI', 'Method Landscape'] },
+      { date: '2026-07', dateLabel: 'กรกฎาคม 2026', title: 'World กับ World Model', summary: '4 แนวคิด × 5 ตระกูล；ตารางเปรียบเทียบ 20 บทความ', link: 'blogs/#world-model', tags: ['Embodied AI', 'World Model'] },
+      { date: '2026-07', dateLabel: 'กรกฎาคม 2026', title: 'สำรวจการสร้างสภาพแวดล้อมฝึก Embodied AI', summary: 'ไพป์ไลน์ 8 ขั้นตอน × 2 จุดเข้า × 3 เส้นหลัก；43 บทความ (ไม่ใช่การเลือกแพลตฟอร์ม)', link: 'blogs/#training-env', tags: ['Embodied AI', 'Training Env'] },
       { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'สำรวจแพลตฟอร์ม NVIDIA Embodied AI', summary: 'Isaac Sim, Isaac Lab, Cosmos', link: 'blogs/nvidia/', tags: ['Embodied AI', 'NVIDIA'] },
       { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'สำรวจ AI2-THOR', summary: 'Unity indoor simulation', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['Simulation', 'AI2-THOR'] },
       { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'สำรวจ SAPIEN / ManiSkill', summary: 'GPU parallel physics', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['Simulation', 'ManiSkill'] },

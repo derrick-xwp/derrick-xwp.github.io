@@ -1,0 +1,1421 @@
+{
+  "theme-agentic": {
+    "title": "4.1 智能体编排 · 技术路线对比图",
+    "caption": "基于 8 篇论文方法归纳：共同骨架为「条件输入 → Agent 分解 → 异构工具编排 → 物理/语义验证 → 仿真装配」，差异体现在编排器形态、闭环机制、仿真后端与是否延伸至策略训练。",
+    "shared_stages": [
+      { "id": "s1", "label": "① 条件输入", "desc": "自然语言 / 任务 / 图像" },
+      { "id": "s2", "label": "③ Agent 分解", "desc": "任务→物体关系 / 工具规划" },
+      { "id": "s3", "label": "④ 工具编排", "desc": "布局·T2-3D·代码·资产检索" },
+      { "id": "s4", "label": "⑤ 验证闭环", "desc": "Critic / 引擎 / VLM 反馈" },
+      { "id": "s5", "label": "⑥ 仿真装配", "desc": "USD / Gym / 场景网格" },
+      { "id": "s6", "label": "⑦ 策略训练", "desc": "IL / RL / 下游评测" }
+    ],
+    "clusters": [
+      {
+        "id": "full-stack",
+        "label": "Sim-Ready 全栈",
+        "hint": "编排 + 三重 Critic + Isaac 全流程",
+        "papers": ["SAGE", "SceneSmith"]
+      },
+      {
+        "id": "toolchain",
+        "label": "异构工具链场景合成",
+        "hint": "多生成器编排，侧重场景质量与效率",
+        "papers": ["SceneWeaver", "SceneOrchestra"]
+      },
+      {
+        "id": "layout-physics",
+        "label": "布局 / 物理专精",
+        "hint": "多智能体或谓词驱动，布局密度高",
+        "papers": ["DisCo-Layout", "PhyScensis"]
+      },
+      {
+        "id": "env-learn",
+        "label": "环境生成 + 学习闭环",
+        "hint": "自动生成可训练环境与技能",
+        "papers": ["SimWorld Studio", "RoboGen"]
+      }
+    ],
+    "compare_axes": [
+      { "key": "orchestrator", "label": "编排器" },
+      { "key": "loop", "label": "闭环机制" },
+      { "key": "physics", "label": "物理检验" },
+      { "key": "backend", "label": "仿真后端" },
+      { "key": "training", "label": "⑦ 训练" },
+      { "key": "diff", "label": "核心差异" }
+    ],
+    "papers": {
+      "SAGE": {
+        "cluster": "full-stack",
+        "orchestrator": "多生成器 Agent",
+        "loop": "Physics/Semantic/Visual Critic",
+        "physics": "Isaac Sim 内检验",
+        "backend": "Isaac Sim USD",
+        "training": "Pick-place IL",
+        "diff": "SAGE-10k 规模化 + Sim-Ready",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "SceneSmith": {
+        "cluster": "full-stack",
+        "orchestrator": "Agentic 并发生成",
+        "loop": "Observe + Critic 迭代",
+        "physics": "仿真器内物理观测",
+        "backend": "Isaac / USD",
+        "training": "Isaac 策略验证",
+        "diff": "室内 Sim-Ready 端到端",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "SceneWeaver": {
+        "cluster": "toolchain",
+        "orchestrator": "自反思 LLM Agent",
+        "loop": "逐步 execute-review-reflect",
+        "physics": "3D 自评估 P/V/S",
+        "backend": "多仿真器",
+        "training": "下游任务验证",
+        "diff": "可扩展工具卡 + 开放词汇",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "SceneOrchestra": {
+        "cluster": "toolchain",
+        "orchestrator": "可训练 Orchestrator (Qwen3)",
+        "loop": "一次生成完整 tool 轨迹",
+        "physics": "训练期 Discriminator 评轨迹",
+        "backend": "多后端网格",
+        "training": "—",
+        "diff": "消除逐步渲染 review，提速",
+        "stages": [1, 1, 1, 1, 1, 0]
+      },
+      "DisCo-Layout": {
+        "cluster": "layout-physics",
+        "orchestrator": "Planner / Designer / Evaluator",
+        "loop": "SRT 语义 + PRT 物理工具",
+        "physics": "网格匹配碰撞消解",
+        "backend": "布局网格导出",
+        "training": "—",
+        "diff": "语义/物理 refine 解耦",
+        "stages": [1, 1, 1, 1, 1, 0]
+      },
+      "PhyScensis": {
+        "cluster": "layout-physics",
+        "orchestrator": "LLM 谓词提议 Agent",
+        "loop": "引擎反馈迭代 enrich",
+        "physics": "物理引擎 settle 验证",
+        "backend": "可操作物理场景",
+        "training": "操作策略训练",
+        "diff": "高密度支撑/包含关系",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "SimWorld Studio": {
+        "cluster": "env-learn",
+        "orchestrator": "SimCoder 编码 Agent",
+        "loop": "Verifier 自演化 + co-evolution",
+        "physics": "规则 + VLM 多视角检验",
+        "backend": "UE5 → Gymnasium",
+        "training": "导航 RL / LLM 策略",
+        "diff": "代码级环境 + 课程共演化",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "RoboGen": {
+        "cluster": "env-learn",
+        "orchestrator": "GPT-4 自主提议",
+        "loop": "propose-generate-learn",
+        "physics": "PyBullet / Genesis",
+        "backend": "自动场景装配",
+        "training": "RL / 规划技能",
+        "diff": "任务先于场景，无限技能扩展",
+        "stages": [1, 1, 1, 1, 1, 1]
+      }
+    },
+    "mermaid": "flowchart TB\n  subgraph COMMON[\"共同技术骨架\"]\n    direction LR\n    IN[\"① 语言/任务条件\"] --> DEC[\"③ Agent 分解\"]\n    DEC --> ORCH[\"④ 异构工具编排\"]\n    ORCH --> VAL[\"⑤ 验证闭环\"]\n    VAL --> DEP[\"⑥ 仿真装配\"]\n    DEP --> TR[\"⑦ 策略训练\"]\n  end\n\n  subgraph C1[\"Sim-Ready 全栈\"]\n    direction TB\n    P1[\"SAGE<br/>三重 Critic · Isaac USD\"]\n    P2[\"SceneSmith<br/>Observe+Critic · 室内\"]\n  end\n\n  subgraph C2[\"工具链场景合成\"]\n    direction TB\n    P3[\"SceneWeaver<br/>逐步 review-reflect\"]\n    P4[\"SceneOrchestra<br/>全轨迹 · 无逐步渲染\"]\n  end\n\n  subgraph C3[\"布局/物理专精\"]\n    direction TB\n    P5[\"DisCo-Layout<br/>三 Agent · SRT/PRT\"]\n    P6[\"PhyScensis<br/>谓词 + 物理引擎\"]\n  end\n\n  subgraph C4[\"环境 + 学习闭环\"]\n    direction TB\n    P7[\"SimWorld Studio<br/>UE5 代码 · Gym 导出\"]\n    P8[\"RoboGen<br/>任务提议 · 技能学习\"]\n  end\n\n  ORCH --> C1\n  ORCH --> C2\n  ORCH --> C3\n  ORCH --> C4\n\n  P3 -.演进.-> P4\n  P8 -.启发.-> P1\n\n  classDef shared fill:#1e3a5f,stroke:#7ecbff,color:#e8f4ff\n  classDef cluster fill:#162544,stroke:#60a5fa,color:#e8f4ff\n  class IN,DEC,ORCH,VAL,DEP,TR shared\n  class P1,P2,P3,P4,P5,P6,P7,P8 cluster",
+    "diagram_guide_kicker": "方法梳理",
+    "diagram_guide": [
+      "本节 8 篇工作共享「语言/任务条件驱动的仿真场景构建」问题设定：以自然语言或任务规格为入口，经 Agent 任务分解与异构工具编排（布局生成、T2-3D、资产检索、代码合成等），在物理/语义验证闭环后完成仿真装配，并（部分工作）延伸至 IL/RL 策略训练。上图六阶段主干刻画了这一共性接口；方法分化集中于编排器形态（LLM Agent / 可训练 Orchestrator / 多 Agent 分工）、⑤验证机制（Critic / 引擎反馈 / VLM 检验）与⑥仿真后端选型。",
+      "（一）Sim-Ready 全栈路线（SAGE、SceneSmith）：以 Isaac Sim / USD 为统一后端，将 Physics·Semantic·Visual 三重 Critic 嵌入生成回路，追求端到端 Sim-Ready 室内场景与策略验证；SAGE 强调 SAGE-10k 规模化数据集与 pick-place IL，SceneSmith 则以 Observe+Critic 并发 Agentic 管线验证室内全栈可行性。（二）异构工具链合成（SceneWeaver、SceneOrchestra）：编排多生成器完成开放词汇场景合成；SceneWeaver 采用逐步 execute-review-reflect 自反思回路与 3D 自评估 P/V/S，SceneOrchestra 以可训练 Orchestrator（Qwen3）一次性输出完整 tool 轨迹，以 Discriminator 评轨迹质量并消除逐步渲染 review 以提升吞吐。",
+      "（三）布局/物理专精（DisCo-Layout、PhyScensis）：DisCo-Layout 以 Planner/Designer/Evaluator 三 Agent 解耦 SRT 语义细化与 PRT 物理细化，经网格匹配碰撞消解导出布局网格；PhyScensis 以 LLM 谓词驱动物体关系提议，经物理引擎 settle 反馈迭代 enrich，支撑高密度包含/支撑关系与操作策略训练。（四）环境生成+学习闭环（SimWorld Studio、RoboGen）：SimWorld Studio 以 SimCoder 将 UE5 场景编译为 Gymnasium 环境，Verifier+VLM 共演化课程与导航 RL；RoboGen 以 GPT-4 任务先验驱动 propose-generate-learn，在 PyBullet/Genesis 中扩展技能空间，体现「任务先于场景」的逆向构建范式。",
+      "横向对比可沿编排器、闭环机制、物理检验、仿真后端与⑦训练五轴展开：全栈组（C1）与 env-learn 组（C4）均贯通⑥⑦，toolchain 组（C2）侧重场景质量与开放词汇效率，layout-physics 组（C3）则聚焦布局密度与物理合法性。图中 SceneWeaver→SceneOrchestra 虚线表示从逐步 review 向全轨迹生成的演进；RoboGen→SAGE 为概念启发而非直接继承。建议结合对比表与聚类图例悬停高亮，按「是否需要 Sim-Ready USD」「是否内嵌策略训练」检索适配方法。"
+    ]
+  },
+  "theme-layout": {
+    "title": "4.2 场景图/扩散布局 · 技术路线对比图",
+    "caption": "基于 14 篇论文归纳：共同闭环为「条件输入 → 场景表示/分解 → 布局生成 → 物理约束 → 仿真装配 → 策略验证 → 反馈增广」；差异体现在条件模态、生成范式（程序化 / LLM / 自回归 / 扩散 / 场景图扩散）、物理机制强度及是否贯通 ⑥⑦。",
+    "shared_stages": [
+      { "id": "s1", "label": "① 条件输入", "desc": "语言 / 户型 / 场景图 / 程序化参数" },
+      { "id": "s2", "label": "③ 场景表示", "desc": "物体集·SceneGraph·语义图·操作图" },
+      { "id": "s3", "label": "④ 布局生成", "desc": "LLM·AR Transformer·扩散·程序化" },
+      { "id": "s4", "label": "⑤ 物理约束", "desc": "隐式·采样·可微引导·引擎规则" },
+      { "id": "s5", "label": "⑥ 仿真装配", "desc": "AI2-THOR / Isaac / Sim 加载" },
+      { "id": "s6", "label": "⑦ 策略验证", "desc": "导航 / IL / RL / 交互评测" }
+    ],
+    "clusters": [
+      {
+        "id": "sim-loop",
+        "label": "仿真训练闭环",
+        "hint": "贯通 ⑥⑦，具身策略或导航验证",
+        "papers": ["Holodeck", "PhyScene", "ProcTHOR", "DynScene"]
+      },
+      {
+        "id": "llm-plan",
+        "label": "LLM 组合规划",
+        "hint": "大模型直接产出布局或 Blender 场景",
+        "papers": ["LayoutGPT"]
+      },
+      {
+        "id": "ar-transformer",
+        "label": "自回归 Transformer 布局",
+        "hint": "户型/文本条件，物体集合自回归预测",
+        "papers": ["SceneFormer", "ATISS"]
+      },
+      {
+        "id": "diffusion-box",
+        "label": "扩散布局（户型条件）",
+        "hint": "连续/混合扩散生成 bbox 布局",
+        "papers": ["DiffuScene", "MiDiffusion"]
+      },
+      {
+        "id": "graph-diffusion",
+        "label": "场景图条件扩散",
+        "hint": "SceneGraph / 语义图驱动形状+布局",
+        "papers": ["CommonScenes", "InstructScene", "EchoScene"]
+      },
+      {
+        "id": "physics-guided",
+        "label": "物理引导扩散",
+        "hint": "可微碰撞/支撑/重力或可达性引导",
+        "papers": ["SPREAD"]
+      },
+      {
+        "id": "cascade-ctrl",
+        "label": "级联可控扩散",
+        "hint": "分阶段生成 + 稀疏关系 / LLM 规划",
+        "papers": ["CasLayout"]
+      }
+    ],
+    "compare_axes": [
+      { "key": "condition", "label": "条件模态" },
+      { "key": "represent", "label": "③ 表示" },
+      { "key": "generator", "label": "④ 生成范式" },
+      { "key": "physics", "label": "⑤ 物理" },
+      { "key": "deploy", "label": "⑥ 装配" },
+      { "key": "training", "label": "⑦ 训练" },
+      { "key": "diff", "label": "核心差异" }
+    ],
+    "papers": {
+      "Holodeck": {
+        "cluster": "sim-loop",
+        "condition": "GPT-4 自然语言",
+        "represent": "LLM 物体列表+空间关系",
+        "generator": "Objaverse 检索+约束优化",
+        "physics": "支撑/碰撞空间约束",
+        "deploy": "AI2-THOR",
+        "training": "导航 agent",
+        "diff": "语言→可交互具身环境全栈",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "PhyScene": {
+        "cluster": "sim-loop",
+        "condition": "房间类型",
+        "represent": "—",
+        "generator": "条件扩散家具布局",
+        "physics": "碰撞/可达性引导扩散",
+        "deploy": "GAPartNet→Isaac",
+        "training": "Isaac 交互验证",
+        "diff": "可交互关节物体+物理引导",
+        "stages": [1, 0, 1, 1, 1, 1]
+      },
+      "ProcTHOR": {
+        "cluster": "sim-loop",
+        "condition": "程序化参数",
+        "represent": "—",
+        "generator": "10万+ 程序化房间",
+        "physics": "引擎内置物理规则",
+        "deploy": "AI2-THOR",
+        "training": "Zero-shot 泛化",
+        "diff": "百万级低成本数据基线",
+        "stages": [1, 0, 1, 1, 1, 1]
+      },
+      "DynScene": {
+        "cluster": "sim-loop",
+        "condition": "操作任务+模板",
+        "represent": "动态操作场景图",
+        "generator": "可扩展动态操作场景",
+        "physics": "动态场景物理合法性",
+        "deploy": "Sim 环境加载",
+        "training": "IL/RL 操作验证",
+        "diff": "静态房间→任务驱动动态布局",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "LayoutGPT": {
+        "cluster": "llm-plan",
+        "condition": "LLM 布局 prompt",
+        "represent": "LLM 组合视觉规划",
+        "generator": "GPT-4→Blender 布局",
+        "physics": "—",
+        "deploy": "Blender 轻量渲染",
+        "training": "—",
+        "diff": "2D/3D 组合规划，无物理 Sim",
+        "stages": [1, 1, 1, 0, 0, 0]
+      },
+      "SceneFormer": {
+        "cluster": "ar-transformer",
+        "condition": "户型或文本",
+        "represent": "Transformer 物体序列",
+        "generator": "自回归 Transformer",
+        "physics": "隐式数据驱动",
+        "deploy": "—",
+        "training": "—",
+        "diff": "早期文本/户型双条件 AR 基线",
+        "stages": [1, 1, 1, 1, 0, 0]
+      },
+      "ATISS": {
+        "cluster": "ar-transformer",
+        "condition": "房间类型+户型",
+        "represent": "无序物体集合",
+        "generator": "置换等变自回归 Transformer",
+        "physics": "隐式合理性",
+        "deploy": "—",
+        "training": "—",
+        "diff": "集合生成+场景补全/重排",
+        "stages": [1, 1, 1, 1, 0, 0]
+      },
+      "DiffuScene": {
+        "cluster": "diffusion-box",
+        "condition": "房间布局/文本",
+        "represent": "物体级布局图",
+        "generator": "去噪扩散（无序物体集）",
+        "physics": "碰撞避免采样",
+        "deploy": "—",
+        "training": "—",
+        "diff": "扩散替代 AR 的布局 SOTA 基线",
+        "stages": [1, 1, 1, 1, 0, 0]
+      },
+      "MiDiffusion": {
+        "cluster": "diffusion-box",
+        "condition": "户型+部分物体约束",
+        "represent": "离散语义+连续几何混合",
+        "generator": "混合离散-连续扩散",
+        "physics": "边界/碰撞采样",
+        "deploy": "—",
+        "training": "—",
+        "diff": "统一类别选择与几何连续属性",
+        "stages": [1, 1, 1, 1, 0, 0]
+      },
+      "CommonScenes": {
+        "cluster": "graph-diffusion",
+        "condition": "场景图条件",
+        "represent": "Scene Graph Diffusion",
+        "generator": "VAE 布局 + 形状潜扩散",
+        "physics": "图约束物理关系",
+        "deploy": "—",
+        "training": "—",
+        "diff": "SG-FRONT + 常识关系生成",
+        "stages": [1, 1, 1, 1, 0, 0]
+      },
+      "InstructScene": {
+        "cluster": "graph-diffusion",
+        "condition": "自然语言指令",
+        "represent": "语义图先验 SGP",
+        "generator": "指令驱动两阶段合成",
+        "physics": "隐式布局合理性",
+        "deploy": "—",
+        "training": "—",
+        "diff": "语言→语义图→场景可控编辑",
+        "stages": [1, 1, 1, 1, 0, 0]
+      },
+      "EchoScene": {
+        "cluster": "graph-diffusion",
+        "condition": "场景图条件",
+        "represent": "图节点/边 + 信息回声",
+        "generator": "双分支扩散（布局+形状）",
+        "physics": "全局一致性约束",
+        "deploy": "—",
+        "training": "—",
+        "diff": "逐步回声交换提升图一致性",
+        "stages": [1, 1, 1, 1, 0, 0]
+      },
+      "SPREAD": {
+        "cluster": "physics-guided",
+        "condition": "场景图/房间",
+        "represent": "空间-物理关系图",
+        "generator": "几何感知图 Transformer 扩散",
+        "physics": "碰撞/支撑/重力可微引导",
+        "deploy": "物理仿真稳定性验证",
+        "training": "—",
+        "diff": "ProcTHOR 评测·仿真就绪布局",
+        "stages": [1, 1, 1, 1, 1, 0]
+      },
+      "CasLayout": {
+        "cluster": "cascade-ctrl",
+        "condition": "户型 / LLM 家具清单",
+        "represent": "四阶段级联分解",
+        "generator": "类型→属性→关系→OBB 级联扩散",
+        "physics": "建筑元素+稀疏关系约束",
+        "deploy": "—",
+        "training": "—",
+        "diff": "设计师工作流式可控生成",
+        "stages": [1, 1, 1, 1, 0, 0]
+      }
+    },
+    "mermaid": "flowchart TB\n  subgraph LOOP[\"完整技术闭环\"]\n    direction LR\n    IN[\"① 条件输入\"] --> REP[\"③ 场景表示\"]\n    REP --> GEN[\"④ 布局生成\"]\n    GEN --> PHY[\"⑤ 物理约束\"]\n    PHY --> DEP[\"⑥ 仿真装配\"]\n    DEP --> TR[\"⑦ 策略验证\"]\n    TR -.\"⑧ 反馈/数据增广\".-> IN\n  end\n\n  subgraph C1[\"仿真训练闭环\"]\n    direction TB\n    H1[\"Holodeck<br/>LLM+约束·AI2-THOR\"]\n    H2[\"PhyScene<br/>引导扩散·Isaac\"]\n    H3[\"ProcTHOR<br/>程序化·10万房间\"]\n    H4[\"DynScene<br/>动态操作场景图\"]\n  end\n\n  subgraph C2[\"LLM 组合规划\"]\n    L1[\"LayoutGPT<br/>GPT-4→Blender\"]\n  end\n\n  subgraph C3[\"自回归 Transformer\"]\n    direction TB\n    A1[\"SceneFormer<br/>文本/户型 AR\"]\n    A2[\"ATISS<br/>无序集合 AR\"]\n  end\n\n  subgraph C4[\"扩散布局\"]\n    direction TB\n    D1[\"DiffuScene<br/>物体集扩散\"]\n    D2[\"MiDiffusion<br/>混合离散-连续\"]\n  end\n\n  subgraph C5[\"场景图扩散\"]\n    direction TB\n    G1[\"CommonScenes<br/>双分支 SG\"]\n    G2[\"InstructScene<br/>指令+SGP\"]\n    G3[\"EchoScene<br/>信息回声\"]\n  end\n\n  subgraph C6[\"物理引导\"]\n    S1[\"SPREAD<br/>几何感知+可微引导\"]\n  end\n\n  subgraph C7[\"级联可控\"]\n    C9[\"CasLayout<br/>四阶段级联扩散\"]\n  end\n\n  GEN --> C1\n  GEN --> C2\n  GEN --> C3\n  GEN --> C4\n  GEN --> C5\n  PHY --> C6\n  GEN --> C7\n\n  A1 -.演进.-> A2\n  A2 -.演进.-> D1\n  D1 -.演进.-> D2\n  G1 -.演进.-> G3\n  G2 -.演进.-> C9\n  H2 -.演进.-> S1\n  H3 -.基线.-> S1\n  H3 -.基线.-> H4\n\n  classDef loop fill:#1e3a5f,stroke:#7ecbff,color:#e8f4ff\n  classDef cluster fill:#162544,stroke:#60a5fa,color:#e8f4ff\n  class IN,REP,GEN,PHY,DEP,TR loop\n  class H1,H2,H3,H4,L1,A1,A2,D1,D2,G1,G2,G3,S1,C9 cluster",
+    "diagram_guide_kicker": "方法梳理",
+    "diagram_guide": [
+      "本节 14 篇工作共享 Indoor Scene Synthesis 问题域：在语言、户型、场景图或程序化参数条件下，经场景表示/分解、布局生成与物理约束，产出可装配至仿真器的室内场景，并以策略验证与反馈增广构成闭环。方法谱系的核心分化轴为④生成范式（LLM 组合规划 / 自回归 Transformer / 扩散 / 场景图扩散 / 级联可控）与⑤物理约束强度（隐式数据驱动 vs 可微引导 vs 引擎内置规则），以及是否贯通⑥⑦仿真装配与策略验证。",
+      "（一）仿真训练闭环（Holodeck、PhyScene、ProcTHOR、DynScene）代表「布局即训练环境」路线：Holodeck 以 LLM+Objaverse 检索+空间约束导出 AI2-THOR 导航 agent；PhyScene 将碰撞/可达性可微引导嵌入条件扩散并导入 Isaac 交互关节物体；ProcTHOR 以程序化参数实现 10 万+房间低成本基线；DynScene 将静态布局扩展为任务驱动动态操作场景图，支撑 IL/RL 操作验证。（二）自回归→扩散演进链（SceneFormer→ATISS→DiffuScene→MiDiffusion）：从文本/户型双条件 AR、置换等变物体集合 AR，演进至物体集扩散与混合离散-连续扩散，统一类别选择与几何连续属性预测。",
+      "（三）场景图条件扩散（CommonScenes、InstructScene、EchoScene）：以 Scene Graph / 语义图先验（SGP）驱动双分支布局+形状合成；InstructScene 实现语言→语义图→场景可控编辑，EchoScene 以信息回声机制提升全局图一致性。（四）物理引导与级联可控（SPREAD、CasLayout）：SPREAD 将碰撞/支撑/重力可微引导引入几何感知图 Transformer 扩散，面向仿真就绪布局评测；CasLayout 以类型→属性→关系→OBB 四阶段级联扩散模拟设计师工作流。LayoutGPT 作为 LLM→Blender 组合规划代表，止于轻量渲染、未接入物理 Sim。",
+      "多数 AR/扩散/layout-only 方法（C3–C7）止于③–⑤、未贯通⑥⑦，与仿真闭环组（C1）形成「合成质量 vs 训练可用性」的方法分野。建议结合对比表七列（条件模态、表示、生成范式、物理、装配、训练）与聚类图例悬停高亮，按研究问题（导航 IL、交互验证、可控编辑、物理合法性）检索适配路线；虚线箭头标注技术演进脉络，非同构论文引用关系。"
+    ]
+  },
+  "theme-r2sim-compose": {
+    "title": "4.4 组合式场景重建 · 技术路线对比图",
+    "caption": "基于 9 篇论文归纳：共同闭环为「真实观测 → 感知重建 → 实例/关系分解 → 单物体或场景补全 → 物理一致装配 → 仿真部署 → 策略训练 → Sim↔Real 反馈」；差异集中在输入模态（视频/单图/城市）、阶段桥接（AVO·SGS / 能量优化 / 物理在环 / 扩散 SDS）与是否延伸至 ⑦⑧。",
+    "shared_stages": [
+      { "id": "s1", "label": "① 真实观测", "desc": "RGB 视频 / 单图 / RGB-D / 城市漫游" },
+      { "id": "s2", "label": "② 感知重建", "desc": "3DGS · mesh · 神经场 · 语义重建" },
+      { "id": "s3", "label": "③ 分解", "desc": "实例 mask · Scene Graph · 支撑拓扑" },
+      { "id": "s4", "label": "④ 生成补全", "desc": "T2-3D · SDS · 能量优化 · amodal 形状" },
+      { "id": "s5", "label": "⑤ 物理一致", "desc": "构造装配 · 沉降 · 碰撞校验" },
+      { "id": "s6", "label": "⑥ 仿真部署", "desc": "Isaac · SAPIEN · Unity · PyBullet" },
+      { "id": "s7", "label": "⑦ 策略训练", "desc": "IL · RL · 合成演示 · 想象数据" },
+      { "id": "s8", "label": "⑧ 迁移闭环", "desc": "sim2real · 光度闭环 · 真机评测" }
+    ],
+    "clusters": [
+      {
+        "id": "pgs-stack",
+        "label": "A · P-G-S 视频全栈",
+        "hint": "Perception-Generation-Simulation 三阶段 + 显式桥接模块",
+        "papers": ["SimRecon", "HoloScene"]
+      },
+      {
+        "id": "phys-loop",
+        "label": "B · 物理在环单图/稀疏",
+        "hint": "引擎嵌入重建回路，拓扑或诊断驱动装配",
+        "papers": ["SimuScene", "Phi-Scene", "DP-Recon"]
+      },
+      {
+        "id": "outdoor-hybrid",
+        "label": "C · 户外混合表征",
+        "hint": "度量 3DGS+mesh，城市/开放世界导航仿真",
+        "papers": ["WANDERLAND", "Vid2Sim"]
+      },
+      {
+        "id": "photo-policy",
+        "label": "D · 光度 + 策略闭环",
+        "hint": "高保真渲染数据或组合世界模型延伸至 ⑦⑧",
+        "papers": ["Re3Sim", "DreMa"]
+      }
+    ],
+    "compare_axes": [
+      { "key": "input", "label": "输入" },
+      { "key": "decompose", "label": "③ 分解" },
+      { "key": "bridge", "label": "阶段桥接" },
+      { "key": "physics", "label": "⑤ 物理" },
+      { "key": "repr", "label": "表征" },
+      { "key": "backend", "label": "⑥ 后端" },
+      { "key": "loop", "label": "⑦⑧ 闭环" },
+      { "key": "diff", "label": "核心差异" }
+    ],
+    "papers": {
+      "SimRecon": {
+        "cluster": "pgs-stack",
+        "input": "室内 RGB 视频",
+        "decompose": "实例 + Scene Graph",
+        "bridge": "AVO + Scene Graph Synthesizer",
+        "physics": "Constructive 物理装配",
+        "repr": "单物体 mesh + 场景图",
+        "backend": "Isaac / SAPIEN",
+        "loop": "—",
+        "diff": "SimReady 三阶段桥接标杆",
+        "stages": [1, 1, 1, 1, 1, 1, 0, 0]
+      },
+      "HoloScene": {
+        "cluster": "pgs-stack",
+        "input": "单段普通视频",
+        "decompose": "Interactive Scene Graph",
+        "bridge": "能量优化 + 生成先验",
+        "physics": "观测+物理+生成统一目标",
+        "repr": "交互式 Digital Twin",
+        "backend": "实时交互仿真",
+        "loop": "—",
+        "diff": "单视频可交互世界",
+        "stages": [1, 1, 1, 1, 1, 1, 0, 0]
+      },
+      "SimuScene": {
+        "cluster": "phys-loop",
+        "input": "单张 RGB",
+        "decompose": "逐物体实例",
+        "bridge": "物理诊断 → 形状重采样",
+        "physics": "引擎 in-the-loop 重力沉降",
+        "repr": "逐物体 mesh 组合",
+        "backend": "通用物理仿真器",
+        "loop": "人形/机械臂操作",
+        "diff": "物理作测量工具非后处理",
+        "stages": [1, 1, 1, 1, 1, 1, 1, 0]
+      },
+      "Phi-Scene": {
+        "cluster": "phys-loop",
+        "input": "单张 RGB",
+        "decompose": "支撑拓扑排序",
+        "bridge": "SDF 穿透消解 + 刚性沉降",
+        "physics": "拓扑驱动物理装配",
+        "repr": "组合式 3D 基础模型",
+        "backend": "物理仿真器导入",
+        "loop": "—",
+        "diff": "动态扰动后低漂移",
+        "stages": [1, 1, 1, 1, 1, 1, 0, 0]
+      },
+      "DP-Recon": {
+        "cluster": "phys-loop",
+        "input": "稀疏多视角/视频",
+        "decompose": "实例级物体分解",
+        "bridge": "可见性引导 SDS 扩散先验",
+        "physics": "隐式布局约束",
+        "repr": "神经场 + 分解 mesh",
+        "backend": "mesh 导出 / 交互编辑",
+        "loop": "—",
+        "diff": "遮挡区扩散补全 + VFX",
+        "stages": [1, 1, 1, 1, 1, 1, 0, 0]
+      },
+      "WANDERLAND": {
+        "cluster": "outdoor-hybrid",
+        "input": "多传感器城市漫游",
+        "decompose": "—",
+        "bridge": "度量重建 + 碰撞 mesh",
+        "physics": "几何 grounded 碰撞校验",
+        "repr": "metric mesh + 3DGS",
+        "backend": "几何 grounded Sim",
+        "loop": "导航评测 + gap 分析",
+        "diff": "开放世界大场景",
+        "stages": [1, 1, 0, 0, 1, 1, 1, 1]
+      },
+      "Vid2Sim": {
+        "cluster": "outdoor-hybrid",
+        "input": "单目城市视频",
+        "decompose": "—",
+        "bridge": "几何一致 3DGS + mesh 融合",
+        "physics": "碰撞 mesh + 障碍增广",
+        "repr": "Splats + mesh 混合",
+        "backend": "Unity 交互仿真",
+        "loop": "导航 RL + zero-shot 真机",
+        "diff": "30 场景 real2sim 数据集",
+        "stages": [1, 1, 0, 1, 1, 1, 1, 1]
+      },
+      "Re3Sim": {
+        "cluster": "photo-policy",
+        "input": "多视角真实场景",
+        "decompose": "场景-物体分离",
+        "bridge": "3D 光度真实重建管线",
+        "physics": "物理一致性校验",
+        "repr": "神经渲染 + Isaac 资产",
+        "backend": "Isaac 高保真",
+        "loop": "Real2Sim IL + 光度闭环",
+        "diff": "操作类光度 sim 数据",
+        "stages": [1, 1, 1, 1, 1, 1, 1, 1]
+      },
+      "DreMa": {
+        "cluster": "photo-policy",
+        "input": "RGB-D 场景观测",
+        "decompose": "分割 mask 物体级",
+        "bridge": "物体级 GS + 组合变换",
+        "physics": "PyBullet 动力学",
+        "repr": "组合式 Gaussian 世界模型",
+        "backend": "可组合 PyBullet 环境",
+        "loop": "想象 IL + Franka one-shot",
+        "diff": "等变想象扩增演示",
+        "stages": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "mermaid": "flowchart TB\n  subgraph RW[\"真实世界 Real\"]\n    direction LR\n    R1[\"手持/固定相机视频\"]\n    R2[\"单张 RGB 图像\"]\n    R3[\"城市漫游/多传感器\"]\n    R4[\"RGB-D 桌面场景\"]\n  end\n\n  subgraph LOOP[\"4.4 组合式场景重建 · 八阶段完整闭环\"]\n    direction TB\n    L1[\"① 真实观测<br/>视频·单图·RGB-D·漫游\"]\n    L2[\"② 感知重建<br/>3DGS·mesh·神经场·语义\"]\n    L3[\"③ 分解/关系<br/>实例·SceneGraph·拓扑\"]\n    L4[\"④ 生成补全<br/>T2-3D·SDS·能量优化\"]\n    L5[\"⑤ 物理一致<br/>装配·沉降·碰撞\"]\n    L6[\"⑥ 仿真部署<br/>Isaac·Unity·PyBullet\"]\n    L7[\"⑦ 策略训练<br/>IL·RL·想象数据\"]\n    L8[\"⑧ Sim↔Real<br/>评测·光度闭环·真机\"]\n    L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7 --> L8\n    L8 -.\"重建质量·域差反馈\".-> L2\n    L8 -.\"物理违规·布局修正\".-> L5\n    L8 -.\"新场景采集\".-> L1\n    L7 -.\"合成数据再训练\".-> L4\n  end\n\n  R1 & R2 & R3 & R4 --> L1\n  L8 -->|部署·评测| RW\n\n  subgraph DUAL[\"共性双轨 · 外观↔物理\"]\n    direction LR\n    VIS[\"视觉轨<br/>3DGS/神经渲染光度\"]\n    PHY[\"物理轨<br/>mesh碰撞·刚体沉降\"]\n    VIS <-->|\"混合表征同步\"| PHY\n  end\n  L2 & L5 --> DUAL\n  DUAL --> L6\n\n  subgraph CA[\"A · P-G-S 视频全栈\"]\n    direction TB\n    SR[\"SimRecon CVPR'26<br/>AVO+SGS·P-G-S桥接<br/>Isaac/SAPIEN\"]\n    HS[\"HoloScene NeurIPS'25<br/>能量优化·交互SceneGraph<br/>实时 Digital Twin\"]\n  end\n\n  subgraph CB[\"B · 物理在环单图/稀疏\"]\n    direction TB\n    SS[\"SimuScene arXiv'26<br/>诊断回路·重力沉降<br/>人形/机械臂验证\"]\n    PS[\"Phi-Scene arXiv'26<br/>拓扑装配·SDF消解<br/>低动态漂移\"]\n    DP[\"DP-Recon CVPR'25<br/>可见性SDS·分解mesh<br/>遮挡补全+VFX\"]\n  end\n\n  subgraph CC[\"C · 户外混合表征\"]\n    direction TB\n    WL[\"WANDERLAND CVPR'26<br/>度量mesh+3DGS<br/>开放世界导航\"]\n    V2[\"Vid2Sim CVPR'25<br/>几何一致3DGS+mesh<br/>Unity RL·30场景集\"]\n  end\n\n  subgraph CD[\"D · 光度+策略闭环\"]\n    direction TB\n    R3S[\"Re3Sim ICRA'26<br/>神经渲染·Isaac IL<br/>zero-shot >58%\"]\n    DM[\"DreMa ICLR'25<br/>组合GS世界模型<br/>PyBullet·one-shot\"]\n  end\n\n  L3 --> CA\n  L3 --> CB\n  L4 --> CA\n  L4 --> CB\n  L4 --> CC\n  L6 --> CC\n  L6 --> CD\n  L7 --> CD\n\n  DP -.\"分解+扩散先验\".-> SR\n  HS -.\"能量优化范式\".-> PS\n  PS -.\"物理装配演进\".-> SS\n  V2 -.\"城市real2sim\".-> WL\n  R3S -.\"光度数据管线\".-> V2\n  DM -.\"物体级组合孪生\".-> SR\n  R3S -.\"§4.8 R2S2R承接\".-> L7\n\n  classDef real fill:#3d1f4f,stroke:#e879f9,color:#fce7ff\n  classDef loop fill:#1e3a5f,stroke:#7ecbff,color:#e8f4ff\n  classDef dual fill:#2a2a1a,stroke:#facc15,color:#fef9c3\n  classDef ca fill:#134e4a,stroke:#34d399,color:#d1fae5\n  classDef cb fill:#1e3a5f,stroke:#60a5fa,color:#dbeafe\n  classDef cc fill:#3b2f1a,stroke:#fbbf24,color:#fef3c7\n  classDef cd fill:#4a1d3f,stroke:#f472b6,color:#fce7f3\n  class R1,R2,R3,R4 real\n  class L1,L2,L3,L4,L5,L6,L7,L8 loop\n  class VIS,PHY dual\n  class SR,HS ca\n  class SS,PS,DP cb\n  class WL,V2 cc\n  class R3S,DM cd",
+    "diagram_guide_kicker": "方法梳理",
+    "diagram_guide": [
+      "本节 9 篇工作共享 Real→Sim 组合式场景重建范式：从真实观测（室内 RGB 视频、单张 RGB、RGB-D、城市漫游）出发，经感知重建、实例/关系分解、生成补全与物理一致装配，部署至 Isaac/Unity/PyBullet 等仿真器，并（部分）延伸至⑦⑧策略训练与 sim–real 反馈闭环。共性工程难点在于视觉轨（3DGS/神经渲染光度）与物理轨（mesh 碰撞、刚体沉降）的双轨同步——混合表征须在⑥部署前完成位姿与碰撞体对齐。",
+      "（A）P-G-S 视频全栈（SimRecon、HoloScene）：以 Perception-Generation-Simulation 三段式显式桥接为核心——SimRecon 以 AVO（Amodal Volumetric Object）+ Scene Graph Synthesizer 将室内 RGB 视频管线化至 Isaac/SAPIEN，是 SimReady 三阶段桥接标杆；HoloScene 以能量优化统一观测、物理与生成先验，从单段普通视频构建可实时交互的 Digital Twin。（B）物理在环单图/稀疏（SimuScene、Phi-Scene、DP-Recon）：将物理引擎嵌入重建回路而非后处理——SimuScene 以诊断驱动的形状重采样+重力沉降验证人形/机械臂操作；Phi-Scene 以支撑拓扑排序+SDF 穿透消解实现低动态漂移装配；DP-Recon 以可见性引导 SDS 扩散先验补全遮挡 amodal 形状并支持 VFX 编辑。",
+      "（C）户外混合表征（WANDERLAND、Vid2Sim）：以 metric mesh+3DGS 融合支撑开放世界/城市导航仿真；WANDERLAND 面向多传感器城市漫游与 gap 分析，Vid2Sim 提供 30 场景 real2sim 数据集、Unity RL 与 zero-shot 真机导航证据。（D）光度+策略闭环（Re3Sim、DreMa）：Re3Sim 构建 Isaac 光度真实 IL 管线（zero-shot >58%），承接 §4.8 R2S2R；DreMa 以组合 Gaussian 世界模型+等变想象扩增 Franka one-shot 演示。L8 反馈至 L2/L5/L1 的虚线表明重建质量、物理违规与域差驱动迭代闭环。",
+      "演进上，DP-Recon 的分解+扩散先验、HoloScene 的能量优化、Phi-Scene→SimuScene 的物理装配思路、Vid2Sim→WANDERLAND 的城市 real2sim 扩展构成纵向脉络。对比表按输入模态、③分解、阶段桥接、⑤物理、表征、⑥后端与⑦⑧覆盖度横向定位；带 7/8 或 8/8 阶段标签者表明已贯通策略训练或真机迁移。"
+    ]
+  },
+  "theme-articulation": {
+    "title": "4.5 关节数字孪生 · 技术路线对比图",
+    "caption": "基于 11 篇论文归纳：共同闭环为「真实观测 → 几何/外观表征 → 可动部件分解 → 关节运动学 → 物理一致性 → Sim-Ready 导出 →（可选）策略验证与 Sim↔Real 校准 → 增量观测」。差异集中在输入模态、核心表征（隐式场 vs 3DGS）、运动监督（离散姿态 vs 连续视频）与是否扩展至场景级/环境耦合。",
+    "shared_stages": [
+      { "id": "s1", "label": "① 观测采集", "desc": "多视角 / 单目视频 / RGB-D / egocentric" },
+      { "id": "s2", "label": "② 几何外观", "desc": "3DGS · SDF · 神经隐式场" },
+      { "id": "s3", "label": "③ 部件分解", "desc": "mask · 聚类 · 运动分组 · SAM2" },
+      { "id": "s4", "label": "④ 关节运动学", "desc": "轴/枢轴/DOF · URDF 参数" },
+      { "id": "s5", "label": "⑤ 物理一致", "desc": "接触 · 限位 · 运动/几何约束" },
+      { "id": "s6", "label": "⑥ 仿真装配", "desc": "Mesh/URDF/USD → Isaac 等" },
+      { "id": "s7", "label": "⑦⑧ R2S2R 闭环", "desc": "策略验证 · 真机校准 → 新观测" }
+    ],
+    "clusters": [
+      {
+        "id": "scene-func",
+        "label": "功能场景级孪生",
+        "hint": "egocentric 交互视频 → 多物体功能场景 + URDF/USD",
+        "papers": ["FunREC"]
+      },
+      {
+        "id": "env-hybrid",
+        "label": "环境耦合高保真",
+        "hint": "GS-on-Mesh + 环境真实感 + Isaac Lab R2S2R",
+        "papers": ["DRAWER"]
+      },
+      {
+        "id": "implicit-interact",
+        "label": "隐式场交互重建",
+        "hint": "交互前后观测或隐式分解，偏物体级 mesh/URDF",
+        "papers": ["Ditto", "Neural Implicit"]
+      },
+      {
+        "id": "gs-discrete",
+        "label": "离散姿态 3DGS",
+        "hint": "双姿态/多视角静态配置，自监督部件 Gaussian",
+        "papers": ["ArtGS", "ArticulatedGS"]
+      },
+      {
+        "id": "gs-video",
+        "label": "视频运动驱动 3DGS",
+        "hint": "单目或 RGB-D 连续运动，运动先验/点轨迹初始化关节",
+        "papers": ["VideoArtGS", "Articulat3D", "ArtiTwinSplat"]
+      },
+      {
+        "id": "gs-physics",
+        "label": "物理约束 Part-aware GS",
+        "hint": "部件级 Gaussian + 接触/连续形变/排斥点等物理先验",
+        "papers": ["Part2GS", "PD2GS"]
+      }
+    ],
+    "compare_axes": [
+      { "key": "input", "label": "输入模态" },
+      { "key": "repr", "label": "核心表征" },
+      { "key": "decompose", "label": "部件分解" },
+      { "key": "kinematics", "label": "关节估计" },
+      { "key": "physics", "label": "物理约束" },
+      { "key": "deploy", "label": "⑥ 装配" },
+      { "key": "loop", "label": "⑦⑧ 闭环" },
+      { "key": "diff", "label": "核心差异" }
+    ],
+    "papers": {
+      "FunREC": {
+        "cluster": "scene-func",
+        "input": "野外 Egocentric RGB-D",
+        "repr": "静/动态联合 mesh",
+        "decompose": "自动关节部件发现",
+        "kinematics": "关节 mesh+运动学",
+        "physics": "关节合法性校验",
+        "deploy": "URDF/USD→Isaac",
+        "loop": "机器人-场景交互 · 野外→Sim",
+        "diff": "场景级功能孪生，非单物体",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "DRAWER": {
+        "cluster": "env-hybrid",
+        "input": "多视角扫描",
+        "repr": "SDF + Gaussian",
+        "decompose": "GSAM 门/抽屉 + 3DOI",
+        "kinematics": "GS-on-Mesh + 纹理",
+        "physics": "Isaac 门轨迹动力学",
+        "deploy": "USD + Isaac Lab",
+        "loop": "DRAWER-R2S2R 扩展",
+        "diff": "环境真实感 + 完整 R2S2R",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "Ditto": {
+        "cluster": "implicit-interact",
+        "input": "交互前后深度/点云",
+        "repr": "ConvONet 隐式场",
+        "decompose": "交互运动→部件 DOF",
+        "kinematics": "关节 mesh 重建",
+        "physics": "—",
+        "deploy": "Mesh/URDF 导出",
+        "loop": "—",
+        "diff": "双时刻隐式，无 GS",
+        "stages": [1, 1, 1, 1, 0, 1]
+      },
+      "VideoArtGS": {
+        "cluster": "gs-video",
+        "input": "单目交互视频",
+        "repr": "Per-part 3DGS",
+        "decompose": "关节部件分割",
+        "kinematics": "可变形 GS + URDF",
+        "physics": "—",
+        "deploy": "URDF→Isaac ≥4.5",
+        "loop": "—",
+        "diff": "3D 轨迹运动先验引导",
+        "stages": [1, 1, 1, 1, 0, 1]
+      },
+      "ArtGS": {
+        "cluster": "gs-discrete",
+        "input": "多视角 / iPad 扫描",
+        "repr": "三阶段 3DGS",
+        "decompose": "Spectral 部件聚类",
+        "kinematics": "交互式关节 Gaussian",
+        "physics": "—",
+        "deploy": "json2urdf→Isaac",
+        "loop": "交互重建验证",
+        "diff": "复杂物体多阶段 GS 管线",
+        "stages": [1, 1, 1, 1, 0, 1]
+      },
+      "ArticulatedGS": {
+        "cluster": "gs-discrete",
+        "input": "双姿态渲染图像",
+        "repr": "自监督双姿态 3DGS",
+        "decompose": "自监督部件 Gaussian",
+        "kinematics": "关节 Gaussian 优化",
+        "physics": "—",
+        "deploy": "Mesh/URDF 导出",
+        "loop": "—",
+        "diff": "仅需两静态配置，无视频",
+        "stages": [1, 1, 1, 1, 0, 1]
+      },
+      "Neural Implicit": {
+        "cluster": "implicit-interact",
+        "input": "多视角 RGB",
+        "repr": "神经隐式场",
+        "decompose": "关节部件隐式分解",
+        "kinematics": "隐式 Digital Twin",
+        "physics": "—",
+        "deploy": "Mesh 导出",
+        "loop": "重建质量验证",
+        "diff": "NeRF 时代隐式孪生基线",
+        "stages": [1, 1, 1, 1, 0, 1]
+      },
+      "Articulat3D": {
+        "cluster": "gs-video",
+        "input": "随意单目交互视频",
+        "repr": "3D 点轨迹 + 运动基",
+        "decompose": "刚体运动分组软分解",
+        "kinematics": "轴/枢轴运动学原语",
+        "physics": "几何与运动约束精炼",
+        "deploy": "Mesh 导出",
+        "loop": "—",
+        "diff": "连续单目 + 显式运动约束",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "ArtiTwinSplat": {
+        "cluster": "gs-video",
+        "input": "RGB-D 静/动态序列",
+        "repr": "规范 3DGS + 变化检测",
+        "decompose": "SAM2 部件追踪",
+        "kinematics": "关节条件 3DGS",
+        "physics": "关节两阶段优化",
+        "deploy": "URDF→Isaac Sim",
+        "loop": "—",
+        "diff": "无标注 RGB-D 自动发现关节",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "Part2GS": {
+        "cluster": "gs-physics",
+        "input": "多视角 / RGB-D",
+        "repr": "Part-aware 3DGS",
+        "decompose": "可学习部件属性",
+        "kinematics": "运动感知规范表示",
+        "physics": "接触/速度/排斥点",
+        "deploy": "Mesh 导出",
+        "loop": "—",
+        "diff": "物理约束防穿透/漂移",
+        "stages": [1, 1, 1, 1, 1, 1]
+      },
+      "PD2GS": {
+        "cluster": "gs-physics",
+        "input": "交互 RGB-D 序列",
+        "repr": "共享规范 Gaussian 场",
+        "decompose": "VLM + SAM 部件边界",
+        "kinematics": "连续形变关节建模",
+        "physics": "—",
+        "deploy": "Mesh/资产导出",
+        "loop": "—",
+        "diff": "连续形变 vs 离散姿态插值",
+        "stages": [1, 1, 1, 1, 0, 1]
+      }
+    },
+    "mermaid": "flowchart TB\n  subgraph LOOP[\"重建式关节孪生 · 八阶段闭环\"]\n    direction LR\n    S1[\"① 真实观测<br/>视频·RGB-D·多视角\"] --> S2[\"② 几何外观<br/>3DGS·SDF·隐式场\"]\n    S2 --> S3[\"③ 部件分解<br/>mask·聚类·运动分组\"]\n    S3 --> S4[\"④ 关节运动学<br/>轴·枢轴·URDF\"]\n    S4 --> S5[\"⑤ 物理一致<br/>接触·限位·运动约束\"]\n    S5 --> S6[\"⑥ Sim-Ready<br/>URDF·USD·Mesh\"]\n    S6 --> S7[\"⑦ 策略验证<br/>IL/RL·交互评测\"]\n    S7 --> S8[\"⑧ Sim↔Real<br/>真机部署·校准\"]\n    S8 -.\"增量观测 / Twin 对齐\".-> S1\n  end\n\n  subgraph K1[\"功能场景级\"]\n    F1[\"FunREC<br/>egocentric 功能场景\"]\n  end\n\n  subgraph K2[\"环境耦合\"]\n    F2[\"DRAWER<br/>GS-on-Mesh · R2S2R\"]\n  end\n\n  subgraph K3[\"隐式场\"]\n    F3[\"Ditto<br/>交互前后隐式\"]\n    F4[\"Neural Implicit<br/>多视角隐式\"]\n  end\n\n  subgraph K4[\"离散姿态 GS\"]\n    F5[\"ArtGS<br/>多视角三阶段\"]\n    F6[\"ArticulatedGS<br/>双姿态自监督\"]\n  end\n\n  subgraph K5[\"视频运动 GS\"]\n    F7[\"VideoArtGS<br/>单目·运动先验\"]\n    F8[\"Articulat3D<br/>几何+运动约束\"]\n    F9[\"ArtiTwinSplat<br/>RGB-D·SAM2·URDF\"]\n  end\n\n  subgraph K6[\"物理 Part-GS\"]\n    F10[\"Part2GS<br/>接触·排斥点\"]\n    F11[\"PD2GS<br/>连续形变场\"]\n  end\n\n  S1 --> K1 & K2 & K3 & K4 & K5 & K6\n  S3 --> K1 & K3 & K4 & K5 & K6\n  S4 --> K2 & K3 & K4 & K5 & K6\n  S6 --> K1 & K2 & K4 & K5\n  S7 --> K1 & K2\n\n  F3 -.演进.-> F7\n  F5 -.演进.-> F6\n  F7 -.演进.-> F8\n  F8 -.演进.-> F9\n  F5 -.表征趋同.-> F10\n  F10 -.互补.-> F11\n  F2 -.场景扩展.-> F1\n\n  classDef loop fill:#1a3d2e,stroke:#6ee7b7,color:#ecfdf5\n  classDef cluster fill:#162544,stroke:#60a5fa,color:#e8f4ff\n  class S1,S2,S3,S4,S5,S6,S7,S8 loop\n  class F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11 cluster",
+    "diagram_guide_kicker": "方法梳理",
+    "diagram_guide": [
+      "本节 11 篇工作共享关节物体 Digital Twin 问题设定：从真实观测（多视角扫描、单目/RGB-D 交互视频、egocentric 序列）出发，联合估计几何/外观表征、可动部件分解、关节运动学参数（转轴/枢轴/DOF）与物理一致性，导出 URDF/USD/Mesh 至 Isaac 等仿真器，并（少数）形成 R2S2R 闭环。方法分化轴为：核心表征（神经隐式场 vs 3DGS）、运动监督（离散静态姿态 vs 连续视频轨迹）及粒度（单物体 vs 场景级/环境耦合）。",
+      "（一）隐式场交互重建（Ditto、Neural Implicit）：Ditto 以交互前后点云/深度驱动 ConvONet 隐式场，从双时刻观测推断部件 DOF 与关节 mesh，代表 NeRF 时代物体级孪生基线；Neural Implicit 以多视角 RGB 神经隐式分解实现 Digital Twin，二者均止于 mesh/URDF 导出、未系统贯通⑦⑧。（二）离散姿态 3DGS（ArtGS、ArticulatedGS）：以多视角扫描或双静态渲染配置自监督学习 per-part Gaussian 与关节参数；ArtGS 采用三阶段 spectral 聚类+交互式关节 Gaussian 管线，ArticulatedGS 仅需两配置、无需视频运动监督，降低采集成本。",
+      "（三）视频运动驱动 3DGS（VideoArtGS→Articulat3D→ArtiTwinSplat）：谱系从单目 3D 轨迹运动先验引导 per-part GS（VideoArtGS），演进至刚体运动分组+显式轴/枢轴运动学原语与几何约束精炼（Articulat3D），再到 SAM2 部件追踪+RGB-D 无标注关节发现与 URDF→Isaac 导出（ArtiTwinSplat）。（四）物理约束 Part-aware GS（Part2GS、PD2GS）：以接触/速度/排斥点或连续形变场抑制穿透与形变漂移，与离散姿态路线在表征层趋同、在⑤物理约束上互补。",
+      "（五）场景级/环境耦合（FunREC、DRAWER）：FunREC 从 egocentric 交互视频重建功能场景级多物体孪生并贯通机器人-场景交互验证；DRAWER 以 GS-on-Mesh 耦合门/抽屉与厨房环境，导出 USD+Isaac Lab 并扩展 DRAWER-R2S2R。虚线「演进」标注技术脉络而非严格引用。建议结合对比表七维（输入、表征、分解、运动学、物理、装配、闭环）与聚类图例悬停高亮，按「单物体 vs 场景级」「是否需要操作视频」检索适配方法。"
+    ]
+  },
+  "theme-cousins": {
+    "title": "4.6 Digital Cousins · 技术路线对比图",
+    "caption": "基于 4 篇论文方法归纳：共同闭环为「真实单图/全景 → 感知分解 → Cousin（非 Twin）场景合成 → 物理可交互装配 → 仿真演示/策略训练 → 零样本真机部署 → 反馈 Cousin 分布增广」。差异体现在输入模态、④ 合成策略（资产检索 vs 生成混合 vs 全景编辑）、⑤ 校验机制与仿真后端。",
+    "shared_stages": [
+      { "id": "s1", "label": "① 真实观测", "desc": "单张 RGB / RGB-D / 360° 全景" },
+      { "id": "s2", "label": "② 单视图感知", "desc": "深度·分割·点云/世界模型" },
+      { "id": "s3", "label": "③ 场景分解", "desc": "物体检测·语义·空间关系" },
+      { "id": "s4", "label": "④ Cousin 合成", "desc": "保 affordance，非像素 Twin" },
+      { "id": "s5", "label": "⑤ 物理校验", "desc": "去穿透·属性·任务可解性" },
+      { "id": "s6", "label": "⑥ 仿真装配", "desc": "OmniGibson / CLIPort / Isaac USD" },
+      { "id": "s7", "label": "⑦ 演示/策略", "desc": "TAMP·Oracle·Visual Blending" },
+      { "id": "s8", "label": "⑧ Sim→Real", "desc": "零样本部署·Sim-Real 相关性" }
+    ],
+    "clusters": [
+      {
+        "id": "asset-match",
+        "label": "资产库 Cousin 匹配",
+        "hint": "分割+嵌入/VLM 检索 Sim-ready 资产，快速装配可交互场景",
+        "papers": ["Digital Cousins", "GRS"]
+      },
+      {
+        "id": "gen-hybrid",
+        "label": "生成式单视图混合",
+        "hint": "Image-to-3D 刚体 + 关节资产检索；视觉混合缩小 sim-real 外观差",
+        "papers": ["RoLA"]
+      },
+      {
+        "id": "pano-cousin",
+        "label": "全景 Twin + Cousin 增广",
+        "hint": "世界模型重建 Twin，语言/几何编辑生成 Cousin 分布",
+        "papers": ["WorldComposer"]
+      }
+    ],
+    "compare_axes": [
+      { "key": "input", "label": "① 输入" },
+      { "key": "perceive", "label": "② 感知" },
+      { "key": "decompose", "label": "③ 分解" },
+      { "key": "synthesis", "label": "④ 合成策略" },
+      { "key": "physics", "label": "⑤ 物理/校验" },
+      { "key": "backend", "label": "⑥ 仿真后端" },
+      { "key": "training", "label": "⑦ 训练数据" },
+      { "key": "transfer", "label": "⑧ 迁移闭环" },
+      { "key": "diff", "label": "核心差异" }
+    ],
+    "papers": {
+      "Digital Cousins": {
+        "cluster": "asset-match",
+        "input": "单张 RGB（标定内参）",
+        "perceive": "Depth-Anything-v2 单目深度→点云",
+        "decompose": "GPT-4 物体描述 + GroundedSAM-v2 掩码",
+        "synthesis": "CLIP 类别筛选 + DINOv2 嵌入匹配 BEHAVIOR-1K Cousin",
+        "physics": "平面拟合·GPT-4 支撑关系·去穿透稳定化",
+        "backend": "OmniGibson（BEHAVIOR 资产）",
+        "training": "TAMP 技能 Open/Close/Pick/Place + 域随机化 IL",
+        "transfer": "Twin vs Cousin 对比；Cousin 零样本 90% vs Twin 25%",
+        "diff": "首创 Digital Cousin 概念与 ACDC 全自动管线",
+        "stages": [1, 1, 1, 1, 1, 1, 1, 1]
+      },
+      "GRS": {
+        "cluster": "asset-match",
+        "input": "单张 RGB-D（ZED 2 等）",
+        "perceive": "SAM2 过分割 + 深度→3D bbox",
+        "decompose": "VLM 逐 crop 物体文本描述",
+        "synthesis": "VLM 图文匹配 HOPE/Objaverse Sim-ready URDF",
+        "physics": "LLM Router 迭代修复仿真+单元测试直至 Oracle 可解",
+        "backend": "CLIPort Task 框架（Python 仿真代码）",
+        "training": "生成可解任务 + Oracle policy 验证；支持策略训练",
+        "transfer": "—（侧重仿真任务生成与可解性验证）",
+        "diff": "双生成（仿真+测试）+ Router 对齐任务与实现",
+        "stages": [1, 1, 1, 1, 1, 1, 1, 0]
+      },
+      "RoLA": {
+        "cluster": "gen-hybrid",
+        "input": "任意单张 RGB（野外/互联网/机器人数据）",
+        "perceive": "Foundation 先验单视图几何 + 支撑平面估计",
+        "decompose": "Grounded 分割；场景/物体/背景点云分离",
+        "synthesis": "Image-to-3D 刚体 mesh；关节物体从 3D 库检索",
+        "physics": "LLM 估计质量/摩擦；平面/Primitive 背景加速仿真",
+        "backend": "通用物理引擎（PyBullet 等）",
+        "training": "运动规划/预训练策略采集；z-buffer Visual Blending 光度演示",
+        "transfer": "单图 Real2Sim2Real；论文对比 ACDC 检索基线",
+        "diff": "无需专用资产库；视觉混合替代全渲染缩小外观差",
+        "stages": [1, 1, 1, 1, 1, 1, 1, 1]
+      },
+      "WorldComposer": {
+        "cluster": "pano-cousin",
+        "input": "真实 360° 全景图（可多房间）",
+        "perceive": "Marble 世界模型→3DGS + Collision Mesh",
+        "decompose": "桌面/操作区域识别；多房间 SuperPoint+ICP 拼接",
+        "synthesis": "Twin 重建 + Prompt 语义/几何编辑→Cousin 分布",
+        "physics": "高保真物理求解器 + 真实资产库填充可交互物体",
+        "backend": "Isaac Sim / USD（3DGRUT 转换）",
+        "training": "ACT/DP/SmolVLA/π0 共训练；Cousin 轨迹扩增",
+        "transfer": "Sim-Real Pearson r≈0.91；Cousin 数据 10%→85% 成功率",
+        "diff": "全景级 Cousin 增广 + 多房间导航 + 大规模策略评测平台",
+        "stages": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "mermaid": "flowchart TB\n  subgraph LOOP[\"Digital Cousins · Real→Sim→Real 八阶段闭环\"]\n    direction LR\n    S1[\"① 真实观测<br/>RGB / RGB-D / 全景\"]\n    S2[\"② 单视图感知<br/>深度 · 分割 · 3DGS/点云\"]\n    S3[\"③ 场景分解<br/>掩码 · 语义 · 空间关系\"]\n    S4[\"④ Cousin 合成<br/>保 affordance 非 Twin\"]\n    S5[\"⑤ 物理校验<br/>去穿透 · 属性 · 可解性\"]\n    S6[\"⑥ 仿真装配<br/>OmniGibson / CLIPort / Isaac\"]\n    S7[\"⑦ 演示/策略<br/>TAMP · Oracle · Blending\"]\n    S8[\"⑧ Sim→Real<br/>零样本 · 相关性评测\"]\n    S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8\n    S8 -.\"Cousin 增广 · 策略反馈\".-> S1\n  end\n\n  S4 --> C1 & C2 & C3\n  C1 & C2 & C3 --> S5\n\n  subgraph C1[\"分支 A · 资产库 Cousin 匹配\"]\n    direction TB\n    subgraph DC[\"Digital Cousins / ACDC\"]\n      direction LR\n      DC1[\"GPT-4 描述\"] --> DC2[\"GSAM 掩码\"]\n      DC2 --> DC3[\"DepthAnything\"]\n      DC3 --> DC4[\"CLIP+DINOv2<br/>BEHAVIOR 匹配\"]\n      DC4 --> DC5[\"放置·去穿透<br/>OmniGibson\"]\n      DC5 --> DC6[\"TAMP 技能 IL<br/>Twin vs Cousin\"]\n    end\n    subgraph GRS[\"GRS\"]\n      direction LR\n      G1[\"SAM2 分割\"] --> G2[\"深度 bbox\"]\n      G2 --> G3[\"VLM 物体描述\"]\n      G3 --> G4[\"VLM 资产匹配<br/>HOPE/Objaverse\"]\n      G4 --> G5[\"任务+仿真代码<br/>Router 迭代\"]\n      G5 --> G6[\"CLIPort Oracle\"]\n    end\n    DC -.同构检索.-> GRS\n  end\n\n  subgraph C2[\"分支 B · 生成式单视图混合\"]\n    direction LR\n    R1[\"GroundedSAM\"] --> R2[\"Image-to-3D mesh\"]\n    R2 --> R3[\"关节资产检索\"]\n    R3 --> R4[\"LLM 物理属性\"]\n    R4 --> R5[\"物理仿真采集\"]\n    R5 --> R6[\"z-buffer<br/>Visual Blending\"]\n    R6 --> R7[\"单图 R2S2R\"]\n  end\n\n  subgraph C3[\"分支 C · 全景 Twin+Cousin 编辑\"]\n    direction LR\n    W1[\"360 全景\"] --> W2[\"Marble Twin<br/>3DGS+Mesh\"]\n    W2 --> W3[\"Prompt 编辑<br/>Cousin 分布\"]\n    W3 --> W4[\"多房间 ICP 拼接\"]\n    W4 --> W5[\"USD Isaac 装配\"]\n    W5 --> W6[\"ACT/DP 共训练<br/>r=0.91\"]\n  end\n\n  DC -.对比基线.-> R1\n  DC -.概念延伸.-> W1\n\n  classDef loop fill:#1a3d2e,stroke:#6ee7b7,color:#ecfdf5\n  classDef branch fill:#162544,stroke:#60a5fa,color:#e8f4ff\n  classDef step fill:#0f2744,stroke:#93c5fd,color:#e8f4ff\n  class S1,S2,S3,S4,S5,S6,S7,S8 loop\n  class DC1,DC2,DC3,DC4,DC5,DC6,G1,G2,G3,G4,G5,G6,R1,R2,R3,R4,R5,R6,R7,W1,W2,W3,W4,W5,W6 step",
+    "diagram_guide_kicker": "方法梳理",
+    "diagram_guide": [
+      "本图基于四篇工作归纳 Digital Cousin 重建式专题的统一范式：在单视图或稀疏全景观测下，经感知分解将真实场景映射为保留语义与几何 affordance、而非像素级一致的仿真场景（Cousin ≠ Digital Twin），再经物理一致性校验与引擎装配完成演示采集或策略训练，并以零样本部署与 Cousin 分布增广构成 Real→Sim→Real 闭环。八阶段主干（①–⑧）刻画从观测到迁移的共性接口；方法分化主要集中于④合成策略、⑤校验机制与⑥仿真后端三个环节。",
+      "分支 A（资产库 Cousin 匹配）以 Digital Cousins/ACDC 与 GRS 为代表，共享「分割—语义描述—嵌入/VLM 检索 Sim-ready 资产—场景装配」范式。ACDC 以 GPT-4 + GroundedSAM-v2 驱动 Depth-Anything-v2 点云估计，经 CLIP 类别约束与 DINOv2 嵌入在 BEHAVIOR-1K 中检索功能近邻 Cousin，辅以平面拟合与支撑关系推理完成 OmniGibson 装配，并以 Twin vs Cousin 对照验证 Cousin 的策略鲁棒性优势（零样本 90% vs 25%）。GRS 在同构框架上引入 RGB-D 几何先验与 SAM2 过分割，以 VLM 图文匹配 HOPE/Objaverse 等 URDF 资产；其核心增量在于 LLM Router 驱动的双生成回路（仿真代码 + 单元测试），将任务可解性作为⑤校验的显式终止条件，但尚未系统报告⑧真机迁移。",
+      "分支 B（生成式单视图混合）以 RoLA 为单点代表，旨在摆脱专用资产库依赖：Grounded 分割后，刚体几何由 Image-to-3D 生成，关节物体仍经 3D 库检索补全，物性参数由 LLM 估计并接入通用物理引擎（PyBullet）。方法论要点在于 z-buffer Visual Blending——以原图外观锚定仿真渲染，在光度域缩小 sim-real gap，实现任意单张 RGB 的 Real2Sim2Real 闭环，并在论文中与 ACDC 检索基线进行对照。",
+      "分支 C（全景 Twin + Cousin 增广）由 WorldComposer 承载，输入扩展至 360° 全景及多房间序列：Marble 世界模型联合产出 3DGS 与碰撞 mesh 构成高保真 Twin，再经 Prompt 驱动的语义/几何编辑生成 Cousin 分布，SuperPoint+ICP 实现跨房间拼接，最终导入 Isaac Sim/USD 进行 ACT/DP/SmolVLA/π0 等多策略共训练。相较单图路线，该分支将 Cousin 从物体级匹配提升至场景级增广，并以 Sim-Real 相关性（Pearson r≈0.91）与 Cousin 轨迹扩增（10%→85%）提供规模化评测证据。",
+      "读图时可将实线箭头视为阶段间数据流，虚线箭头标注概念演进或基线对照（非同构引用）。下方九维对比表按输入、感知、分解、合成、校验、后端、训练与迁移等轴横向辨析四篇工作的阶段覆盖度（x/8）与技术定位；悬停聚类图例可联动高亮同分支论文行。"
+    ]
+  },
+  "theme-deformable": {
+    "title": "4.7 可变形数字孪生 · 技术路线对比图",
+    "caption": "基于 5 篇论文方法归纳：共同闭环为「真实交互观测 → 外观/几何重建 → 结构分解与补全 → 物理参数辨识 → 可微仿真装配 → 重仿真评测 → 新交互泛化 → 观测偏差反馈再优化」；差异体现在视觉表征（NeRF/3DGS）、物理引擎（MPM/弹簧质点/神经动力学）、输入稀疏度、仿真-渲染耦合方式及是否支持机器人关节条件控制。",
+    "shared_stages": [
+      { "id": "s1", "label": "① 采集", "desc": "多视角动态视频 / RGB-D / 真机 RGB" },
+      { "id": "s2", "label": "② 感知", "desc": "NeRF · 3DGS · 隐式体素场" },
+      { "id": "s3", "label": "③ 分解", "desc": "锚点采样 · 弹簧拓扑 · P2G/G2P" },
+      { "id": "s4", "label": "④ 生成", "desc": "形状先验 · 遮挡几何补全" },
+      { "id": "s5", "label": "⑤ 物理", "desc": "MPM · 弹簧质点 · 神经动力学" },
+      { "id": "s6", "label": "⑥ 装配", "desc": "Taichi MPM · 可微 Playground" },
+      { "id": "s7", "label": "⑦ 评测", "desc": "重仿真 · 未来预测 · 策略评估" },
+      { "id": "s8", "label": "⑧ 迁移", "desc": "新动作泛化 · 机器人规划" }
+    ],
+    "clusters": [
+      {
+        "id": "inverse-explicit",
+        "label": "逆物理 · 显式本构辨识",
+        "hint": "从动态视频联合估计几何与物理参数；MPM 或弹簧-质点可微逆优化",
+        "papers": ["PAC-NeRF", "Spring-Gaus", "PhysTwin"]
+      },
+      {
+        "id": "forward-ws2",
+        "label": "前向物理 · WS² 统一表征",
+        "hint": "静态 3DGS 重建后 MPM 前向合成；同一 Gaussian 核驱动仿真与渲染",
+        "papers": ["PhysGaussian"]
+      },
+      {
+        "id": "neural-r2s",
+        "label": "神经 Real-to-Sim",
+        "hint": "无预定义本构；GS 图网络 + 机器人关节力驱动潜空间动力学",
+        "papers": ["SoMA"]
+      }
+    ],
+    "compare_axes": [
+      { "key": "input", "label": "① 输入" },
+      { "key": "represent", "label": "② 表征" },
+      { "key": "physics", "label": "⑤ 物理" },
+      { "key": "inverse", "label": "逆建模" },
+      { "key": "coupling", "label": "仿真-渲染" },
+      { "key": "robot", "label": "机器人条件" },
+      { "key": "eval", "label": "⑦⑧ 评测" },
+      { "key": "diff", "label": "核心差异" }
+    ],
+    "papers": {
+      "PAC-NeRF": {
+        "cluster": "inverse-explicit",
+        "input": "多视角动态视频",
+        "represent": "Hybrid Eulerian-Lagrangian NeRF",
+        "physics": "Taichi MPM 连续介质",
+        "inverse": "端到端梯度系统辨识",
+        "coupling": "P2G/G2P 统一管线",
+        "robot": "—",
+        "eval": "几何+参数估计",
+        "diff": "无几何先验；弹性/流体/颗粒多材质",
+        "stages": [1, 1, 1, 0, 1, 1, 1, 0]
+      },
+      "Spring-Gaus": {
+        "cluster": "inverse-explicit",
+        "input": "多视角物体运动视频",
+        "represent": "静态+动态 3DGS",
+        "physics": "可微弹簧-质点",
+        "inverse": "外观/几何与动力学解耦逆优化",
+        "coupling": "锚点驱动 Gaussian 形变",
+        "robot": "—",
+        "eval": "未来预测·新初始状态",
+        "diff": "PhysTwin 直接前序；密集视角弹性体",
+        "stages": [1, 1, 1, 0, 1, 1, 1, 0]
+      },
+      "PhysGaussian": {
+        "cluster": "forward-ws2",
+        "input": "多视角静态图像",
+        "represent": "3DGS 静态重建",
+        "physics": "自定义 MPM 连续介质",
+        "inverse": "前向动力学合成（非视频逆物理）",
+        "coupling": "WS² 同一 Gaussian 核",
+        "robot": "—",
+        "eval": "新运动合成·材质泛化",
+        "diff": "消除 mesh 嵌入；实时 MPM+GS",
+        "stages": [1, 1, 1, 0, 1, 1, 0, 0]
+      },
+      "PhysTwin": {
+        "cluster": "inverse-explicit",
+        "input": "2–3 视角 RGB-D 交互",
+        "represent": "3DGS + TRELLIS 形状先验",
+        "physics": "弹簧-质点 + 控制点弹簧",
+        "inverse": "零阶拓扑→一阶稠密刚度",
+        "coupling": "LBS 绑定 Gaussian 与质点",
+        "robot": "模型预测规划（演示）",
+        "eval": "Real2Sim-Eval · 实时交互",
+        "diff": "稀疏视角+生成补全；超越 Spring-Gaus",
+        "stages": [1, 1, 0, 1, 1, 1, 1, 1]
+      },
+      "SoMA": {
+        "cluster": "neural-r2s",
+        "input": "真机三视角 RGB+关节",
+        "represent": "层次化 3D Gaussian Splat",
+        "physics": "力驱动 GS 图神经网络",
+        "inverse": "端到端神经动力学学习",
+        "coupling": "力传播+多分辨率监督",
+        "robot": "关节空间 FK 条件控制",
+        "eval": "长程布料折叠·未见动作",
+        "diff": "无预定义本构；+20% 重仿真精度",
+        "stages": [1, 1, 1, 0, 1, 1, 1, 1]
+      }
+    },
+    "mermaid": "flowchart TB\n  subgraph UP[\"真实世界 · 观测源\"]\n    direction LR\n    U1[\"人手交互视频\"]\n    U2[\"多视角 RGB-D\"]\n    U3[\"真机操作 RGB+关节\"]\n  end\n\n  subgraph LOOP[\"4.7 可变形数字孪生 · 完整技术闭环\"]\n    direction TB\n    S1[\"① 采集<br/>标定多视角序列\"]\n    S2[\"② 感知重建<br/>NeRF / 3DGS / 体素\"]\n    S3[\"③ 结构分解<br/>锚点·拓扑·粒子采样\"]\n    S4[\"④ 几何补全<br/>生成先验·遮挡恢复\"]\n    S5[\"⑤ 物理辨识<br/>逆/前向本构参数\"]\n    S6[\"⑥ 仿真装配<br/>可微引擎·Playground\"]\n    S7[\"⑦ 交互评测<br/>重仿真·未来预测\"]\n    S8[\"⑧ 泛化迁移<br/>新动作·机器人规划\"]\n    S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8\n    S8 -.\"观测偏差·参数再辨识\".-> S5\n    S7 -.\"Real2Sim 策略相关\".-> S8\n  end\n\n  U1 & U2 & U3 --> S1\n\n  subgraph C1[\"逆物理 · 显式本构辨识\"]\n    direction TB\n    P1[\"PAC-NeRF ICLR'23<br/>Hybrid NeRF+MPM<br/>无几何先验·多材质\"]\n    P2[\"Spring-Gaus ECCV'24<br/>弹簧质点+3DGS<br/>锚点逆优化\"]\n    P3[\"PhysTwin ICCV'25<br/>稀疏视角+TRELLIS<br/>零阶→一阶分层\"]\n  end\n\n  subgraph C2[\"前向物理 · WS² 统一表征\"]\n    P4[\"PhysGaussian CVPR'24<br/>静态3DGS→MPM<br/>所见即所仿\"]\n  end\n\n  subgraph C3[\"神经 Real-to-Sim\"]\n    P5[\"SoMA arXiv'26<br/>力驱动 GS 图网络<br/>机器人关节条件\"]\n  end\n\n  S5 --> C1 & C2 & C3\n  S6 --> C1 & C2 & C3\n\n  P1 -.\"逆物理演进\".-> P2\n  P2 -.\"基线·改进\".-> P3\n  P2 -.\"MPM 技术族\".-> P4\n  P3 -.\"Real2Sim-Eval\".-> S7\n  P3 -.\"显式→神经\".-> P5\n  P4 -.\"外观层互补\".-> P2\n\n  classDef loop fill:#1e3a5f,stroke:#7ecbff,color:#e8f4ff\n  classDef cluster fill:#162544,stroke:#60a5fa,color:#e8f4ff\n  classDef upstream fill:#2a1f3d,stroke:#c084fc,color:#f3e8ff\n  class S1,S2,S3,S4,S5,S6,S7,S8 loop\n  class P1,P2,P3,P4,P5 cluster\n  class U1,U2,U3 upstream",
+    "diagram_guide": [
+      "本节 5 篇工作共享「可变形体 Digital Twin」问题设定：从真实交互观测（多视角动态视频、稀疏 RGB-D 或真机 RGB+关节状态）出发，联合估计外观/几何表征与可仿真动力学，构建可微 Playground 以支持重仿真评测、未来状态预测及（部分工作的）机器人规划。上图八阶段主干（①–⑧）概括了这一共性闭环：采集 → 感知重建 → 结构分解 → 几何补全 → 物理参数辨识 → 仿真装配 → 交互评测 → 泛化迁移；S8→S5 的反馈边表示观测–仿真偏差驱动本构参数再辨识，构成 system identification 意义上的 Real↔Sim 内环。",
+      "依物理建模范式、逆/前向辨识策略及仿真–渲染耦合方式，可将方法梳理为三条路线。（1）逆物理 · 显式本构辨识（PAC-NeRF → Spring-Gaus → PhysTwin）：从动态观测联合优化几何与物理参数，分别采用 Hybrid Eulerian–Lagrangian NeRF + Taichi MPM 连续介质（PAC-NeRF）、可微弹簧–质点嵌入 3DGS 的解耦逆优化（Spring-Gaus）、以及稀疏视角下生成形状先验（TRELLIS）+ 零阶拓扑→一阶稠密刚度分层的弹簧–质点模型（PhysTwin）；该谱系的核心演进轴为输入稀疏度容忍与遮挡几何补全能力的递进增强。（2）前向物理 · WS² 统一表征（PhysGaussian）：自多视角静态图像重建 3DGS 后，以同一 Gaussian 核同时驱动 MPM 前向合成与光度渲染，实现「所见即所仿（What You See Is What You Simulate）」，侧重材质参数可控的新运动生成而非视频级逆辨识。（3）神经 Real-to-Sim（SoMA）：放弃预定义本构方程，以层次化 3D Gaussian Splat 为离散载体、力驱动 GS 图网络为动力学引擎，在潜空间端到端学习可变形体响应，并以机器人关节空间 FK 作为条件输入，面向真机软体操作的长程重仿真与未见动作泛化。",
+      "三条路线在关键分化轴上形成互补：视觉表征（NeRF 隐式场 vs 显式 3DGS）、辨识模式（视频逆物理 vs 静态前向合成 vs 神经动力学学习）、仿真–渲染耦合（MPM P2G/G2P 统一管线 · 锚点/LBS 驱动 Gaussian 形变 · WS² 同核双用 · 力传播多分辨率监督）、以及机器人条件控制（仅 PhysTwin/SoMA 部分贯通）。图中虚线演进关系标注技术脉络而非严格引用链：PAC-NeRF 奠定无几何先验的 MPM 逆辨识框架；Spring-Gaus 将其迁移至 3DGS 并引入弹簧–质点可微仿真；PhysTwin 在 Spring-Gaus 基线上以生成补全应对稀疏视角；PhysGaussian 与 Spring-Gaus 共享 MPM 技术族但走前向合成路径；SoMA 代表显式本构向神经潜空间动力学的范式延伸，并与 PhysTwin 在 Real2Sim 评测维度上形成对照。",
+      "读图建议：先沿上方八阶段横条把握各论文的阶段覆盖（聚类卡片中的 N/8 标签）；再对照流程图三簇定位方法归属；最后使用下方对比表沿输入模态、表征、物理引擎、逆/前向辨识、耦合机制、机器人条件与评测范围等维度横向比较。悬停聚类图例可高亮同类论文行，便于检索特定研究问题（如稀疏视角逆物理、WS² 实时合成、关节条件神经重仿真）的适配方法。"
+    ]
+  },
+  "theme-r2s2r": {
+    "title": "4.8 Real2Sim2Real · 技术路线对比图",
+    "caption": "基于 14 篇论文归纳：共同闭环为「真实观测 → 3DGS/NeRF 重建 → 物理耦合仿真 → 策略训练 → 真机迁移/评测」，并以失败反馈、动力学校准或视觉对齐形成 Real↔Sim 双向闭环；差异体现在采集模态、仿真后端、增广方式与训练范式。下图展示八阶段主干、五类技术聚类、双轨（视觉/物理）维护难点及论文间演进关系。",
+    "shared_stages": [
+      { "id": "s1", "label": "① 真实采集", "desc": "扫描·视频·演示·状态流" },
+      { "id": "s2", "label": "② 视觉重建", "desc": "3DGS · NeRF · VGGT" },
+      { "id": "s3", "label": "③ 场景分解", "desc": "分割·轨迹跟踪·组件分离" },
+      { "id": "s4", "label": "④ 增广生成", "desc": "GS编辑·轨迹·碰撞Mesh" },
+      { "id": "s5", "label": "⑤ 物理对齐", "desc": "PhysX·PyBullet·Twin同步" },
+      { "id": "s6", "label": "⑥ 仿真装配", "desc": "Isaac·GSWorld·Habitat" },
+      { "id": "s7", "label": "⑦ 策略训练", "desc": "IL · RL · DAgger · 扩散" },
+      { "id": "s8", "label": "⑧ 闭环迁移", "desc": "Zero-shot·在线适应·评测" }
+    ],
+    "clusters": [
+      {
+        "id": "gs-suite",
+        "label": "A · 3DGS 光度真实仿真器",
+        "hint": "真实扫描→3DGS+物理引擎耦合→可并行 rollout 的闭环仿真套件",
+        "papers": ["RoboGSim", "GSWorld", "SplatSim", "RL-GSBridge"]
+      },
+      {
+        "id": "real2sim-data",
+        "label": "B · Real→Sim 数据合成",
+        "hint": "从真实场景/人类演示生成 Sim 训练数据或 3DGS 演示增广",
+        "papers": ["Re3Sim", "Real2Render2Real", "RoboSplat"]
+      },
+      {
+        "id": "human2robot",
+        "label": "C · 人类视频零硬件",
+        "hint": "无需机器人遥操作，从人类演示视频学习操作策略",
+        "papers": ["Video2Robo", "X-Sim"]
+      },
+      {
+        "id": "pixel-loco",
+        "label": "D · 像素级运动/导航",
+        "hint": "个性化场景扫描 + 高吞吐像素 RL（locomotion / navigation）",
+        "papers": ["GaussGym", "EmbodiedSplat (Nav)"]
+      },
+      {
+        "id": "align-robust",
+        "label": "E · 对齐·鲁棒化·评测",
+        "hint": "Real↔Sim 双向对齐、策略可信评测与迭代鲁棒化闭环",
+        "papers": ["EmbodiedDreamer", "Real-is-Sim", "RialTo"]
+      }
+    ],
+    "compare_axes": [
+      { "key": "capture", "label": "① 采集" },
+      { "key": "visual", "label": "② 视觉" },
+      { "key": "physics", "label": "⑤⑥ 仿真" },
+      { "key": "augment", "label": "④ 增广" },
+      { "key": "train", "label": "⑦ 训练" },
+      { "key": "transfer", "label": "⑧ 迁移" },
+      { "key": "diff", "label": "核心差异" }
+    ],
+    "papers": {
+      "RoboGSim": {
+        "cluster": "gs-suite",
+        "capture": "真实场景扫描",
+        "visual": "3DGS 全场景",
+        "physics": "GS+物理耦合·自研引擎",
+        "augment": "新视角·物体·轨迹·场景",
+        "train": "策略训练+在线评测",
+        "transfer": "Sim→真机 zero-shot",
+        "diff": "四模块闭环仿真器·可复现 benchmark",
+        "stages": [1, 1, 0, 0, 1, 1, 1, 1]
+      },
+      "GSWorld": {
+        "cluster": "gs-suite",
+        "capture": "COLMAP+ArUco 度量采集",
+        "visual": "GSDF·Gaussian-on-Mesh",
+        "physics": "GSDF+URDF·物理引擎",
+        "augment": "40+物体·3机器人本体库",
+        "train": "IL/RL/DAgger/虚拟遥操作",
+        "transfer": "Zero-shot sim2real·策略 benchmark",
+        "diff": "闭环 API·DAgger 自动纠错数据",
+        "stages": [1, 1, 1, 1, 1, 1, 1, 1]
+      },
+      "SplatSim": {
+        "cluster": "gs-suite",
+        "capture": "真实 RGB 场景视频",
+        "visual": "3DGS 替换 mesh 渲染",
+        "physics": "PyBullet+GS 位姿同步",
+        "augment": "—",
+        "train": "RGB 操作 IL",
+        "transfer": "Zero-shot 真机 86%",
+        "diff": "纯 RGB 策略·对标 RialTo 点云",
+        "stages": [1, 1, 1, 0, 1, 1, 1, 1]
+      },
+      "RL-GSBridge": {
+        "cluster": "gs-suite",
+        "capture": "真实场景",
+        "visual": "mesh-based 3DGS 软绑定",
+        "physics": "GS 编辑同步物理仿真",
+        "augment": "渲染-物理联动编辑",
+        "train": "视觉 DRL",
+        "transfer": "Zero-shot 抓取/放置",
+        "diff": "RL 管线内嵌 3DGS·减少 mesh 伪影",
+        "stages": [1, 1, 0, 1, 1, 1, 1, 1]
+      },
+      "Re3Sim": {
+        "cluster": "real2sim-data",
+        "capture": "真实场景多视角",
+        "visual": "3DGS+神经渲染",
+        "physics": "Isaac PhysX",
+        "augment": "Sim 特权演示·大规模合成",
+        "train": "IL 模仿学习",
+        "transfer": "Zero-shot sim2real >58%",
+        "diff": "背景/物体分离重建·跨物体泛化",
+        "stages": [1, 1, 1, 1, 1, 1, 1, 1]
+      },
+      "Real2Render2Real": {
+        "cluster": "real2sim-data",
+        "capture": "手机扫描+人类演示",
+        "visual": "3DGS+6-DoF 跟踪",
+        "physics": "—",
+        "augment": "IK 轨迹·五维渲染增广",
+        "train": "渲染数据 IL",
+        "transfer": "无机器人硬件→真机",
+        "diff": "跳过动力学仿真·纯渲染数据扩展",
+        "stages": [1, 1, 0, 1, 0, 1, 1, 1]
+      },
+      "RoboSplat": {
+        "cluster": "real2sim-data",
+        "capture": "单次 demo+多视角",
+        "visual": "3DGS 场景重建",
+        "physics": "—",
+        "augment": "3DGS 六类编辑增广",
+        "train": "RGB visuomotor IL",
+        "transfer": "六类泛化真机 87.8%",
+        "diff": "One-shot·直接操作 Gaussian 增广",
+        "stages": [1, 1, 1, 1, 0, 1, 1, 1]
+      },
+      "Video2Robo": {
+        "cluster": "human2robot",
+        "capture": "单目人类演示视频",
+        "visual": "3DGS 场景",
+        "physics": "—",
+        "augment": "五维增强+轨迹变换",
+        "train": "Sim+Real IL",
+        "transfer": "零硬件→真机",
+        "diff": "单视频→可扩展机器人数据",
+        "stages": [1, 1, 0, 1, 0, 0, 1, 1]
+      },
+      "X-Sim": {
+        "cluster": "human2robot",
+        "capture": "RGB-D 人类操作视频",
+        "visual": "光度真实仿真重建",
+        "physics": "物体运动奖励 RL",
+        "augment": "视角·光照随机 rollout",
+        "train": "RL→扩散策略蒸馏",
+        "transfer": "在线域适应真机",
+        "diff": "跨本体·物体运动作稠密监督",
+        "stages": [1, 1, 1, 0, 1, 1, 1, 1]
+      },
+      "GaussGym": {
+        "cluster": "pixel-loco",
+        "capture": "手机扫描/多源视频",
+        "visual": "VGGT→3DGS",
+        "physics": "NKSR 碰撞 mesh",
+        "augment": "Veo 生成场景探索",
+        "train": "像素级 locomotion RL",
+        "transfer": "Zero-shot 真机四足",
+        "diff": "10万+ step/s·消费级 GPU 吞吐",
+        "stages": [1, 1, 0, 1, 1, 1, 1, 1]
+      },
+      "EmbodiedSplat (Nav)": {
+        "cluster": "pixel-loco",
+        "capture": "iPhone 个性化采集",
+        "visual": "移动 3DGS",
+        "physics": "—",
+        "augment": "—",
+        "train": "导航 RL",
+        "transfer": "真机导航部署",
+        "diff": "个性化室内导航·Habitat 后端",
+        "stages": [1, 1, 0, 0, 0, 1, 1, 1]
+      },
+      "EmbodiedDreamer": {
+        "cluster": "align-robust",
+        "capture": "真机交互观测",
+        "visual": "VisAligner 视频扩散",
+        "physics": "PhysAligner 参数优化",
+        "augment": "世界模型生成对齐",
+        "train": "RL/IL+偏好学习",
+        "transfer": "R2S2R 视觉+物理双对齐",
+        "diff": "分离视觉/物理对齐器·闭环世界模型",
+        "stages": [1, 0, 0, 1, 1, 1, 1, 1]
+      },
+      "Real-is-Sim": {
+        "cluster": "align-robust",
+        "capture": "真机实时状态流",
+        "visual": "Dynamic Twin 同步",
+        "physics": "Twin 动力学对齐",
+        "augment": "—",
+        "train": "Twin 策略评测",
+        "transfer": "可信 sim-real 评估",
+        "diff": "评测导向·动态数字孪生同步",
+        "stages": [1, 1, 0, 0, 1, 1, 1, 1]
+      },
+      "RialTo": {
+        "cluster": "align-robust",
+        "capture": "真机 demo+GUI 扫描",
+        "visual": "NeRF/SDF→Sim",
+        "physics": "Isaac 物理",
+        "augment": "逆蒸馏·域随机化",
+        "train": "PPO 4096 env+BC",
+        "transfer": "Real→Sim→Real 鲁棒 +67%",
+        "diff": "on-the-fly 数字孪生·逆蒸馏微调",
+        "stages": [1, 1, 0, 0, 1, 1, 1, 1]
+      }
+    },
+    "mermaid": "flowchart TB\n  subgraph UP[\"上游场景供给 · 非 4.8 构建\"]\n    direction LR\n    U1[\"§4.4 组合重建<br/>Re3Sim·SimRecon\"]\n    U2[\"§4.5 关节 Twin<br/>DRAWER·ArtGS\"]\n    U3[\"§4.6 Cousin<br/>Digital Cousins\"]\n  end\n\n  RW((\"真实世界 Real\"))\n\n  subgraph LOOP[\"4.8 Real2Sim2Real · 八阶段完整闭环\"]\n    direction TB\n    S1[\"① 采集<br/>手机扫描·多视角·人类视频·真机状态流\"]\n    S2[\"② 视觉重建<br/>3DGS·NeRF·VGGT·度量对齐\"]\n    S3[\"③ 场景分解<br/>SAM分割·轨迹跟踪·GSDF组件\"]\n    S4[\"④ 增广生成<br/>GS编辑·IK轨迹·碰撞Mesh·渲染增广\"]\n    S5[\"⑤ 物理对齐<br/>PhysX·PyBullet·Twin动力学同步\"]\n    S6[\"⑥ 仿真装配<br/>Isaac·GSWorld·Habitat·gsplat\"]\n    S7[\"⑦ 策略训练<br/>IL·RL·DAgger·扩散·PPO并行\"]\n    S8[\"⑧ 闭环迁移<br/>Zero-shot·在线适应·可信评测\"]\n    S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8\n    S8 -.\"DAgger失败纠错\".-> S4\n    S8 -.\"PhysAligner/Twin偏差\".-> S5\n    S8 -.\"VisAligner域差\".-> S2\n    S8 -.\"RialTo重扫描·逆蒸馏\".-> S1\n    S7 -.\"GSWorld虚拟遥操作\".-> S4\n  end\n\n  subgraph DUAL[\"共性双轨 · 视觉↔物理\"]\n    direction LR\n    VT[\"视觉轨<br/>3DGS光度渲染\"]\n    PT[\"物理轨<br/>刚体/关节动力学\"]\n    VT <-->|\"GS位姿同步·软绑定\"| PT\n  end\n\n  RW -->|观测·交互·部署| S1\n  S8 -->|执行·评测| RW\n  U1 & U2 & U3 -.资产/场景注入.-> S2\n  S2 & S5 --> DUAL\n  DUAL --> S6\n\n  subgraph CA[\"A·3DGS 光度真实仿真器\"]\n    direction TB\n    A1[\"RoboGSim arXiv'24<br/>重建·Twin·合成·评测四模块\"]\n    A2[\"GSWorld ICRA'26<br/>GSDF资产库·DAgger闭环\"]\n    A3[\"SplatSim ICRA'25<br/>PyBullet·纯RGB IL 86%\"]\n    A4[\"RL-GSBridge ICRA'25<br/>mesh-GS软绑定·视觉DRL\"]\n  end\n\n  subgraph CB[\"B·Real→Sim 数据合成\"]\n    direction TB\n    B1[\"Re3Sim ICRA'26<br/>Isaac IL·zero-shot >58%\"]\n    B2[\"Real2Render2Real<br/>手机扫描·无动力学渲染IL\"]\n    B3[\"RoboSplat RSS'25<br/>3DGS六类编辑·one-shot 87.8%\"]\n  end\n\n  subgraph CC[\"C·人类视频零硬件\"]\n    direction TB\n    C1[\"Video2Robo CVPR'26<br/>单视频·五维增广\"]\n    C2[\"X-Sim CoRL'25 Oral<br/>物体运动RL→扩散·在线适应\"]\n  end\n\n  subgraph CD[\"D·像素运动/导航\"]\n    direction TB\n    D1[\"GaussGym<br/>VGGT→3DGS·10万step/s RL\"]\n    D2[\"EmbodiedSplat Nav<br/>iPhone 3DGS·Habitat\"]\n  end\n\n  subgraph CE[\"E·对齐·鲁棒·评测闭环\"]\n    direction TB\n    E1[\"EmbodiedDreamer<br/>VisAligner+PhysAligner\"]\n    E2[\"Real-is-Sim<br/>Dynamic Twin实时评测\"]\n    E3[\"RialTo RSS'24<br/>NeRF Twin·逆蒸馏PPO +67%\"]\n  end\n\n  S2 --> CA\n  S4 --> CB\n  S1 --> CC\n  S6 --> CD\n  S7 --> CE\n  CE -->|R2S2R反馈| S8\n\n  A1 -.先驱·四模块范式.-> A2\n  A3 -.RGB对标.-> E3\n  A4 -.RL内嵌GS.-> A3\n  B1 -.Isaac数据管线.-> A2\n  B2 -.跳过⑤动力学.-> B3\n  B3 -.GS直接编辑.-> A3\n  C1 -.单视频扩展.-> C2\n  C2 -.跨本体.-> B2\n  D1 -.高吞吐像素RL.-> D2\n  E1 -.双对齐器.-> E2\n  E3 -.Real2Sim2Real范式.-> E1\n\n  classDef real fill:#3d1f4f,stroke:#e879f9,color:#fce7ff\n  classDef loop fill:#1e3a5f,stroke:#7ecbff,color:#e8f4ff\n  classDef dual fill:#2a2a1a,stroke:#facc15,color:#fef9c3\n  classDef upstream fill:#1a2e1a,stroke:#86efac,color:#e8ffe8\n  classDef ca fill:#134e4a,stroke:#34d399,color:#d1fae5\n  classDef cb fill:#1e3a5f,stroke:#60a5fa,color:#dbeafe\n  classDef cc fill:#4a1d3f,stroke:#f472b6,color:#fce7f3\n  classDef cd fill:#3b2f1a,stroke:#fbbf24,color:#fef3c7\n  classDef ce fill:#3f1f2e,stroke:#fb7185,color:#ffe4e6\n  class RW real\n  class S1,S2,S3,S4,S5,S6,S7,S8 loop\n  class VT,PT dual\n  class U1,U2,U3 upstream\n  class A1,A2,A3,A4 ca\n  class B1,B2,B3 cb\n  class C1,C2 cc\n  class D1,D2 cd\n  class E1,E2,E3 ce",
+    "diagram_guide_kicker": "方法梳理",
+    "diagram_guide": [
+      "本节 14 篇工作共享同一 Real2Sim2Real（R2S2R）问题设定：在已具备或可快速重建的⑥仿真环境之上，通过⑦策略训练与⑧sim–real 迁移/评测，形成「真实观测 → 数字孪生 → 仿真 rollout → 真机部署 → 闭环反馈」的完整链路。共性技术栈以 3D Gaussian Splatting（3DGS）/ NeRF 类神经辐射场承担②视觉重建与光度渲染，以 PhysX、PyBullet 等刚体/关节引擎承担⑤物理仿真；核心工程矛盾在于视觉轨（photorealistic rendering）与物理轨（dynamics consistency）的双轨维护——Gaussian 原语须与碰撞体/URDF 位姿同步，否则 visuomotor 策略在仿真中习得的 appearance cue 无法 zero-shot 迁移。",
+      "沿方法目标可划分为五条互补路线。（A）3DGS 光度真实仿真器（RoboGSim、GSWorld、SplatSim、RL-GSBridge）：以真实扫描为输入，构建可并行交互的 closed-loop simulator，强调渲染–物理耦合与在线策略评测；GSWorld 进一步引入 GSDF 资产格式与 DAgger 纠错闭环，SplatSim 则验证纯 RGB 操作策略的 sim2real 可行性（对标 RialTo 的点云范式）。（B）Real→Sim 数据合成（Re3Sim、Real2Render2Real、RoboSplat）：侧重从真实场景批量生成 IL/增广演示，而非仿真器本体；Re3Sim 在 Isaac 中利用特权信息合成演示并实现 >58% zero-shot 迁移，Real2Render2Real 跳过动力学仿真、仅做渲染轨迹增广，RoboSplat 直接在 3DGS 空间编辑实现六类 one-shot 泛化。（C）人类视频零硬件（Video2Robo、X-Sim）：以人类演示为唯一行为先验，规避机器人遥操作成本；X-Sim 以物体运动轨迹定义 object-centric reward，经 RL→扩散策略蒸馏与在线域适应实现 cross-embodiment transfer。（D）像素级运动/导航（GaussGym、EmbodiedSplat）：面向 locomotion / navigation 的 pixel RL，GaussGym 以 VGGT→3DGS 与 NKSR 碰撞 mesh 支撑 10⁵ step/s 级吞吐。（E）对齐·鲁棒·评测（EmbodiedDreamer、Real-is-Sim、RialTo）：分别解耦 VisAligner / PhysAligner 双对齐、Dynamic Twin 可信评测、以及 on-the-fly NeRF 数字孪生 + 逆蒸馏 PPO 鲁棒化（+67%）。",
+      "横向对比可沿四个维度展开：①采集模态（手机扫描、多视角、人类 RGB-D 视频、真机状态流）决定 Real→Sim 入口；⑤⑥仿真后端（Isaac / PyBullet / Habitat / 自研引擎）与是否维护完整动力学（Real2Render2Real 为渲染-only 例外）；④增广机制（GS 编辑、IK 轨迹、DAgger、域随机化）决定样本效率与分布覆盖；⑦⑧训练–迁移范式（IL、RL、扩散、PPO 并行、zero-shot / 在线适应）决定闭环终点。图中虚线反馈（DAgger→④、PhysAligner→⑤、VisAligner→②、RialTo 重扫描→①）表明 R2S2R 并非单向 pipeline，而是 sim–real gap 驱动的迭代对齐过程。",
+      "演进关系上，RoboGSim 的四模块范式（重建–Twin–合成–评测）为 GSWorld 等后续 closed-loop suite 提供结构模板；SplatSim 与 RialTo 形成「RGB vs 点云/NeRF」的策略输入对照；B 类增广路线（RoboSplat 的 3DGS 直接编辑）与 A 类仿真器（SplatSim 的 GS–PyBullet 同步）在视觉表征层收敛。建议结合下方对比表与聚类图例：悬停 A–E 聚类可高亮同类论文行，按「采集–视觉–仿真–增广–训练–迁移」六列快速定位方法差异与适用任务边界。"
+    ]
+  },
+  "theme-platforms": {
+    "title": "4.9 仿真平台与数据扩展 · 技术路线对比图",
+    "caption": "基于 16 篇工作归纳：支撑层在 §4.1–4.5 与 §4.8 资产注入后，形成「④ 资产/任务 → ⑤ 物理 → ⑥ API 装配 → ⑦ 训练评测 → ⑧ Sim2Real → ⑨ 数据扩展反馈」闭环；方法谱系按物理后端、并行范式、任务模态与演示增广路径，划分为 GPU 并行栈、robosuite 生态、家务长程、导航/语言 Benchmark、多物理/Twin 及演示合成六类路线。",
+    "diagram_guide_kicker": "技术路线说明",
+    "diagram_guide": [
+      "本节 16 篇工作定位于训练环境构建链路的支撑层（Infrastructure Layer）：不直接承担场景生成（§4.1–4.5）或 Real2Sim 重建（§4.8），而是在上游资产与种子演示注入后，提供可复现的任务定义、物理仿真求解、并行环境 API、策略训练/评测基准，以及 Sim2Real 与数据反馈接口。上图主干闭环（A4→A9）概括了这一层的共性工作流：任务/场景资产装配 → 物理引擎求解 → Gym/USD/SAPIEN 等统一接口封装 → RL/IL/Benchmark 训练与评测 → 真机迁移验证 → 经演示重放或生成式 Twin 扩展数据并反馈至资产层。",
+      "依物理后端、并行能力与评测目标，可将相关工作梳理为六类方法路线。（1）GPU 并行训练栈（ManiSkill3、Isaac Lab、SAPIEN、MuJoCo Playground）：以 PhysX GPU 或 MJX 为核心，追求 thousands-of-env 级并行与 RL/IL 吞吐，面向可扩展策略学习；（2）MuJoCo/robosuite 生态（robosuite、RoboCasa、LIBERO）：以模块化操作 API 为基石，分别向厨房域随机化场景与终身学习多任务基准扩展；（3）家务/长程高保真（BEHAVIOR-1K、iGibson 2.0）：强调室内活动复杂度、物体状态迁移与移动操作一体评测；（4）导航/语言/经典操作 Benchmark（Habitat 3.0、CALVIN、RLBench）：分别覆盖人机共存导航、语言条件长程 IL 与百任务少样本泛化；（5）多物理/生成式 Twin（ThreeDWorld、Robotwin 2.0）：前者基于 Unity 提供刚体–流体–变形通用交互，后者以生成式 Digital Twin 扩展双臂操作合成数据；（6）演示数据扩展闭环（MimicGen、SkillMimicGen）：在 robosuite 后端实现轨迹级与技能级合成增广，将稀疏人类演示放大至万级 IL 数据集。",
+      "方法差异的主要分化轴包括：物理引擎选型（PhysX/OmniGibson · MuJoCo/MJX · Bullet · CoppeliaSim/Unity）、GPU 并行能力、任务/场景规模、传感与指令模态，以及是否贯通 Sim2Real 与数据反馈环。图中虚线演进关系表明：SAPIEN 为 ManiSkill3 提供部件级交互引擎；Isaac Orbit 演进为 Isaac Lab 统一工业级栈；robosuite 承接 RoboCasa、LIBERO 及 MimicGen 系列的 benchmark 与数据扩展；iGibson 2.0 为 BEHAVIOR-1K 的高保真家务评测奠定场景基础。下方对比表对各论文在上述维度上的覆盖程度进行结构化并列，便于按研究问题（高吞吐 RL、长程 IL、Sim2Real、演示稀缺等）检索适配平台。"
+    ],
+    "shared_stages": [
+      { "id": "s1", "label": "④ 资产/任务", "desc": "程序化场景·资产库·演示扩展" },
+      { "id": "s2", "label": "⑤ 物理", "desc": "PhysX·MuJoCo·Bullet·OmniGibson" },
+      { "id": "s3", "label": "⑥ 装配 API", "desc": "Gym·USD·SAPIEN·robosuite" },
+      { "id": "s4", "label": "⑦ 训练", "desc": "RL·IL·Benchmark·终身学习" },
+      { "id": "s5", "label": "⑧ 闭环", "desc": "Sim2Real·数据反馈·可信评估" }
+    ],
+    "clusters": [
+      {
+        "id": "gpu-stack",
+        "label": "GPU 并行训练栈",
+        "hint": "PhysX/MJX/SAPIEN GPU · 高吞吐 RL/IL · 消费级到数据中心",
+        "papers": ["ManiSkill3", "Isaac Lab", "SAPIEN", "MuJoCo Playground"]
+      },
+      {
+        "id": "robosuite-eco",
+        "label": "MuJoCo / robosuite 生态",
+        "hint": "模块化操作仿真 · 厨房/终身学习 benchmark · CPU 为主",
+        "papers": ["robosuite", "RoboCasa", "LIBERO"]
+      },
+      {
+        "id": "household",
+        "label": "家务 / 长程高保真",
+        "hint": "室内活动 · 流体/状态变化 · 移动操作一体",
+        "papers": ["Behavior-1k", "iGibson 2.0"]
+      },
+      {
+        "id": "nav-lang",
+        "label": "导航 / 语言 / 经典操作 Benchmark",
+        "hint": "人机共存导航 · 语言长程 IL · 百任务少样本",
+        "papers": ["Habitat 3.0", "CALVIN", "RLBench"]
+      },
+      {
+        "id": "multi-physics",
+        "label": "多物理 / 生成式 Twin",
+        "hint": "Unity 流体变形 · 生成式 Digital Twin 数据管线",
+        "papers": ["ThreeDWorld", "Robotwin 2.0"]
+      },
+      {
+        "id": "data-aug",
+        "label": "演示数据扩展闭环",
+        "hint": "少量演示 → 大规模合成轨迹 · 技能级增广 · 跨布局/机器人",
+        "papers": ["MimicGen", "SkillMimicGen"]
+      }
+    ],
+    "compare_axes": [
+      { "key": "physics", "label": "物理引擎" },
+      { "key": "gpu", "label": "GPU 并行" },
+      { "key": "task_scale", "label": "任务/场景规模" },
+      { "key": "modality", "label": "模态侧重" },
+      { "key": "data_aug", "label": "数据扩展" },
+      { "key": "sim2real", "label": "⑧ 迁移" },
+      { "key": "diff", "label": "核心差异" }
+    ],
+    "papers": {
+      "ManiSkill3": {
+        "cluster": "gpu-stack",
+        "physics": "PhysX (SAPIEN)",
+        "gpu": "是 · 4096 env",
+        "task_scale": "操作 benchmark 套件",
+        "modality": "RGB-D·点云·状态",
+        "data_aug": "域随机化",
+        "sim2real": "Zero-shot 真机",
+        "diff": "开源 SAPIEN 栈最高 GPU 吞吐",
+        "stages": [1, 1, 1, 1, 1]
+      },
+      "Isaac Lab": {
+        "cluster": "gpu-stack",
+        "physics": "PhysX GPU",
+        "gpu": "是 · Omniverse",
+        "task_scale": "30+ 现成 env",
+        "modality": "多传感器·LiDAR·触觉",
+        "data_aug": "DR·演示采集管线",
+        "sim2real": "工业 Sim2Real 工作流",
+        "diff": "NVIDIA 官方统一 RL/IL/规划栈",
+        "stages": [1, 1, 1, 1, 1]
+      },
+      "SAPIEN": {
+        "cluster": "gpu-stack",
+        "physics": "PhysX",
+        "gpu": "部分 GPU 加速",
+        "task_scale": "PartNet-Mobility 关节资产",
+        "modality": "深度·法线·光流·RT",
+        "data_aug": "—",
+        "sim2real": "—",
+        "diff": "ManiSkill 底层引擎·部件级交互",
+        "stages": [1, 1, 1, 1, 0]
+      },
+      "MuJoCo Playground": {
+        "cluster": "gpu-stack",
+        "physics": "MuJoCo MJX",
+        "gpu": "是 · 单卡分钟级",
+        "task_scale": "腿足·人形·灵巧·操作",
+        "modality": "状态·像素 (Madrona)",
+        "data_aug": "域随机化",
+        "sim2real": "Zero-shot Sim2Real",
+        "diff": "开源 MuJoCo GPU 训练栈 (RSS'25)",
+        "stages": [1, 1, 1, 1, 1]
+      },
+      "robosuite": {
+        "cluster": "robosuite-eco",
+        "physics": "MuJoCo",
+        "gpu": "CPU 为主",
+        "task_scale": "9+ 标准操作任务",
+        "modality": "RGB·深度·proprio",
+        "data_aug": "—",
+        "sim2real": "—",
+        "diff": "模块化 API·robosuite 生态基石",
+        "stages": [1, 1, 1, 1, 0]
+      },
+      "RoboCasa": {
+        "cluster": "robosuite-eco",
+        "physics": "MuJoCo",
+        "gpu": "CPU",
+        "task_scale": "120 厨房×2500+ 物体",
+        "modality": "日常操作·多机器人",
+        "data_aug": "场景/物体随机",
+        "sim2real": "—",
+        "diff": "最大规模厨房通才 benchmark",
+        "stages": [1, 1, 1, 1, 0]
+      },
+      "LIBERO": {
+        "cluster": "robosuite-eco",
+        "physics": "MuJoCo/robosuite",
+        "gpu": "CPU",
+        "task_scale": "130 终身学习任务",
+        "modality": "语言+视觉操作",
+        "data_aug": "程序化任务生成",
+        "sim2real": "—",
+        "diff": "声明/过程知识迁移评测",
+        "stages": [1, 1, 1, 1, 0]
+      },
+      "Behavior-1k": {
+        "cluster": "household",
+        "physics": "OmniGibson 流体/状态",
+        "gpu": "重·Omniverse",
+        "task_scale": "1000 日常活动",
+        "modality": "移动操作·流体·变形",
+        "data_aug": "活动实例化",
+        "sim2real": "初步真机验证",
+        "diff": "最真实家务+状态变化仿真",
+        "stages": [1, 1, 1, 1, 1]
+      },
+      "iGibson 2.0": {
+        "cluster": "household",
+        "physics": "Bullet",
+        "gpu": "CPU",
+        "task_scale": "572 扫描室内场景",
+        "modality": "家务 IL·物体中心",
+        "data_aug": "—",
+        "sim2real": "—",
+        "diff": "BEHAVIOR 前身·扫描场景家务",
+        "stages": [1, 1, 1, 1, 0]
+      },
+      "Habitat 3.0": {
+        "cluster": "nav-lang",
+        "physics": "Habitat 物理",
+        "gpu": "部分 GPU",
+        "task_scale": "HM3D/HSSD 导航",
+        "modality": "人机共存导航",
+        "data_aug": "场景数据集",
+        "sim2real": "—",
+        "diff": "人形 avatar+机器人共栖",
+        "stages": [1, 1, 1, 1, 0]
+      },
+      "CALVIN": {
+        "cluster": "nav-lang",
+        "physics": "PyBullet",
+        "gpu": "CPU",
+        "task_scale": "语言长程桌面操作",
+        "modality": "语言+视觉+7-DoF",
+        "data_aug": "语言指令链",
+        "sim2real": "—",
+        "diff": "RA-L'22 语言条件长程 IL 标准",
+        "stages": [1, 1, 1, 1, 0]
+      },
+      "RLBench": {
+        "cluster": "nav-lang",
+        "physics": "CoppeliaSim/PyRep",
+        "gpu": "CPU",
+        "task_scale": "100 手工操作任务",
+        "modality": "RGB·深度·分割·eye-in-hand",
+        "data_aug": "MP 无限演示",
+        "sim2real": "Sim2Real 演示",
+        "diff": "百任务少样本+运动规划 demo",
+        "stages": [1, 1, 1, 1, 1]
+      },
+      "ThreeDWorld": {
+        "cluster": "multi-physics",
+        "physics": "Unity 刚体/流体/变形",
+        "gpu": "部分",
+        "task_scale": "程序化多模态场景",
+        "modality": "视觉·力·音频",
+        "data_aug": "—",
+        "sim2real": "—",
+        "diff": "通用多物理交互研究平台",
+        "stages": [1, 1, 1, 1, 0]
+      },
+      "Robotwin 2.0": {
+        "cluster": "multi-physics",
+        "physics": "双臂仿真物理",
+        "gpu": "是",
+        "task_scale": "50+ 双臂任务",
+        "modality": "生成式 Twin·DP/IL",
+        "data_aug": "生成式 Digital Twin",
+        "sim2real": "—",
+        "diff": "可扩展合成数据+双臂 benchmark",
+        "stages": [1, 1, 1, 1, 0]
+      },
+      "MimicGen": {
+        "cluster": "data-aug",
+        "physics": "robosuite/MuJoCo",
+        "gpu": "CPU·跨仿真器",
+        "task_scale": "18 任务·50K 演示",
+        "modality": "操作 IL 数据",
+        "data_aug": "轨迹重放·新布局",
+        "sim2real": "Isaac Gym 等",
+        "diff": "200 demo→50K·轨迹级扩展",
+        "stages": [1, 1, 1, 1, 1]
+      },
+      "SkillMimicGen": {
+        "cluster": "data-aug",
+        "physics": "robosuite/MuJoCo",
+        "gpu": "CPU",
+        "task_scale": "18 变体·24K 演示",
+        "modality": "技能+HSP IL",
+        "data_aug": "技能切分+运动规划",
+        "sim2real": "Zero-shot 真机",
+        "diff": "MimicGen 技能级演进·24% 提升",
+        "stages": [1, 1, 1, 1, 1]
+      }
+    },
+    "mermaid": "flowchart TB\n  subgraph UP[\"上游供给 · 非 4.9 构建\"]\n    direction LR\n    U1[\"§4.1–4.5 场景资产<br/>Holodeck·SimRecon·EmbodiedGen\"]\n    U2[\"§4.8 R2S2R 环境<br/>GaussGym·RialTo·GSWorld\"]\n    U3[\"少量人类演示<br/>遥操作·MP waypoint\"]\n  end\n\n  RW((\"真实机器人 Real\"))\n\n  subgraph LOOP[\"4.9 支撑层 · 完整技术闭环\"]\n    direction TB\n    A4[\"④ 任务/场景资产<br/>程序化·资产库·Twin·演示扩展\"]\n    A5[\"⑤ 物理仿真<br/>PhysX·MuJoCo·Bullet·OmniGibson\"]\n    A6[\"⑥ 引擎装配与并行 API<br/>Gym·USD·SAPIEN·robosuite\"]\n    A7[\"⑦ 策略训练 / Benchmark<br/>RL·IL·终身学习·长程评测\"]\n    A8[\"⑧ Sim2Real 与可信评估<br/>零样本·Dynamic Twin·BEHAVIOR真机\"]\n    A9[\"数据扩展反馈<br/>MimicGen·SkillGen·Robotwin\"]\n    A4 --> A5 --> A6 --> A7 --> A8\n    A8 -->|域偏移·失败案例| A9\n    A9 -->|增广轨迹·新布局·技能段| A4\n    A7 -->|benchmark gap·样本不足| A9\n    A8 -.动力学校准·Twin对齐.-> A5\n    A8 -.渲染/传感器域差.-> A6\n    A7 -.新一轮 IL/RL 迭代.-> A7\n  end\n\n  subgraph PHY[\"物理引擎谱系 · 共性分化轴\"]\n    direction LR\n    PX[\"PhysX GPU<br/>SAPIEN·Isaac·OmniGibson\"]\n    MJ[\"MuJoCo / MJX<br/>robosuite·Playground\"]\n    BL[\"Bullet / PyBullet<br/>iGibson·CALVIN\"]\n    OT[\"CoppeliaSim / Unity<br/>RLBench·TDW\"]\n  end\n\n  RW -->|真机评测·遥操作采集| A8\n  A8 -->|策略部署·执行| RW\n  U1 & U2 -.资产/场景注入.-> A4\n  U3 -.种子演示.-> A9\n  A5 --> PHY\n  PHY --> A6\n\n  subgraph C1[\"GPU 并行训练栈\"]\n    direction TB\n    P1[\"ManiSkill3 RSS'25<br/>SAPIEN·4096 env·30K FPS\"]\n    P2[\"Isaac Lab arXiv'25<br/>PhysX·Omniverse·30+ env\"]\n    P3[\"SAPIEN CVPR'20<br/>PartNet 关节引擎\"]\n    P4[\"MuJoCo Playground RSS'25<br/>MJX·单卡分钟级 RL\"]\n  end\n\n  subgraph C2[\"MuJoCo / robosuite 生态\"]\n    direction TB\n    P5[\"robosuite arXiv'20<br/>模块化 API 基石\"]\n    P6[\"RoboCasa arXiv'24<br/>120 厨房·2500+ 物体\"]\n    P7[\"LIBERO NeurIPS'23<br/>130 终身学习任务\"]\n  end\n\n  subgraph C3[\"家务长程高保真\"]\n    direction TB\n    P8[\"BEHAVIOR-1K CoRL'23<br/>OmniGibson·1000 活动\"]\n    P9[\"iGibson 2.0 arXiv'21<br/>572 扫描场景\"]\n  end\n\n  subgraph C4[\"导航 / 语言 Benchmark\"]\n    direction TB\n    P10[\"Habitat 3.0 arXiv'23<br/>HM3D·人机共栖导航\"]\n    P11[\"CALVIN RA-L'22<br/>语言长程 7-DoF IL\"]\n    P12[\"RLBench RA-L'20<br/>100 任务·MP 无限 demo\"]\n  end\n\n  subgraph C5[\"多物理 / 生成 Twin\"]\n    direction TB\n    P13[\"ThreeDWorld arXiv'20<br/>Unity 流体/变形/刚体\"]\n    P14[\"Robotwin 2.0 arXiv'25<br/>生成式 Twin·双臂数据\"]\n  end\n\n  subgraph C6[\"演示数据扩展闭环\"]\n    direction TB\n    P15[\"MimicGen CoRL'23<br/>200→50K 轨迹重放\"]\n    P16[\"SkillMimicGen CoRL'24<br/>60→24K 技能+规划\"]\n  end\n\n  A6 --> C1 & C2 & C3 & C4 & C5\n  A9 --> C6\n\n  P3 -->|底层引擎| P1\n  P2 -.Orbit 演进.-> P1\n  P5 -->|生态扩展| P6\n  P5 -->|生态扩展| P7\n  P5 -->|承接演示| P15\n  P9 -.演进.-> P8\n  P15 -.技能级演进.-> P16\n  P14 -.Twin 增广.-> A9\n  P1 & P4 -.高吞吐 RL.-> A7\n  P15 & P16 -.合成 IL 数据.-> A7\n  P2 & P4 -.Sim2Real 工作流.-> A8\n  P12 -.MP demo 供给.-> A9\n  U2 -.§4.8 衔接.-> A8\n\n  classDef real fill:#3d1f4f,stroke:#e879f9,color:#fce7ff\n  classDef loop fill:#1e3a5f,stroke:#7ecbff,color:#e8f4ff\n  classDef phy fill:#2a2a1a,stroke:#facc15,color:#fef9c3\n  classDef cluster fill:#162544,stroke:#60a5fa,color:#e8f4ff\n  classDef upstream fill:#1a2e1a,stroke:#86efac,color:#e8ffe8\n  class RW real\n  class A4,A5,A6,A7,A8,A9 loop\n  class PX,MJ,BL,OT phy\n  class P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14,P15,P16 cluster\n  class U1,U2,U3 upstream"
+  }
+}

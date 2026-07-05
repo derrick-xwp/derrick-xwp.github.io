@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../../blog-auth.css">
+  <script src="../../blog-auth.config.js"></script>
+  <script src="../../blog-crypto.js"></script>
+  <script src="../../blog-auth.js"></script>
+<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>训练流程 · NVIDIA 具身平台调研</title>
   <link rel="stylesheet" href="../styles.css" />
@@ -10,185 +14,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <header class="site-topbar">
-    <div class="site-topbar-nav">
-      <a class="site-back" id="site-back-blogs" href="../../">← 返回博客</a>
-      <span class="site-topbar-sep" aria-hidden="true">·</span>
-      <a class="site-back" id="site-back-home" href="../../../">← 返回主页</a>
-    </div>
-    <span class="site-topbar-label">Blog · 技术调研</span>
-  </header>
-  <div class="layout">
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <h1>NVIDIA 具身平台调研</h1>
-        <p>Isaac Sim · Isaac Lab · Cosmos</p>
-      </div>
-      <div class="search-box">
-        <input id="search" type="search" placeholder="搜索文档…" autocomplete="off" />
-      </div>
-      <nav id="nav-root" aria-label="文档导航">
-<div class="nav-section"><div class="nav-section-title">总体</div>
-<a class="nav-link" href="../总体介绍.html"><span class="nav-link-title">总体介绍</span><span class="nav-link-desc">三者定位、协作关系与许可说明（Sim 5.1 · Lab 2.3.2）</span></a>
+<div id="blog-encrypted-root" class="blog-encrypted-root" data-enc="训练流程.enc.json" hidden aria-hidden="true">
+  <p class="blog-encrypted-placeholder">内容已加密，请输入访问密码解锁。</p>
 </div>
-<div class="nav-section"><div class="nav-section-title">Isaac Sim</div>
-<a class="nav-link" href="../issac_sim/介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">架构、传感器、域随机化、ROS 2</span></a>
-<a class="nav-link" href="../issac_sim/基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">安装、启动与常用操作</span></a>
-<a class="nav-link" href="../issac_sim/不同格式3d文件的介绍.html"><span class="nav-link-title">3D 资产格式</span><span class="nav-link-desc">URDF、MJCF、CAD、OBJ/FBX/STL</span></a>
-</div>
-<div class="nav-section"><div class="nav-section-title">Isaac Lab</div>
-<a class="nav-link" href="介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">包结构、Manager-Based / Direct</span></a>
-<a class="nav-link" href="基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">环境、训练、Mimic 数据管线</span></a>
-<a class="nav-link active" href="训练流程.html"><span class="nav-link-title">训练流程</span><span class="nav-link-desc">RSL-RL 训练与 checkpoint</span></a>
-<a class="nav-link" href="任务基本介绍.html"><span class="nav-link-title">任务基本介绍</span><span class="nav-link-desc">14 个任务与奖励配置索引</span></a>
-</div>
-<div class="nav-section"><div class="nav-section-title">Cosmos</div>
-<a class="nav-link" href="../comos/介绍.html"><span class="nav-link-title">技术介绍</span><span class="nav-link-desc">Cosmos 3 omni 模型、Predict/Transfer/Reason 演进</span></a>
-<a class="nav-link" href="../comos/基本使用流程.html"><span class="nav-link-title">基本使用流程</span><span class="nav-link-desc">Cookbook、推理 CLI、HF、NIM 与 Isaac 组合</span></a>
-<a class="nav-link" href="../comos/官方仓库索引.html"><span class="nav-link-title">官方仓库索引</span><span class="nav-link-desc">GitHub / Hugging Face / NIM 链接</span></a>
-<a class="nav-link" href="../comos/在线资源与Cookbook.html"><span class="nav-link-title">Cookbook 索引</span><span class="nav-link-desc">Cosmos Cookbook 配方与 case study 摘要</span></a>
-</div>
-      </nav>
-    </aside>
-    <div class="main">
-      <header class="topbar">
-        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航">☰</button>
-        <strong>NVIDIA 具身平台调研</strong>
-      </header>
-      <div class="content-wrap">
-        <div class="article-panel">
-          <div class="breadcrumb"><a href="../总体介绍.html">NVIDIA 具身平台调研</a> <span> / </span> <span>Isaac Lab</span> <span> / </span> <span>训练流程</span></div>
-          <article class="article"><h1 id="isaac-lab-">Isaac Lab 强化学习训练流程</h1>
-<blockquote>
-<p>对照本地 <a href="https://github.com/isaac-sim/IsaacLab/blob/main/">Isaac Lab 官方仓库</a>（v2.3.2）修订。</p>
-</blockquote>
-<h2 id="1.--isaac-lab-">1. 强化学习在 Isaac Lab 中的定位</h2>
-<p>Isaac Lab 将外部 RL 库（主要是 <strong><code>rsl_rl</code> PPO</strong>）与 GPU 并行仿真环境结合：环境输出 <code>(num_envs, ...)</code> 张量，策略在同一 GPU 上完成 rollout 与更新。</p>
-<p><strong>核心逻辑</strong>：</p>
-<ul>
-<li>Isaac Lab：<code>ManagerBasedRLEnv</code> 管理并行环境与 MDP 管理器</li>
-<li><code>rsl_rl</code>：PPO 算法与 Actor-Critic（<strong>pip 依赖，不在本仓库内</strong>）</li>
-<li>桥接脚本：<a href="https://github.com/isaac-sim/IsaacLab/blob/main/scripts/reinforcement_learning/rsl_rl/train.py">scripts/reinforcement_learning/rsl_rl/train.py</a></li>
-</ul>
-<hr />
-<h2 id="2.-">2. 并行环境架构</h2>
-<p>基于 <a href="https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab/isaaclab/envs/manager_based_rl_env.py">ManagerBasedRLEnv</a>（继承 <a href="https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab/isaaclab/envs/manager_based_env.py">ManagerBasedEnv</a>）：</p>
-<ul>
-<li>单 GPU 上 <code>num_envs</code> 个并行实例</li>
-<li>观测、动作、奖励、done 均为 GPU 张量</li>
-<li>Gymnasium 风格接口：<code>reset()</code> / <code>step(action)</code></li>
-</ul>
-<hr />
-<h2 id="3.-rsl_rl-ppo">3. 训练主循环（rsl_rl PPO）</h2>
-<p>入口：<a href="https://github.com/isaac-sim/IsaacLab/blob/main/scripts/reinforcement_learning/rsl_rl/train.py">train.py</a></p>
-<h3 id="3.1-">3.1 初始化</h3>
-<ul>
-<li>解析 <code>--task</code>，通过 <code>gym.make</code> 加载环境及 <code>env_cfg_entry_point</code></li>
-<li>从 <code>rsl_rl_cfg_entry_point</code> 加载 PPO 配置（如 <a href="https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/config/anymal_d/agents/rsl_rl_ppo_cfg.py">anymal_d/agents/rsl_rl_ppo_cfg.py</a>）</li>
-<li>构建 Actor-Critic 与 <code>OnPolicyRunner</code></li>
-</ul>
-<h3 id="3.2-rollout--gae--ppo-">3.2 Rollout → GAE → PPO 更新</h3>
-<p><code>rsl_rl</code> 内部完成：采样 <code>num_steps_per_env</code> 步 → 计算 GAE → 多 epoch mini-batch 更新。具体实现见已安装的 <code>rsl_rl</code> 包（非本地仓库文件）。</p>
-<h3 id="3.3-">3.3 迭代与保存</h3>
-<p>循环至 <code>max_iterations</code>，定期保存 checkpoint 到 <code>logs/</code>。</p>
-<hr />
-<h2 id="4.-ppo-">4. PPO 配置位置</h2>
-<table>
-<thead>
-<tr class="header">
-<th>内容</th>
-<th>官方文件</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>环境 MDP（奖励权重等）</td>
-<td><code>source/isaaclab_tasks/.../xxx_env_cfg.py</code></td>
-</tr>
-<tr class="even">
-<td>PPO 超参 / 网络结构</td>
-<td><code>.../agents/rsl_rl_ppo_cfg.py</code> 或 <code>agents/skrl_*_cfg.yaml</code></td>
-</tr>
-<tr class="odd">
-<td>共享速度跟踪奖励</td>
-<td><a href="https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab/isaaclab/envs/mdp/rewards.py">isaaclab/envs/mdp/rewards.py</a></td>
-</tr>
-</tbody>
-</table>
-<p>网络 hidden dims、learning rate 等在 <code>RslRlPpoActorCriticCfg</code> / <code>RslRlPpoAlgorithmCfg</code> 中定义，而非环境 <code>cfg.yaml</code>（该文件不存在）。</p>
-<hr />
-<h2 id="5.--pbt">5. 域随机化与 PBT</h2>
-<ul>
-<li><strong>域随机化</strong>：各任务 <code>EventCfg</code> 中定义（如 <a href="https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/velocity_env_cfg.py">velocity_env_cfg.py EventCfg</a>）</li>
-<li><strong>PBT</strong>：<code>rl_games</code> 路径下实现（<a href="https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab_rl/isaaclab_rl/rl_games/pbt/">isaaclab_rl/rl_games/pbt/</a>），非所有 <code>rsl_rl</code> 训练默认启用</li>
-</ul>
-<hr />
-<h2 id="6.-">6. 关键文件一览</h2>
-<table>
-<thead>
-<tr class="header">
-<th>组件</th>
-<th>官方路径</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>PPO 训练脚本</td>
-<td><a href="https://github.com/isaac-sim/IsaacLab/blob/main/scripts/reinforcement_learning/rsl_rl/train.py">scripts/reinforcement_learning/rsl_rl/train.py</a></td>
-</tr>
-<tr class="even">
-<td>PPO 测试脚本</td>
-<td><a href="https://github.com/isaac-sim/IsaacLab/blob/main/scripts/reinforcement_learning/rsl_rl/play.py">scripts/reinforcement_learning/rsl_rl/play.py</a></td>
-</tr>
-<tr class="odd">
-<td>环境基类</td>
-<td><a href="https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab/isaaclab/envs/manager_based_env.py">isaaclab/envs/manager_based_env.py</a></td>
-</tr>
-<tr class="even">
-<td>RL 环境</td>
-<td><a href="https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab/isaaclab/envs/manager_based_rl_env.py">isaaclab/envs/manager_based_rl_env.py</a></td>
-</tr>
-<tr class="odd">
-<td>四足任务 MDP 基类</td>
-<td><a href="https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/velocity_env_cfg.py">locomotion/velocity/velocity_env_cfg.py</a></td>
-</tr>
-<tr class="even">
-<td>Anymal D 注册</td>
-<td><a href="https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/config/anymal_d/__init__.py">config/anymal_d/<strong>init</strong>.py</a></td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p><strong><code>rsl_rl</code> 的 <code>ppo.py</code></strong> 位于 pip 安装的 <code>rsl_rl</code> 包中（通常来自 <a href="https://github.com/leggedrobotics/rsl_rl），**不在**本地">https://github.com/leggedrobotics/rsl_rl），**不在**本地</a> IsaacLab 仓库内。</p>
-</blockquote>
-<hr />
-<h2 id="7.-">7. 流程图</h2>
-<div class="mermaid">graph LR
-    A[xxx_env_cfg.py<br/>MDP 配置] --> B[ManagerBasedRLEnv<br/>num_envs 并行]
-    B --> C[Actor-Critic<br/>rsl_rl]
-    C --> D[Rollout 收集]
-    D --> E[GAE + PPO 更新]
-    E --> C
-    E --> F[保存 checkpoint]
-    F --> G{收敛?}
-    G -- 否 --> C
-    G -- 是 --> H[play.py 评估]</div>
-<hr />
-<p><em>对照版本：Isaac Lab 2.3.2</em></p></article>
-          <p class="footer-note">
-            源码链接指向
-            <a href="https://github.com/isaac-sim/IsaacSim" target="_blank" rel="noopener">Isaac Sim</a>、
-            <a href="https://github.com/isaac-sim/IsaacLab" target="_blank" rel="noopener">Isaac Lab</a>
-            与
-            <a href="https://github.com/nvidia/cosmos" target="_blank" rel="noopener">NVIDIA Cosmos</a>
-            官方 GitHub 仓库。
-          </p>
-        </div>
-        <aside class="toc-panel" aria-label="目录"><h2>本页目录</h2><ul class="toc-list"><li><a class="" href="#1.--isaac-lab-">1. 强化学习在 Isaac Lab 中的定位</a></li><li><a class="" href="#2.-">2. 并行环境架构</a></li><li><a class="" href="#3.-rsl_rl-ppo">3. 训练主循环（rsl_rl PPO）</a></li><li><a class="level-3" href="#3.1-">3.1 初始化</a></li><li><a class="level-3" href="#3.2-rollout--gae--ppo-">3.2 Rollout → GAE → PPO 更新</a></li><li><a class="level-3" href="#3.3-">3.3 迭代与保存</a></li><li><a class="" href="#4.-ppo-">4. PPO 配置位置</a></li><li><a class="" href="#5.--pbt">5. 域随机化与 PBT</a></li><li><a class="" href="#6.-">6. 关键文件一览</a></li><li><a class="" href="#7.-">7. 流程图</a></li></ul></aside>
-      </div>
-    </div>
-  </div>
-  <script src="../../../site-paths.js"></script>
+<script src="../../../site-paths.js"></script>
   <script src="../nav.js"></script>
   <script src="../vendor/mermaid.min.js"></script>
   <script src="../mermaid-init.js"></script>
