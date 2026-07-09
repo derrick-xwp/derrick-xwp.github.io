@@ -19,9 +19,26 @@ window.RESUME = {
     newsTitle: '新闻与活动',
     blogsTitle: '博客',
     blogHubTitle: '技术博客',
-    blogHubDesc: '',
+    blogHubDesc: '具身智能场景生成、专题调研与仿真平台的技术笔记与交互式综述。',
     blogHubBack: '← 返回主页',
     blogHubReadMore: '进入专栏 →',
+    blogGroups: [
+      {
+        id: 'generation',
+        title: '场景生成与代表方法',
+        desc: '从语言 / 图像到 Sim-Ready 3D 场景与资产的端到端工具链'
+      },
+      {
+        id: 'surveys',
+        title: '专题调研系列',
+        desc: '训练环境、World Model、数据引擎与全链条方法图谱的深度综述'
+      },
+      {
+        id: 'platforms',
+        title: '仿真平台专栏',
+        desc: 'NVIDIA Isaac 生态与主流开源仿真平台的选型对比与技术文档'
+      }
+    ],
     embodiedSeries: {
       title: '具身智能成熟平台调研',
       summary: '涵盖 NVIDIA Isaac 生态与 9 大开源仿真平台；含多维度能力矩阵、选型决策与各平台技术文档。',
@@ -108,84 +125,124 @@ window.RESUME = {
     },
     blogs: [
       {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'SAGE 交互式流程导览',
+        summary: 'Scalable Agentic 3D Scene Generation 全流程：架构总览、核心流程、提示词库、模型分工与 MCP 工具。',
+        link: 'blogs/sage/flow-guide.html',
+        image: 'https://research.nvidia.com/labs/cosmos-lab/sage/assets/images/teaser.png',
+        tags: ['具身智能', 'SAGE', 'Agentic', '3D Scene Generation']
+      },
+      {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'EmbodiedGen：生成式 Sim-Ready 3D 世界引擎',
+        summary: 'Text / Image → mesh、URDF、关节物体与物理参数；基础模型编排式资产工厂，可部署 Isaac / MuJoCo / SAPIEN。',
+        link: 'blogs/embodiedgen/flow-guide.html',
+        image: 'https://cdn.jsdelivr.net/gh/HorizonRobotics/EmbodiedGen@master/docs/landing/assets/img/overview.jpg',
+        tags: ['具身智能', 'EmbodiedGen', 'Sim-Ready', 'Asset Factory']
+      },
+      {
+        group: 'surveys',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: '从 Sim-Ready World 到 Policy-Ready Data Engine',
+        summary: 'Sim-Ready 之后的任务、奖励、数据、评测与真机迁移；六节凝练版 + 9 篇代表论文对比。',
+        link: 'blogs/policy-data/',
+        image: 'https://mimicgen.github.io/resources/overview.png',
+        tags: ['具身智能', 'Policy-Ready', 'Policy Data', 'Sim2Real']
+      },
+      {
+        group: 'surveys',
         date: '2026-07',
         dateLabel: '2026年7月',
         title: '具身智能训练场景构建 Pipeline',
         summary: '从任务生成到 Policy-Ready Data Engine；主线 8 篇论文的端到端技术路线与交互排序表。',
-        link: 'blogs/#pipeline',
+        link: 'blogs/pipeline/',
+        image: 'https://robogen-ai.github.io/assets/images/long-horizon.png',
         tags: ['具身智能', 'Pipeline', 'Task Generation', 'Policy-Ready']
       },
       {
+        group: 'surveys',
         date: '2026-07',
         dateLabel: '2026年7月',
         title: '全链条方法图谱：完整度、平台族与工程现实',
         summary: '雷达图、平台族聚类、完整度×兼容度气泡图与热力矩阵；17 篇代表方法可检索对比。',
-        link: 'blogs/#method-landscape',
-        tags: ['具身智能', '方法图谱', '平台族', '完整度']
+        link: 'blogs/method-landscape/',
+        image: 'https://research.nvidia.com/labs/cosmos-lab/sage/assets/images/preview_and_stats_v2.png',
+        tags: ['具身智能', '方法图谱', 'Method Landscape', '完整度']
       },
       {
-        date: '2026-07',
-        dateLabel: '2026年7月',
-        title: '从 Sim-Ready World 到 Policy-Ready Data Engine',
-        summary: 'Sim-Ready 之后的任务、奖励、数据、评测与真机迁移；六节凝练版 + 9 篇论文对比。',
-        link: 'blogs/#policy-data',
-        tags: ['具身智能', 'Policy-Ready', 'Task Generation', 'Sim2Real']
-      },
-      {
-        date: '2026-07',
-        dateLabel: '2026年7月',
-        title: 'World 与 World Model：从外部训练环境到内部预测模型',
-        summary: '四层概念 × 五类模型 × 三条闭环；区分 World、Simulator 与 World Model，20 篇代表论文对比表。',
-        link: 'blogs/#world-model',
-        tags: ['具身智能', 'World Model', 'Model-Based RL', 'Planning']
-      },
-      {
+        group: 'surveys',
         date: '2026-07',
         dateLabel: '2026年7月',
         title: '具身智能训练环境构建调研',
         summary: '8 阶段流水线 × 两入口 × 三主线；43 篇论文阶段参与详表（非平台选型）。',
-        link: 'blogs/#training-env',
-        tags: ['具身智能', '训练环境', 'Real2Sim', '场景生成']
+        link: 'blogs/training-env/',
+        image: 'https://yueyang1996.github.io/holodeck/static/images/floorplan_customizability.jpg',
+        tags: ['具身智能', '训练环境', 'Training Env', 'Real2Sim']
       },
       {
+        group: 'surveys',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'World 与 World Model：从外部训练环境到内部预测模型',
+        summary: '四层概念 × 五类模型 × 三条闭环；区分 World、Simulator 与 World Model，20 篇代表论文对比表。',
+        link: 'blogs/world-model/',
+        image: 'https://embodiedreamer.github.io/static/images/main_demo.png',
+        tags: ['具身智能', 'World Model', 'Model-Based RL', 'Planning']
+      },
+      {
+        group: 'platforms',
+        date: '2026-06',
+        dateLabel: '2026年6月',
+        title: '具身智能成熟平台调研',
+        summary: '涵盖 NVIDIA Isaac 生态与 9 大开源仿真平台；含多维度能力矩阵、选型决策与各平台技术文档。',
+        link: 'blogs/embodied-platforms/主页.html',
+        image: 'https://procthor-10k.s3.us-west-2.amazonaws.com/static/demo1/Apartment_0_top_small.jpg',
+        tags: ['具身智能', 'Embodied AI', '仿真平台', 'Benchmark']
+      },
+      {
+        group: 'platforms',
         date: '2026-06',
         dateLabel: '2026年6月',
         title: 'NVIDIA 具身智能平台调研',
         summary: 'Isaac Sim、Isaac Lab 与 Cosmos 的定位、协作关系、许可说明与使用流程；含任务库、训练链路与 3D 资产格式等专题文档。',
         link: 'blogs/nvidia/',
+        image: 'https://cdn.jsdelivr.net/gh/isaac-sim/IsaacLab@main/docs/source/_static/isaaclab.jpg',
         tags: ['具身智能', 'NVIDIA', 'Isaac Sim', 'Isaac Lab']
       },
       {
+        group: 'platforms',
         date: '2026-06',
         dateLabel: '2026年6月',
         title: 'AI2-THOR 调研',
         summary: 'Unity 交互式室内仿真：物体语义状态机、ManipulaTHOR / RoboTHOR / ProcTHOR 与 Controller API。',
         link: 'blogs/embodied-platforms/ai2thor/介绍.html',
+        image: 'https://cdn.jsdelivr.net/gh/allenai/ai2thor@main/doc/static/Ai2-THOR.svg',
         tags: ['仿真平台', 'AI2-THOR', 'Unity']
       },
       {
+        group: 'platforms',
         date: '2026-06',
         dateLabel: '2026年6月',
         title: 'SAPIEN / ManiSkill 调研',
         summary: 'SAPIEN 3 物理引擎与 ManiSkill3 GPU 并行 benchmark、任务库与训练 baseline。',
         link: 'blogs/embodied-platforms/sapien/介绍.html',
+        image: 'https://cdn.jsdelivr.net/gh/mani-skill/ManiSkill@main/figures/teaser.jpg',
         tags: ['仿真平台', 'ManiSkill', 'SAPIEN']
       },
       {
+        group: 'platforms',
         date: '2026-06',
         dateLabel: '2026年6月',
         title: 'BEHAVIOR-1K 调研',
         summary: '1000 项家务 BDDL 任务、OmniGibson 与 2025 Challenge 评测。',
         link: 'blogs/embodied-platforms/behavior_1k/介绍.html',
+        image: 'https://cdn.jsdelivr.net/gh/StanfordVL/BEHAVIOR-1K@main/docs/assets/behavior_cover.png',
         tags: ['仿真平台', 'BEHAVIOR-1K', 'OmniGibson']
-      },
-      {
-        date: '2026-06',
-        dateLabel: '2026年6月',
-        title: '仿真平台选型总览',
-        summary: '9 大平台多维度对比、选型决策与完整文档索引。',
-        link: 'blogs/embodied-platforms/主页.html',
-        tags: ['仿真平台', '具身智能', 'Benchmark']
       }
     ],
     pubTitle: '论文',
@@ -387,10 +444,11 @@ window.RESUME = {
       defaultOpen: true
     },
     blogs: [
-      { date: '2026-07', dateLabel: '2026年7月', title: '全鏈條方法圖譜：完整度、平台族與工程現實', summary: '雷達圖、平台族聚類、完整度×兼容度氣泡圖與熱力矩陣；17 篇代表方法可檢索對比。', link: 'blogs/#method-landscape', tags: ['具身智能', '方法圖譜', '平台族'] },
-      { date: '2026-07', dateLabel: '2026年7月', title: '從 Sim-Ready World 到 Policy-Ready Data Engine', summary: 'Sim-Ready 之後的任務生成、獎勵程序、域隨機化、示範/rollout 數據與 Real2Sim2Real 閉環。', link: 'blogs/#policy-data', tags: ['具身智能', 'Policy-Ready', 'Sim2Real'] },
-      { date: '2026-07', dateLabel: '2026年7月', title: 'World 與 World Model 調研', summary: '四層概念 × 五類模型；區分 World 與 World Model，20 篇代表論文對比表。', link: 'blogs/#world-model', tags: ['具身智能', 'World Model'] },
-      { date: '2026-07', dateLabel: '2026年7月', title: '具身智能訓練環境構建調研', summary: '8 階段流水線 × 兩入口 × 三主線；43 篇論文階段參與詳表（非平台選型）。', link: 'blogs/#training-env', tags: ['具身智能', '訓練環境', 'Real2Sim'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'SAGE 互動式流程導覽', summary: 'Scalable Agentic 3D Scene Generation 全流程：架構總覽、核心流程、提示詞庫、模型分工與 MCP 工具。', link: 'blogs/sage/flow-guide.html', tags: ['具身智能', 'SAGE', 'Agentic', '3D Scene Generation'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: '全鏈條方法圖譜：完整度、平台族與工程現實', summary: '雷達圖、平台族聚類、完整度×兼容度氣泡圖與熱力矩陣；17 篇代表方法可檢索對比。', link: 'blogs/method-landscape/', tags: ['具身智能', '方法圖譜', '平台族'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: '從 Sim-Ready World 到 Policy-Ready Data Engine', summary: 'Sim-Ready 之後的任務生成、獎勵程序、域隨機化、示範/rollout 數據與 Real2Sim2Real 閉環。', link: 'blogs/policy-data/', tags: ['具身智能', 'Policy-Ready', 'Sim2Real'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'World 與 World Model 調研', summary: '四層概念 × 五類模型；區分 World 與 World Model，20 篇代表論文對比表。', link: 'blogs/world-model/', tags: ['具身智能', 'World Model'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: '具身智能訓練環境構建調研', summary: '8 階段流水線 × 兩入口 × 三主線；43 篇論文階段參與詳表（非平台選型）。', link: 'blogs/training-env/', tags: ['具身智能', '訓練環境', 'Real2Sim'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'NVIDIA 具身智能平台調研', summary: 'Isaac Sim、Isaac Lab 與 Cosmos 定位與使用流程。', link: 'blogs/nvidia/', tags: ['具身智能', 'NVIDIA', 'Isaac Sim'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'AI2-THOR 調研', summary: 'Unity 互動室內仿真與 Controller API。', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['仿真平台', 'AI2-THOR'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'SAPIEN / ManiSkill 調研', summary: 'GPU 並行物理仿真與 ManiSkill3 benchmark。', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['仿真平台', 'ManiSkill'] },
@@ -534,9 +592,10 @@ window.RESUME = {
       defaultOpen: true
     },
     blogs: [
-      { date: '2026-07', dateLabel: 'July 2026', title: 'Method Landscape: Completeness & Platform Families', summary: 'Radar, cluster map, bubble chart, heatmap and reference table for 17 representative methods.', link: 'blogs/#method-landscape', tags: ['Embodied AI', 'Method Landscape', 'Platforms'] },
-      { date: '2026-07', dateLabel: 'July 2026', title: 'World vs World Model Survey', summary: 'Four concepts × five families; 20-paper comparison table.', link: 'blogs/#world-model', tags: ['Embodied AI', 'World Model'] },
-      { date: '2026-07', dateLabel: 'July 2026', title: 'Embodied AI Training Environment Survey', summary: '8-stage pipeline with per-paper contributions across 43 papers (not platform selection).', link: 'blogs/#training-env', tags: ['Embodied AI', 'Training Env', 'Real2Sim'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'SAGE Interactive Flow Guide', summary: 'Scalable Agentic 3D Scene Generation: architecture, pipeline, prompts, model roles, and MCP tools.', link: 'blogs/sage/flow-guide.html', tags: ['Embodied AI', 'SAGE', 'Agentic', '3D Scene Generation'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'Method Landscape: Completeness & Platform Families', summary: 'Radar, cluster map, bubble chart, heatmap and reference table for 17 representative methods.', link: 'blogs/method-landscape/', tags: ['Embodied AI', 'Method Landscape', 'Platforms'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'World vs World Model Survey', summary: 'Four concepts × five families; 20-paper comparison table.', link: 'blogs/world-model/', tags: ['Embodied AI', 'World Model'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'Embodied AI Training Environment Survey', summary: '8-stage pipeline with per-paper contributions across 43 papers (not platform selection).', link: 'blogs/training-env/', tags: ['Embodied AI', 'Training Env', 'Real2Sim'] },
       { date: '2026-06', dateLabel: 'June 2026', title: 'NVIDIA Embodied AI Platform Survey', summary: 'Isaac Sim, Isaac Lab, and Cosmos workflows.', link: 'blogs/nvidia/', tags: ['Embodied AI', 'NVIDIA'] },
       { date: '2026-06', dateLabel: 'June 2026', title: 'AI2-THOR Survey', summary: 'Unity interactive indoor simulation and Controller API.', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['Simulation', 'AI2-THOR'] },
       { date: '2026-06', dateLabel: 'June 2026', title: 'SAPIEN / ManiSkill Survey', summary: 'GPU-parallel physics and ManiSkill3 benchmarks.', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['Simulation', 'ManiSkill'] },
@@ -714,9 +773,9 @@ window.RESUME = {
       defaultOpen: true
     },
     blogs: [
-      { date: '2026-07', dateLabel: '2026年7月', title: '全チェーン方法マップ', summary: 'レーダー・クラスタ・バブル・ヒートマップ；17 代表手法の検索可能な比較。', link: 'blogs/#method-landscape', tags: ['エンボディド AI', '方法マップ'] },
-      { date: '2026-07', dateLabel: '2026年7月', title: 'World と World Model 調査', summary: '四層概念 × 五類モデル；20 論文比較表。', link: 'blogs/#world-model', tags: ['エンボディド AI', 'World Model'] },
-      { date: '2026-07', dateLabel: '2026年7月', title: 'エンボディド AI 訓練環境構築調査', summary: '8 段階パイプライン × 2 入口 × 3 主線；43 論文の段階別貢献（プラットフォーム選定ではない）。', link: 'blogs/#training-env', tags: ['エンボディド AI', '訓練環境'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: '全チェーン方法マップ', summary: 'レーダー・クラスタ・バブル・ヒートマップ；17 代表手法の検索可能な比較。', link: 'blogs/method-landscape/', tags: ['エンボディド AI', '方法マップ'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'World と World Model 調査', summary: '四層概念 × 五類モデル；20 論文比較表。', link: 'blogs/world-model/', tags: ['エンボディド AI', 'World Model'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'エンボディド AI 訓練環境構築調査', summary: '8 段階パイプライン × 2 入口 × 3 主線；43 論文の段階別貢献（プラットフォーム選定ではない）。', link: 'blogs/training-env/', tags: ['エンボディド AI', '訓練環境'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'NVIDIA エンボディド AI プラットフォーム調査', summary: 'Isaac Sim・Isaac Lab・Cosmos。', link: 'blogs/nvidia/', tags: ['エンボディド AI', 'NVIDIA'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'AI2-THOR 調査', summary: 'Unity 室内仿真。', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['シミュレーション', 'AI2-THOR'] },
       { date: '2026-06', dateLabel: '2026年6月', title: 'SAPIEN / ManiSkill 調査', summary: 'GPU 並列物理仿真。', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['シミュレーション', 'ManiSkill'] },
@@ -894,9 +953,9 @@ window.RESUME = {
       defaultOpen: true
     },
     blogs: [
-      { date: '2026-07', dateLabel: '2026년 7월', title: '전체 체인 방법 지도', summary: '레이더·클러스터·버블·히트맵；17개 대표 방법 비교.', link: 'blogs/#method-landscape', tags: ['엠보디드 AI', '방법 지도'] },
-      { date: '2026-07', dateLabel: '2026년 7월', title: 'World 와 World Model 조사', summary: '4개 개념 × 5개 계열；20편 논문 비교표.', link: 'blogs/#world-model', tags: ['엠보디드 AI', 'World Model'] },
-      { date: '2026-07', dateLabel: '2026년 7월', title: '엠보디드 AI 훈련 환경 구축 조사', summary: '8단계 파이프라인 × 2개 진입점 × 3개 주선；43편 논문 단계별 기여(플랫폼 선정 아님).', link: 'blogs/#training-env', tags: ['엠보디드 AI', '훈련 환경'] },
+      { date: '2026-07', dateLabel: '2026년 7월', title: '전체 체인 방법 지도', summary: '레이더·클러스터·버블·히트맵；17개 대표 방법 비교.', link: 'blogs/method-landscape/', tags: ['엠보디드 AI', '방법 지도'] },
+      { date: '2026-07', dateLabel: '2026년 7월', title: 'World 와 World Model 조사', summary: '4개 개념 × 5개 계열；20편 논문 비교표.', link: 'blogs/world-model/', tags: ['엠보디드 AI', 'World Model'] },
+      { date: '2026-07', dateLabel: '2026년 7월', title: '엠보디드 AI 훈련 환경 구축 조사', summary: '8단계 파이프라인 × 2개 진입점 × 3개 주선；43편 논문 단계별 기여(플랫폼 선정 아님).', link: 'blogs/training-env/', tags: ['엠보디드 AI', '훈련 환경'] },
       { date: '2026-06', dateLabel: '2026년 6월', title: 'NVIDIA 엠보디드 AI 플랫폼 조사', summary: 'Isaac Sim, Isaac Lab, Cosmos.', link: 'blogs/nvidia/', tags: ['엠보디드 AI', 'NVIDIA'] },
       { date: '2026-06', dateLabel: '2026년 6월', title: 'AI2-THOR 조사', summary: 'Unity 실내 시뮬레이션.', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['시뮬레이션', 'AI2-THOR'] },
       { date: '2026-06', dateLabel: '2026년 6월', title: 'SAPIEN / ManiSkill 조사', summary: 'GPU 병렬 물리 시뮬레이션.', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['시뮬레이션', 'ManiSkill'] },
@@ -1074,9 +1133,9 @@ window.RESUME = {
       defaultOpen: true
     },
     blogs: [
-      { date: '2026-07', dateLabel: 'กรกฎาคม 2026', title: 'แผนที่วิธีการทั้งสายโซ่', summary: 'เรดาร์·คลัสเตอร์·บับเบิล·ฮีตแมป；17 วิธีเปรียบเทียบได้', link: 'blogs/#method-landscape', tags: ['Embodied AI', 'Method Landscape'] },
-      { date: '2026-07', dateLabel: 'กรกฎาคม 2026', title: 'World กับ World Model', summary: '4 แนวคิด × 5 ตระกูล；ตารางเปรียบเทียบ 20 บทความ', link: 'blogs/#world-model', tags: ['Embodied AI', 'World Model'] },
-      { date: '2026-07', dateLabel: 'กรกฎาคม 2026', title: 'สำรวจการสร้างสภาพแวดล้อมฝึก Embodied AI', summary: 'ไพป์ไลน์ 8 ขั้นตอน × 2 จุดเข้า × 3 เส้นหลัก；43 บทความ (ไม่ใช่การเลือกแพลตฟอร์ม)', link: 'blogs/#training-env', tags: ['Embodied AI', 'Training Env'] },
+      { date: '2026-07', dateLabel: 'กรกฎาคม 2026', title: 'แผนที่วิธีการทั้งสายโซ่', summary: 'เรดาร์·คลัสเตอร์·บับเบิล·ฮีตแมป；17 วิธีเปรียบเทียบได้', link: 'blogs/method-landscape/', tags: ['Embodied AI', 'Method Landscape'] },
+      { date: '2026-07', dateLabel: 'กรกฎาคม 2026', title: 'World กับ World Model', summary: '4 แนวคิด × 5 ตระกูล；ตารางเปรียบเทียบ 20 บทความ', link: 'blogs/world-model/', tags: ['Embodied AI', 'World Model'] },
+      { date: '2026-07', dateLabel: 'กรกฎาคม 2026', title: 'สำรวจการสร้างสภาพแวดล้อมฝึก Embodied AI', summary: 'ไพป์ไลน์ 8 ขั้นตอน × 2 จุดเข้า × 3 เส้นหลัก；43 บทความ (ไม่ใช่การเลือกแพลตฟอร์ม)', link: 'blogs/training-env/', tags: ['Embodied AI', 'Training Env'] },
       { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'สำรวจแพลตฟอร์ม NVIDIA Embodied AI', summary: 'Isaac Sim, Isaac Lab, Cosmos', link: 'blogs/nvidia/', tags: ['Embodied AI', 'NVIDIA'] },
       { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'สำรวจ AI2-THOR', summary: 'Unity indoor simulation', link: 'blogs/embodied-platforms/ai2thor/介绍.html', tags: ['Simulation', 'AI2-THOR'] },
       { date: '2026-06', dateLabel: 'มิถุนายน 2026', title: 'สำรวจ SAPIEN / ManiSkill', summary: 'GPU parallel physics', link: 'blogs/embodied-platforms/sapien/介绍.html', tags: ['Simulation', 'ManiSkill'] },

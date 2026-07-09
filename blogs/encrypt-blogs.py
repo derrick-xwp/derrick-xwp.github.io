@@ -36,6 +36,11 @@ CONFIG_PATH = ROOT / "blog-auth.config.js"
 SKIP_DIRS = {"_plain", "vendor", "local-papers", "papers_refs"}
 ENC_MARKER = 'data-enc="'
 BODY_SCRIPT_RE = re.compile(r"(<body[^>]*>)(.*?)(<script\b)", re.DOTALL | re.IGNORECASE)
+BODY_RE = re.compile(r"(<body[^>]*>)(.*?)(</body>)", re.DOTALL | re.IGNORECASE)
+BOOTSTRAP_SCRIPT_RE = re.compile(
+    r"<script\s+[^>]*\bsrc=[\"'][^\"']*site-paths\.js[\"'][^>]*>\s*</script>",
+    re.IGNORECASE,
+)
 REDIRECT_RE = re.compile(r"location\.replace\s*\(", re.IGNORECASE)
 
 
@@ -80,6 +85,8 @@ def write_enc(path: Path, payload: dict) -> None:
 
 
 def should_skip_html(path: Path, html: str) -> bool:
+    if path.name.endswith(".raw.html"):
+        return True
     if ENC_MARKER in html:
         return True
     rel = path.relative_to(ROOT if path.is_relative_to(ROOT) else ROOT)
@@ -88,27 +95,44 @@ def should_skip_html(path: Path, html: str) -> bool:
     return False
 
 
-def extract_body_inner(html: str) -> str | None:
-    m = BODY_SCRIPT_RE.search(html)
+def split_body_inner(html: str) -> tuple[str, str] | None:
+    m = BODY_RE.search(html)
     if not m:
         return None
     inner = m.group(2)
+    bootstrap_m = BOOTSTRAP_SCRIPT_RE.search(inner)
+    if bootstrap_m:
+        return inner[: bootstrap_m.start()], inner[bootstrap_m.start() :]
+    return inner, ""
+
+
+def extract_body_inner(html: str) -> str | None:
+    split = split_body_inner(html)
+    if split is None:
+        return None
+    inner, _bootstrap = split
     if not inner.strip():
         return None
     return inner
 
 
 def build_shell(html: str, enc_name: str, placeholder: str) -> str:
-    m = BODY_SCRIPT_RE.search(html)
-    if not m:
+    split = split_body_inner(html)
+    if split is None:
         return html
+    _inner, bootstrap = split
     shell_inner = (
         '\n<div id="blog-encrypted-root" class="blog-encrypted-root" '
         f'data-enc="{enc_name}" hidden aria-hidden="true">\n'
         f'  <p class="blog-encrypted-placeholder">{placeholder}</p>\n'
         "</div>\n"
     )
-    return html[: m.start(2)] + shell_inner + html[m.start(3) :]
+    if bootstrap:
+        shell_inner += bootstrap
+    m = BODY_RE.search(html)
+    if not m:
+        return html
+    return html[: m.start(2)] + shell_inner + html[m.end(2) :]
 
 
 def ensure_crypto_snippet(html: str, prefix: str) -> str:
