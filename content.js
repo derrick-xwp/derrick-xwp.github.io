@@ -37,6 +37,11 @@ window.RESUME = {
         id: 'platforms',
         title: '仿真平台专栏',
         desc: 'NVIDIA Isaac 生态与主流开源仿真平台的选型对比与技术文档'
+      },
+      {
+        id: 'comparison',
+        title: '方法对比分析',
+        desc: '代表方法在物理属性、管线完整度等维度的并排对比'
       }
     ],
     embodiedSeries: {
@@ -143,6 +148,96 @@ window.RESUME = {
         link: 'blogs/embodiedgen/flow-guide.html',
         image: 'https://cdn.jsdelivr.net/gh/HorizonRobotics/EmbodiedGen@master/docs/landing/assets/img/overview.jpg',
         tags: ['具身智能', 'EmbodiedGen', 'Sim-Ready', 'Asset Factory']
+      },
+      {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'Genesis World 交互式流程导览',
+        summary: '统一多物理引擎：gs.init → Scene → 多求解器耦合 → 并行仿真；支持 URDF/MJCF/USD 与 GPU 批环境。',
+        link: 'blogs/genesis/flow-guide.html',
+        image: 'https://raw.githubusercontent.com/YilingQiao/Genesis/readme-assets/videos/HeroShot_Final.png',
+        tags: ['具身智能', 'Genesis', 'Physics Engine', 'Simulation']
+      },
+      {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'SceneSmith 交互式流程导览',
+        summary: 'MIT/TRI Agentic 室内场景生成：五阶段管线、Planner/Designer/Critic 闭环、SAM3D 资产生成与 Drake 物理仿真。',
+        link: 'blogs/scenesmith/flow-guide.html',
+        image: 'https://scenesmith.github.io/static/images/teaser.webp',
+        tags: ['具身智能', 'SceneSmith', 'Agentic', 'Drake', 'Indoor Scene']
+      },
+      {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'Gen2Sim 交互式流程导览',
+        summary: 'Generation to Simulation：2D→3D 资产、GPT-4 任务分解与 reward 生成、IsaacGym PPO 长程操作技能训练。',
+        link: 'blogs/gen2sim/flow-guide.html',
+        image: 'https://gen2sim.github.io/static/images/teaser.gif',
+        tags: ['具身智能', 'Gen2Sim', 'Task Program', 'IsaacGym']
+      },
+      {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'RoboGen 交互式流程导览',
+        summary: 'Propose-Generate-Learn：GPT-4 自主任务提议、PyBullet 场景装配、OMPL 原语与 SAC 技能学习闭环。',
+        link: 'blogs/robogen/flow-guide.html',
+        image: 'https://robogen-ai.github.io/assets/images/long-horizon.png',
+        tags: ['具身智能', 'RoboGen', 'Agentic', 'PyBullet']
+      },
+      {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'MimicGen 交互式流程导览',
+        summary: '少量人类演示 → 子任务切分与空间变换 → 大规模 robosuite 合成轨迹，支撑 robomimic 行为克隆。',
+        link: 'blogs/mimicgen/flow-guide.html',
+        image: 'https://mimicgen.github.io/resources/overview.png',
+        tags: ['具身智能', 'MimicGen', 'Demo Expansion', 'robosuite']
+      },
+      {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'PhyScene 交互式流程导览',
+        summary: 'CVPR 2024 Highlight：房间户型条件扩散布局 + 碰撞/可达性物理引导 + GAPartNet 关节物体 + Isaac Sim 交互验证。',
+        link: 'blogs/physcene/flow-guide.html',
+        image: 'https://physcene.github.io/assets/images/teaser_compress.png',
+        tags: ['具身智能', 'PhyScene', '物理引导扩散', 'Isaac Sim']
+      },
+      {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'Infinigen 交互式流程导览',
+        summary: 'CVPR 2023：Blender 程序化无限照片级世界生成；Nature 户外与 Indoors 室内两条管线，产出 RGB/深度/分割 GT。',
+        link: 'blogs/infinigen/flow-guide.html',
+        image: 'https://raw.githubusercontent.com/princeton-vl/infinigen/main/docs/images/hello_world/Image0048_00_00.png',
+        tags: ['具身智能', 'Infinigen', '程序化生成', 'Blender']
+      },
+      {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'ProcTHOR 交互式流程导览',
+        summary: 'NeurIPS 2022 Outstanding Paper：HouseGenerator 程序化生成 10K+ AI2-THOR 可交互室内房屋，支撑 ObjectNav zero-shot 泛化。',
+        link: 'blogs/procthor/flow-guide.html',
+        image: 'https://procthor-10k.s3.us-west-2.amazonaws.com/static/demo1/Apartment_0_top_small.jpg',
+        tags: ['具身智能', 'ProcTHOR', '程序化生成', 'AI2-THOR']
+      },
+      {
+        group: 'comparison',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'SAGE vs EmbodiedGen 物理属性对比',
+        summary: '布局级 vs 资产级物理建模：质量、摩擦、密度来源与用途对照表，及机械臂操作任务的 sim-to-real 失真风险分析。',
+        link: 'blogs/comparison/sage-vs-embodiedgen-physics.html',
+        image: 'https://research.nvidia.com/labs/cosmos-lab/sage/assets/images/preview_and_stats_v2.png',
+        tags: ['具身智能', 'SAGE', 'EmbodiedGen', '物理属性', '对比分析']
       },
       {
         group: 'surveys',
@@ -445,6 +540,15 @@ window.RESUME = {
     },
     blogs: [
       { date: '2026-07', dateLabel: '2026年7月', title: 'SAGE 互動式流程導覽', summary: 'Scalable Agentic 3D Scene Generation 全流程：架構總覽、核心流程、提示詞庫、模型分工與 MCP 工具。', link: 'blogs/sage/flow-guide.html', tags: ['具身智能', 'SAGE', 'Agentic', '3D Scene Generation'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'EmbodiedGen：生成式 Sim-Ready 3D 世界引擎', summary: 'Text / Image → mesh、URDF 與物理參數；可部署 Isaac / MuJoCo / SAPIEN 的資產工廠。', link: 'blogs/embodiedgen/flow-guide.html', tags: ['具身智能', 'EmbodiedGen', 'Sim-Ready'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'Genesis World 互動式流程導覽', summary: '統一多物理引擎：gs.init → Scene → 多求解器耦合 → 並行仿真；URDF/MJCF/USD 與 GPU 批環境。', link: 'blogs/genesis/flow-guide.html', tags: ['具身智能', 'Genesis', 'Physics Engine', 'Simulation'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'SceneSmith 互動式流程導覽', summary: 'MIT/TRI Agentic 室內場景生成：五階段管線、Planner/Designer/Critic 閉環、SAM3D 資產與 Drake 物理仿真。', link: 'blogs/scenesmith/flow-guide.html', tags: ['具身智能', 'SceneSmith', 'Agentic', 'Drake'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'Gen2Sim 互動式流程導覽', summary: 'Generation to Simulation：2D→3D 資產、GPT-4 任務分解與 reward 生成、IsaacGym PPO 長程操作技能訓練。', link: 'blogs/gen2sim/flow-guide.html', tags: ['具身智能', 'Gen2Sim', 'Task Program', 'IsaacGym'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'RoboGen 互動式流程導覽', summary: 'Propose-Generate-Learn：GPT-4 自主任務提議、PyBullet 場景裝配、OMPL 原語與 SAC 技能學習閉環。', link: 'blogs/robogen/flow-guide.html', tags: ['具身智能', 'RoboGen', 'Agentic', 'PyBullet'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'MimicGen 互動式流程導覽', summary: '少量人類演示 → 子任務切分與空間變換 → 大規模 robosuite 合成軌跡，支撐 robomimic 行為克隆。', link: 'blogs/mimicgen/flow-guide.html', tags: ['具身智能', 'MimicGen', 'Demo Expansion', 'robosuite'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'PhyScene 互動式流程導覽', summary: 'CVPR 2024 Highlight：房間戶型條件擴散布局 + 物理引導 + GAPartNet 關節物體 + Isaac Sim 驗證。', link: 'blogs/physcene/flow-guide.html', tags: ['具身智能', 'PhyScene', '物理引導擴散'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'Infinigen 互動式流程導覽', summary: 'CVPR 2023：Blender 程序化無限照片級世界；Nature 戶外與 Indoors 室內兩條管線。', link: 'blogs/infinigen/flow-guide.html', tags: ['具身智能', 'Infinigen', '程序化生成'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'ProcTHOR 互動式流程導覽', summary: 'NeurIPS 2022：HouseGenerator 程序化生成 10K+ AI2-THOR 可交互室內房屋。', link: 'blogs/procthor/flow-guide.html', tags: ['具身智能', 'ProcTHOR', 'AI2-THOR'] },
       { date: '2026-07', dateLabel: '2026年7月', title: '全鏈條方法圖譜：完整度、平台族與工程現實', summary: '雷達圖、平台族聚類、完整度×兼容度氣泡圖與熱力矩陣；17 篇代表方法可檢索對比。', link: 'blogs/method-landscape/', tags: ['具身智能', '方法圖譜', '平台族'] },
       { date: '2026-07', dateLabel: '2026年7月', title: '從 Sim-Ready World 到 Policy-Ready Data Engine', summary: 'Sim-Ready 之後的任務生成、獎勵程序、域隨機化、示範/rollout 數據與 Real2Sim2Real 閉環。', link: 'blogs/policy-data/', tags: ['具身智能', 'Policy-Ready', 'Sim2Real'] },
       { date: '2026-07', dateLabel: '2026年7月', title: 'World 與 World Model 調研', summary: '四層概念 × 五類模型；區分 World 與 World Model，20 篇代表論文對比表。', link: 'blogs/world-model/', tags: ['具身智能', 'World Model'] },
@@ -593,6 +697,15 @@ window.RESUME = {
     },
     blogs: [
       { date: '2026-07', dateLabel: 'July 2026', title: 'SAGE Interactive Flow Guide', summary: 'Scalable Agentic 3D Scene Generation: architecture, pipeline, prompts, model roles, and MCP tools.', link: 'blogs/sage/flow-guide.html', tags: ['Embodied AI', 'SAGE', 'Agentic', '3D Scene Generation'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'EmbodiedGen: Sim-Ready 3D World Engine', summary: 'Text/Image → mesh, URDF, and physics; deployable to Isaac, MuJoCo, and SAPIEN.', link: 'blogs/embodiedgen/flow-guide.html', tags: ['Embodied AI', 'EmbodiedGen', 'Sim-Ready'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'Genesis World Interactive Flow Guide', summary: 'Unified multi-physics engine: gs.init → Scene → solver coupling → parallel sim; URDF/MJCF/USD and GPU batched envs.', link: 'blogs/genesis/flow-guide.html', tags: ['Embodied AI', 'Genesis', 'Physics Engine', 'Simulation'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'SceneSmith Interactive Flow Guide', summary: 'MIT/TRI agentic indoor scene generation: five-stage pipeline, Planner/Designer/Critic loop, SAM3D assets, and Drake physics.', link: 'blogs/scenesmith/flow-guide.html', tags: ['Embodied AI', 'SceneSmith', 'Agentic', 'Drake'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'Gen2Sim Interactive Flow Guide', summary: 'Generation to Simulation: 2D→3D assets, GPT-4 task decomposition and reward codegen, IsaacGym PPO for long-horizon manipulation.', link: 'blogs/gen2sim/flow-guide.html', tags: ['Embodied AI', 'Gen2Sim', 'Task Program', 'IsaacGym'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'RoboGen Interactive Flow Guide', summary: 'Propose-Generate-Learn: GPT-4 task proposal, PyBullet scene assembly, OMPL primitives and SAC skill learning.', link: 'blogs/robogen/flow-guide.html', tags: ['Embodied AI', 'RoboGen', 'Agentic', 'PyBullet'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'MimicGen Interactive Flow Guide', summary: 'Few human demos → subtask segmentation and spatial transforms → large-scale robosuite synthetic trajectories for BC.', link: 'blogs/mimicgen/flow-guide.html', tags: ['Embodied AI', 'MimicGen', 'Demo Expansion', 'robosuite'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'PhyScene Interactive Flow Guide', summary: 'CVPR 2024 Highlight: room-conditioned diffusion layout with collision/walkability guidance and GAPartNet articulated objects.', link: 'blogs/physcene/flow-guide.html', tags: ['Embodied AI', 'PhyScene', 'Guided Diffusion'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'Infinigen Interactive Flow Guide', summary: 'CVPR 2023: procedural infinite photorealistic worlds in Blender; Nature outdoors and Indoors pipelines.', link: 'blogs/infinigen/flow-guide.html', tags: ['Embodied AI', 'Infinigen', 'Procedural'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'ProcTHOR Interactive Flow Guide', summary: 'NeurIPS 2022: HouseGenerator procedural 10K+ AI2-THOR interactive indoor homes for embodied AI.', link: 'blogs/procthor/flow-guide.html', tags: ['Embodied AI', 'ProcTHOR', 'AI2-THOR'] },
       { date: '2026-07', dateLabel: 'July 2026', title: 'Method Landscape: Completeness & Platform Families', summary: 'Radar, cluster map, bubble chart, heatmap and reference table for 17 representative methods.', link: 'blogs/method-landscape/', tags: ['Embodied AI', 'Method Landscape', 'Platforms'] },
       { date: '2026-07', dateLabel: 'July 2026', title: 'World vs World Model Survey', summary: 'Four concepts × five families; 20-paper comparison table.', link: 'blogs/world-model/', tags: ['Embodied AI', 'World Model'] },
       { date: '2026-07', dateLabel: 'July 2026', title: 'Embodied AI Training Environment Survey', summary: '8-stage pipeline with per-paper contributions across 43 papers (not platform selection).', link: 'blogs/training-env/', tags: ['Embodied AI', 'Training Env', 'Real2Sim'] },

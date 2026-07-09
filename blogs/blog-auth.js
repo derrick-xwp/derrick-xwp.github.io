@@ -136,8 +136,13 @@
             err.textContent = '当前浏览器不支持 Web Crypto，请更换浏览器。';
           } else if (ex && ex.message === 'locked') {
             err.textContent = '解密失败，请刷新后重试。';
-          } else if (ex && String(ex.message || ex).indexOf('fetch failed') >= 0) {
-            err.textContent = '无法加载加密内容，请检查网络或通过 HTTP 访问站点。';
+          } else if (
+            ex && (
+              String(ex.message || ex).indexOf('fetch failed') >= 0 ||
+              String(ex.message || ex).indexOf('Failed to fetch') >= 0
+            )
+          ) {
+            err.textContent = '无法加载加密内容，请通过 HTTP 本地服务访问（如 dev-server.bat），勿直接打开 file:// 链接。';
           } else {
             err.textContent = '密码错误，请重试。';
           }

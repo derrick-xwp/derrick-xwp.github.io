@@ -122,6 +122,20 @@
     });
   }
 
+  function blogsBaseUrl() {
+    var path = global.location.pathname;
+    var marker = '/blogs/';
+    var i = path.indexOf(marker);
+    if (i >= 0) {
+      return global.location.origin + path.slice(0, i + marker.length);
+    }
+    try {
+      return new URL('./', global.location.href).href;
+    } catch (e) {
+      return global.location.href;
+    }
+  }
+
   function resolveUrl(encPath, baseUrl) {
     if (!encPath) return encPath;
     if (/^https?:\/\//.test(encPath)) return encPath;
@@ -135,13 +149,26 @@
     }
   }
 
+  function resolveBlogsRootAsset(assetPath) {
+    if (!assetPath) return assetPath;
+    if (/^https?:\/\//.test(assetPath)) return assetPath;
+    if (assetPath.charAt(0) === '/') {
+      return global.location.origin + assetPath;
+    }
+    try {
+      return new URL(assetPath.replace(/^\.\//, ''), blogsBaseUrl()).href;
+    } catch (e) {
+      return resolveUrl(assetPath, global.location.href);
+    }
+  }
+
   function encryptionEnabled() {
     return cfg().encryption !== false;
   }
 
   function unlockWithPassword(password) {
-    var canaryUrl = cfg().canaryEnc || 'blog-auth.canary.enc.json';
-    return fetchJson(resolveUrl(canaryUrl, global.location.href)).then(function (payload) {
+    var canaryUrl = resolveBlogsRootAsset(cfg().canaryEnc || 'blog-auth.canary.enc.json');
+    return fetchJson(canaryUrl).then(function (payload) {
       return decryptPayload(password, payload);
     }).then(function (result) {
       writeKeyBytes(result.keyBytes);
