@@ -102,19 +102,27 @@
       </div>
     </section>
 
-    <section id="publications" class="section">
+    <section id="publications" class="section section-papers-rich">
       <div class="container">
         <h2 id="pub-title"></h2>
-        <h3 class="subsec" id="pub-journal-label"></h3>
-        <ol class="papers-list" id="papers-journal"></ol>
-        <h3 class="subsec" id="pub-conf-label"></h3>
-        <ol class="papers-list" id="papers-conf"></ol>
-        <h3 class="subsec" id="pub-preprint-label"></h3>
-        <ol class="papers-list" id="papers-preprints"></ol>
+        <div class="papers-layout">
+          <section class="paper-panel">
+            <h3 class="paper-panel-title" id="pub-journal-label"></h3>
+            <div class="papers-grid" id="papers-journal"></div>
+          </section>
+          <section class="paper-panel">
+            <h3 class="paper-panel-title" id="pub-conf-label"></h3>
+            <div class="papers-grid" id="papers-conf"></div>
+          </section>
+          <section class="paper-panel">
+            <h3 class="paper-panel-title" id="pub-preprint-label"></h3>
+            <div class="papers-grid" id="papers-preprints"></div>
+          </section>
+        </div>
       </div>
     </section>
 
-    <section id="patents" class="section">
+    <section id="patents" class="section section-patents-rich">
       <div class="container">
         <h2 id="patents-title"></h2>
         <div id="patents-content"></div>

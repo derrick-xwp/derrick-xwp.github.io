@@ -1,2 +1,3 @@
 # Plaintext blog sources — do not commit (edit here, then run encrypt-blogs.py)
 _plain/
+_tools/sources/

@@ -230,14 +230,24 @@ window.RESUME = {
         tags: ['具身智能', 'ProcTHOR', '程序化生成', 'AI2-THOR']
       },
       {
+        group: 'generation',
+        date: '2026-07',
+        dateLabel: '2026年7月',
+        title: 'PhysX-Anything 介绍',
+        summary: '单图生成带关节语义与材料力学的 URDF / MuJoCo 仿真资产；流程、评测指标与局限分析。',
+        link: 'blogs/comparison/physx_introduction.html',
+        image: 'https://physx-anything.github.io/static/images/teaser.png',
+        tags: ['具身智能', 'PhysX-Anything', 'Articulation', 'MuJoCo']
+      },
+      {
         group: 'comparison',
         date: '2026-07',
         dateLabel: '2026年7月',
-        title: 'SAGE vs EmbodiedGen 物理属性对比',
-        summary: '布局级 vs 资产级物理建模：质量、摩擦、密度来源与用途对照表，及机械臂操作任务的 sim-to-real 失真风险分析。',
-        link: 'blogs/comparison/sage-vs-embodiedgen-physics.html',
+        title: 'SAGE vs EmbodiedGen vs PhysX 物理属性对比',
+        summary: '三套系统在场景生成与仿真资产中的物理属性来源、用途与机械臂操作失真风险；含布局级、资产级与运动学关节级建模对照。',
+        link: 'blogs/comparison/physics_properties_comparison.html',
         image: 'https://research.nvidia.com/labs/cosmos-lab/sage/assets/images/preview_and_stats_v2.png',
-        tags: ['具身智能', 'SAGE', 'EmbodiedGen', '物理属性', '对比分析']
+        tags: ['具身智能', 'SAGE', 'EmbodiedGen', 'PhysX', '物理属性', '对比分析']
       },
       {
         group: 'surveys',
@@ -384,12 +394,10 @@ window.RESUME = {
     scholarsTitle: '研究助理',
     scholars: [
       { name: '刘元杰', role: '科研助理', email: 'yjliu@zju-if.com', link: '', gender: 'male' },
-      { name: '钱广杰', role: '科研助理', email: 'gjqian@zju-if.com', link: '', gender: 'male' },
       { name: '林柯辰', role: '科研助理', email: 'kclin@zju-if.com', link: '', gender: 'male' },
       { name: '俞哲', role: '科研助理', email: 'zyu@zju-if.com', link: '', gender: 'male' },
       { name: '于静怡', role: '实习生', email: '', link: '', gender: 'female' },
       { name: '于苇杭', role: '实习生', email: '', link: '', gender: 'male' },
-      { name: '王可', role: '实习生 · 法国索邦大学', email: '', link: '', gender: 'female' }
     ],
     alumniTitle: '校友',
     alumni: [
@@ -425,12 +433,10 @@ window.RESUME = {
     scholarsTitle: '研究助理',
     scholars: [
       { name: '劉元杰', role: '科研助理', email: 'yjliu@zju-if.com', link: '', gender: 'male' },
-      { name: '錢廣傑', role: '科研助理', email: 'gjqian@zju-if.com', link: '', gender: 'male' },
       { name: '林柯辰', role: '科研助理', email: 'kclin@zju-if.com', link: '', gender: 'male' },
       { name: '俞哲', role: '科研助理', email: 'zyu@zju-if.com', link: '', gender: 'male' },
       { name: '於靜怡', role: '實習生', email: '', link: '', gender: 'female' },
       { name: '於葦杭', role: '實習生', email: '', link: '', gender: 'male' },
-      { name: '王可', role: '實習生 · 法國索邦大學', email: '', link: '', gender: 'female' }
     ],
     alumniTitle: '校友',
     alumni: [
@@ -549,6 +555,8 @@ window.RESUME = {
       { date: '2026-07', dateLabel: '2026年7月', title: 'PhyScene 互動式流程導覽', summary: 'CVPR 2024 Highlight：房間戶型條件擴散布局 + 物理引導 + GAPartNet 關節物體 + Isaac Sim 驗證。', link: 'blogs/physcene/flow-guide.html', tags: ['具身智能', 'PhyScene', '物理引導擴散'] },
       { date: '2026-07', dateLabel: '2026年7月', title: 'Infinigen 互動式流程導覽', summary: 'CVPR 2023：Blender 程序化無限照片級世界；Nature 戶外與 Indoors 室內兩條管線。', link: 'blogs/infinigen/flow-guide.html', tags: ['具身智能', 'Infinigen', '程序化生成'] },
       { date: '2026-07', dateLabel: '2026年7月', title: 'ProcTHOR 互動式流程導覽', summary: 'NeurIPS 2022：HouseGenerator 程序化生成 10K+ AI2-THOR 可交互室內房屋。', link: 'blogs/procthor/flow-guide.html', tags: ['具身智能', 'ProcTHOR', 'AI2-THOR'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'PhysX-Anything 介紹', summary: '單圖生成帶關節語義與材料力學的 URDF / MuJoCo 仿真資產。', link: 'blogs/comparison/physx_introduction.html', tags: ['具身智能', 'PhysX-Anything'] },
+      { date: '2026-07', dateLabel: '2026年7月', title: 'SAGE vs EmbodiedGen vs PhysX 物理屬性對比', summary: '三套系統在場景生成與仿真資產中的物理屬性來源、用途與機械臂操作失真風險。', link: 'blogs/comparison/physics_properties_comparison.html', tags: ['具身智能', 'SAGE', 'EmbodiedGen', 'PhysX'] },
       { date: '2026-07', dateLabel: '2026年7月', title: '全鏈條方法圖譜：完整度、平台族與工程現實', summary: '雷達圖、平台族聚類、完整度×兼容度氣泡圖與熱力矩陣；17 篇代表方法可檢索對比。', link: 'blogs/method-landscape/', tags: ['具身智能', '方法圖譜', '平台族'] },
       { date: '2026-07', dateLabel: '2026年7月', title: '從 Sim-Ready World 到 Policy-Ready Data Engine', summary: 'Sim-Ready 之後的任務生成、獎勵程序、域隨機化、示範/rollout 數據與 Real2Sim2Real 閉環。', link: 'blogs/policy-data/', tags: ['具身智能', 'Policy-Ready', 'Sim2Real'] },
       { date: '2026-07', dateLabel: '2026年7月', title: 'World 與 World Model 調研', summary: '四層概念 × 五類模型；區分 World 與 World Model，20 篇代表論文對比表。', link: 'blogs/world-model/', tags: ['具身智能', 'World Model'] },
@@ -706,6 +714,8 @@ window.RESUME = {
       { date: '2026-07', dateLabel: 'July 2026', title: 'PhyScene Interactive Flow Guide', summary: 'CVPR 2024 Highlight: room-conditioned diffusion layout with collision/walkability guidance and GAPartNet articulated objects.', link: 'blogs/physcene/flow-guide.html', tags: ['Embodied AI', 'PhyScene', 'Guided Diffusion'] },
       { date: '2026-07', dateLabel: 'July 2026', title: 'Infinigen Interactive Flow Guide', summary: 'CVPR 2023: procedural infinite photorealistic worlds in Blender; Nature outdoors and Indoors pipelines.', link: 'blogs/infinigen/flow-guide.html', tags: ['Embodied AI', 'Infinigen', 'Procedural'] },
       { date: '2026-07', dateLabel: 'July 2026', title: 'ProcTHOR Interactive Flow Guide', summary: 'NeurIPS 2022: HouseGenerator procedural 10K+ AI2-THOR interactive indoor homes for embodied AI.', link: 'blogs/procthor/flow-guide.html', tags: ['Embodied AI', 'ProcTHOR', 'AI2-THOR'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'PhysX-Anything Introduction', summary: 'Single-image URDF/MuJoCo assets with articulation semantics and material mechanics.', link: 'blogs/comparison/physx_introduction.html', tags: ['Embodied AI', 'PhysX-Anything'] },
+      { date: '2026-07', dateLabel: 'July 2026', title: 'SAGE vs EmbodiedGen vs PhysX Physics Comparison', summary: 'Physics property sources, usage, and manipulation distortion risks across three scene/asset pipelines.', link: 'blogs/comparison/physics_properties_comparison.html', tags: ['Embodied AI', 'SAGE', 'EmbodiedGen', 'PhysX'] },
       { date: '2026-07', dateLabel: 'July 2026', title: 'Method Landscape: Completeness & Platform Families', summary: 'Radar, cluster map, bubble chart, heatmap and reference table for 17 representative methods.', link: 'blogs/method-landscape/', tags: ['Embodied AI', 'Method Landscape', 'Platforms'] },
       { date: '2026-07', dateLabel: 'July 2026', title: 'World vs World Model Survey', summary: 'Four concepts × five families; 20-paper comparison table.', link: 'blogs/world-model/', tags: ['Embodied AI', 'World Model'] },
       { date: '2026-07', dateLabel: 'July 2026', title: 'Embodied AI Training Environment Survey', summary: '8-stage pipeline with per-paper contributions across 43 papers (not platform selection).', link: 'blogs/training-env/', tags: ['Embodied AI', 'Training Env', 'Real2Sim'] },
@@ -748,12 +758,10 @@ window.RESUME = {
     scholarsTitle: 'Research Assistants',
     scholars: [
       { name: 'Yuanjie Liu', role: 'Research Assistant', email: 'yjliu@zju-if.com', link: '', gender: 'male' },
-      { name: 'Guangjie Qian', role: 'Research Assistant', email: 'gjqian@zju-if.com', link: '', gender: 'male' },
       { name: 'Kechen Lin', role: 'Research Assistant', email: 'kclin@zju-if.com', link: '', gender: 'male' },
       { name: 'Zhe Yu', role: 'Research Assistant', email: 'zyu@zju-if.com', link: '', gender: 'male' },
       { name: 'Jingyi Yu', role: 'Intern', email: '', link: '', gender: 'female' },
       { name: 'Weihang Yu', role: 'Intern', email: '', link: '', gender: 'male' },
-      { name: 'Ke Wang', role: 'Intern · Sorbonne Université (France)', email: '', link: '', gender: 'female' }
     ],
     alumniTitle: 'Alumni',
     alumni: [
@@ -928,12 +936,10 @@ window.RESUME = {
     scholarsTitle: '研究アシスタント',
     scholars: [
       { name: 'Yuanjie Liu', role: 'Research Assistant', email: 'yjliu@zju-if.com', link: '', gender: 'male' },
-      { name: 'Guangjie Qian', role: 'Research Assistant', email: 'gjqian@zju-if.com', link: '', gender: 'male' },
       { name: 'Kechen Lin', role: 'Research Assistant', email: 'kclin@zju-if.com', link: '', gender: 'male' },
       { name: 'Zhe Yu', role: 'Research Assistant', email: 'zyu@zju-if.com', link: '', gender: 'male' },
       { name: '于静怡', role: 'インターン', email: '', link: '', gender: 'female' },
       { name: '于苇杭', role: 'インターン', email: '', link: '', gender: 'male' },
-      { name: '王可', role: 'インターン · フランス・ソルボンヌ大学', email: '', link: '', gender: 'female' }
     ],
     alumniTitle: '卒業生',
     alumni: [
@@ -1108,12 +1114,10 @@ window.RESUME = {
     scholarsTitle: '연구 보조원',
     scholars: [
       { name: 'Yuanjie Liu', role: 'Research Assistant', email: 'yjliu@zju-if.com', link: '', gender: 'male' },
-      { name: 'Guangjie Qian', role: 'Research Assistant', email: 'gjqian@zju-if.com', link: '', gender: 'male' },
       { name: 'Kechen Lin', role: 'Research Assistant', email: 'kclin@zju-if.com', link: '', gender: 'male' },
       { name: 'Zhe Yu', role: 'Research Assistant', email: 'zyu@zju-if.com', link: '', gender: 'male' },
       { name: '우징이 (于静怡)', role: '인턴', email: '', link: '', gender: 'female' },
       { name: '위웨이항 (于苇杭)', role: '인턴', email: '', link: '', gender: 'male' },
-      { name: '왕커 (王可)', role: '인턴 · 프랑스 소르본대학교', email: '', link: '', gender: 'female' }
     ],
     alumniTitle: '동문',
     alumni: [
@@ -1288,12 +1292,10 @@ window.RESUME = {
     scholarsTitle: 'Research Assistants',
     scholars: [
       { name: 'Yuanjie Liu', role: 'Research Assistant', email: 'yjliu@zju-if.com', link: '', gender: 'male' },
-      { name: 'Guangjie Qian', role: 'Research Assistant', email: 'gjqian@zju-if.com', link: '', gender: 'male' },
       { name: 'Kechen Lin', role: 'Research Assistant', email: 'kclin@zju-if.com', link: '', gender: 'male' },
       { name: 'Zhe Yu', role: 'Research Assistant', email: 'zyu@zju-if.com', link: '', gender: 'male' },
       { name: 'Jingyi Yu', role: 'Intern', email: '', link: '', gender: 'female' },
       { name: 'Weihang Yu', role: 'Intern', email: '', link: '', gender: 'male' },
-      { name: 'Ke Wang', role: 'นักฝึกงาน · Sorbonne Université (ฝรั่งเศส)', email: '', link: '', gender: 'female' }
     ],
     alumniTitle: 'Alumni',
     alumni: [

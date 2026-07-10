@@ -218,9 +218,251 @@
 
     var pf = window.PATENTS_FULL && (window.PATENTS_FULL[lang] || window.PATENTS_FULL.en);
     if (pf) renderPatentsFull(pf);
+
+    if (window.PAPERS) renderPapers(lang);
     
     // Render gallery with current language
     renderGallery();
+  }
+
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function parsePatentItem(item) {
+    var str = String(item).trim();
+    var m = str.match(/^(.+?)\s*\[(已授权|受理中|Granted|Pending)\]\s*$/i);
+    if (m) {
+      var raw = m[2];
+      var granted = /已授权|Granted/i.test(raw);
+      var statusKey = granted ? 'granted' : 'pending';
+      var status = granted
+        ? (/Granted/i.test(raw) ? 'Granted' : '已授权')
+        : (/Pending/i.test(raw) ? 'Pending' : '受理中');
+      return { title: m[1].trim(), status: status, statusKey: statusKey };
+    }
+    var granted2 = /已授权|Granted/i.test(str);
+    var pending2 = /在审|Submitted|受理中|Pending/i.test(str);
+    var titleMatch = str.match(/^(.+?)。/);
+    var title = titleMatch ? titleMatch[1] + '。' : str;
+    if (granted2 || pending2) {
+      return {
+        title: title,
+        status: granted2 ? (langStatusLabel('granted', currentLang)) : langStatusLabel('pending', currentLang),
+        statusKey: granted2 ? 'granted' : 'pending'
+      };
+    }
+    return { title: str, status: null, statusKey: 'unknown' };
+  }
+
+  function langStatusLabel(key, lang) {
+    if (key === 'granted') {
+      return (lang === 'en' || lang === 'ja' || lang === 'ko' || lang === 'th') ? 'Granted' : '已授权';
+    }
+    return (lang === 'en' || lang === 'ja' || lang === 'ko' || lang === 'th') ? 'Pending' : '在审';
+  }
+
+  function renderPatentCard(item) {
+    var p = parsePatentItem(item);
+    var cls = 'patent-card patent-' + p.statusKey;
+    var html = '<article class="' + cls + '">';
+    html += '<div class="patent-card-badges' + (p.status ? '' : ' is-empty') + '">';
+    if (p.status) {
+      html += '<span class="patent-card-status patent-status-' + p.statusKey + '">' + escHtml(p.status) + '</span>';
+    }
+    html += '</div>';
+    html += '<span class="patent-card-title">' + escHtml(p.title) + '</span></article>';
+    return html;
+  }
+
+  function renderPatentsFull(data) {
+    var el = document.getElementById('patents-content');
+    if (!data || !el) return;
+    if (!data.categories || !data.categories.length) return;
+    var html = '<div class="patents-layout">';
+    data.categories.forEach(function (cat) {
+      if (!cat || !cat.items || !cat.items.length) return;
+      html += '<section class="patent-panel"><h3 class="patent-panel-title">' + escHtml(cat.title || '') + '</h3>';
+      html += '<div class="patents-grid">';
+      cat.items.forEach(function (item) {
+        html += renderPatentCard(item);
+      });
+      html += '</div></section>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
+  var JOURNAL_IF_RULES = [
+    { re: /ACM Computing Surveys/i, if: 23.8 },
+    { re: /IEEE Transactions on Image Processing|\bIEEE TIP\b/i, if: 13.7 },
+    { re: /Machine Intelligence Research|\bMIR\b/i, if: 8.7 },
+    { re: /IEEE TIFS|Transactions on Information Forensics and Security/i, if: 8.0 },
+    { re: /SCIENTIA SINICA Informationis|SCIENCE CHINA Information Sciences/i, if: 7.6 },
+    { re: /Computers in Human Behavior/i, if: 9.9 }
+  ];
+
+  var JOURNAL_SCI_RULES = [
+    { re: /ACM Computing Surveys/i, sci: 1, sciTop: true },
+    { re: /SCIENTIA SINICA Informationis|SCIENCE CHINA Information Sciences/i, sci: 1, sciTop: true },
+    { re: /IEEE TIFS|Transactions on Information Forensics and Security/i, sci: 1, sciTop: true },
+    { re: /Machine Intelligence Research|\bMIR\b/i, sci: 2 },
+    { re: /IEEE Transactions on Image Processing|\bIEEE TIP\b/i, sci: 1, sciTop: true },
+    { re: /Computers in Human Behavior/i, sci: 1, sciTop: true }
+  ];
+
+  function formatIFLabel(ifVal, ifNote, lang) {
+    var n = Number(ifVal);
+    if (!isFinite(n)) return '';
+    var s = (Math.round(n * 100) / 100).toString();
+    if (s.indexOf('.') !== -1) s = s.replace(/\.?0+$/, '');
+    if (ifNote === 'composite') {
+      return (lang === 'en') ? ('IF ' + s + ' (composite)') : ('IF ' + s + '（综合）');
+    }
+    return 'IF ' + s;
+  }
+
+  function resolveJournalIF(item, text) {
+    if (item && item.if != null && isFinite(Number(item.if))) {
+      return { value: Number(item.if), note: item.ifNote || null };
+    }
+    for (var i = 0; i < JOURNAL_IF_RULES.length; i++) {
+      var rule = JOURNAL_IF_RULES[i];
+      if (rule.re.test(text)) {
+        return { value: rule.if, note: rule.ifNote || null };
+      }
+    }
+    return null;
+  }
+
+  function formatSciLabel(sciMeta, lang) {
+    if (!sciMeta || !sciMeta.zone) return '';
+    var en = lang === 'en' || lang === 'ja' || lang === 'ko' || lang === 'th';
+    var zoneLabel = en ? ('Zone ' + sciMeta.zone) : (sciMeta.zone + '区');
+    var label = en ? ('SCI ' + zoneLabel) : ('SCI ' + zoneLabel);
+    if (sciMeta.top) label += ' TOP';
+    return label;
+  }
+
+  function resolveJournalSci(item, text) {
+    if (item && item.sci != null && isFinite(Number(item.sci))) {
+      return { zone: Number(item.sci), top: !!item.sciTop };
+    }
+    for (var i = 0; i < JOURNAL_SCI_RULES.length; i++) {
+      var rule = JOURNAL_SCI_RULES[i];
+      if (rule.re.test(text)) {
+        return { zone: rule.sci, top: !!rule.sciTop };
+      }
+    }
+    return null;
+  }
+
+  function parsePaperCite(item, section, lang) {
+    var cite = (item && item.cite) ? item.cite : String(item);
+    var html = String(cite);
+    var badges = [];
+    var text = html;
+    var isFindings = /\bFindings\b/i.test(text);
+    var isWorkshop = /\bworkshop\b/i.test(text);
+
+    var ccf = text.match(/\bCCF-([ABC])\b/i);
+    if (ccf) {
+      var tier = ccf[1].toUpperCase();
+      if (isFindings) {
+        badges.push({ label: 'Findings', key: 'findings' });
+      } else {
+        badges.push({ label: 'CCF-' + tier, key: 'ccf-' + tier.toLowerCase() });
+      }
+      text = text.replace(/\s*\.?\s*CCF-[ABC]\s*\.?\s*/gi, ' ');
+    } else if (isFindings) {
+      badges.push({ label: 'Findings', key: 'findings' });
+    }
+
+    if (isWorkshop) {
+      badges.push({ label: 'Workshop', key: 'workshop' });
+    }
+
+    text = text.replace(/\s*\.?\s*IF[:\s]+[\d.]+\s*\.?\s*/gi, ' ');
+    text = text.replace(/\s*\.?\s*高IF\s*\.?\s*/g, ' ');
+    text = text.replace(/\s*\.?\s*SCI\s*[1-4]\s*区(?:\s*TOP)?\s*\.?\s*/gi, ' ');
+
+    if (section === 'journal') {
+      var sciMeta = resolveJournalSci(typeof item === 'object' ? item : null, text);
+      if (sciMeta) {
+        badges.push({
+          label: formatSciLabel(sciMeta, lang),
+          key: sciMeta.top ? 'sci-top' : 'sci'
+        });
+      }
+      var ifMeta = resolveJournalIF(typeof item === 'object' ? item : null, text);
+      if (ifMeta) {
+        badges.push({
+          label: formatIFLabel(ifMeta.value, ifMeta.note, lang),
+          key: ifMeta.note === 'composite' ? 'if-composite' : 'if'
+        });
+      }
+    }
+
+    if (section === 'preprints') {
+      if (/\barXiv\b/i.test(text)) {
+        badges.push({ label: 'arXiv', key: 'arxiv' });
+      }
+      text = text.replace(/\s*\.?\s*arXiv,?\s*\d{4}\s*\.?\s*/gi, ' ');
+      text = text.replace(/\s*\.?\s*\[Under review\]\s*\.?\s*/gi, ' ');
+    }
+
+    text = text.replace(/\s{2,}/g, ' ').replace(/\s+\./g, '.').replace(/\.\s*\./g, '.').trim();
+    return { bodyHtml: text, badges: badges };
+  }
+
+  function renderPaperCard(item, sectionKey, lang) {
+    var parsed = parsePaperCite(item, sectionKey, lang);
+    var html = '<article class="paper-card">';
+    html += '<div class="paper-card-badges' + (parsed.badges.length ? '' : ' is-empty') + '">';
+    parsed.badges.forEach(function (b) {
+      if (b.stacked && b.sublabel) {
+        html += '<span class="paper-card-badge paper-card-badge-stack paper-badge-' + b.key + '">'
+          + '<span class="paper-card-badge-line">' + escHtml(b.label) + '</span>'
+          + '<span class="paper-card-badge-line paper-card-badge-sub">' + escHtml(b.sublabel) + '</span>'
+          + '</span>';
+      } else {
+        html += '<span class="paper-card-badge paper-badge-' + b.key + '">' + escHtml(b.label) + '</span>';
+      }
+    });
+    html += '</div>';
+    html += '<span class="paper-card-title">' + parsed.bodyHtml + '</span></article>';
+    return html;
+  }
+
+  function renderPapers(lang) {
+    var P = window.PAPERS;
+    if (!P) return;
+    lang = lang || currentLang;
+    var keyToId = { journal: 'papers-journal', conference: 'papers-conf', preprints: 'papers-preprints' };
+
+    function getYear(cite) {
+      var match = cite.match(/\b(20\d{2})\b/);
+      return match ? parseInt(match[1], 10) : 0;
+    }
+
+    function sortPapersByYear(papers) {
+      return papers.slice().sort(function (a, b) {
+        return getYear(b.cite) - getYear(a.cite);
+      });
+    }
+
+    ['journal', 'conference', 'preprints'].forEach(function (key) {
+      var el = document.getElementById(keyToId[key]);
+      if (!el || !P[key]) return;
+      var sortedPapers = sortPapersByYear(P[key]);
+      el.innerHTML = sortedPapers.map(function (item) {
+        return renderPaperCard(item, key, lang);
+      }).join('');
+    });
   }
 
   function escapeHtml(s) {
@@ -545,47 +787,6 @@
     el.innerHTML = html;
   }
 
-
-  function renderPatentsFull(data) {
-    var el = document.getElementById('patents-content');
-    if (!data || !el) return;
-    var html = '';
-    data.categories.forEach(function (cat) {
-      html += '<div class="patent-category"><h3 class="subsec">' + cat.title + '</h3><ol class="patents-list">';
-      cat.items.forEach(function (item) { html += '<li class="patent-item">' + item + '</li>'; });
-      html += '</ol></div>';
-    });
-    el.innerHTML = html;
-  }
-
-  function renderPapers() {
-    var P = window.PAPERS;
-    if (!P) return;
-    var keyToId = { journal: 'papers-journal', conference: 'papers-conf', preprints: 'papers-preprints' };
-    
-    // 辅助函数：从论文引用中提取年份
-    function getYear(cite) {
-      var match = cite.match(/\b(20\d{2})\b/);
-      return match ? parseInt(match[1]) : 0;
-    }
-    
-    // 辅助函数：对论文列表按年份倒序排序
-    function sortPapersByYear(papers) {
-      return papers.sort(function(a, b) {
-        return getYear(b.cite) - getYear(a.cite);
-      });
-    }
-    
-    ['journal', 'conference', 'preprints'].forEach(function (key) {
-      var el = document.getElementById(keyToId[key]);
-      if (!el || !P[key]) return;
-      var sortedPapers = sortPapersByYear(P[key]);
-      el.innerHTML = sortedPapers.map(function (item) {
-        return '<li class="paper-item">' + item.cite + '</li>';
-      }).join('');
-    });
-  }
-
   document.addEventListener('DOMContentLoaded', function () {
     if (fromStorage) {
       setLang(currentLang);
@@ -599,8 +800,6 @@
         setLang(langSelect.value);
       });
     }
-
-    if (window.PAPERS) renderPapers();
 
     window.addEventListener('message', function (ev) {
       var data = ev.data;
